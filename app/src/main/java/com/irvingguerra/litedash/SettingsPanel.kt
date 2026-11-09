@@ -49,6 +49,8 @@ import com.irvingguerra.litedash.core.ui.Typography
 /** Secciones de Ajustes en el orden del menú: cada cosa vive en un solo lugar. */
 enum class SettingsSection(val title: Int) {
     CAR(R.string.your_car), APPEARANCE(R.string.appearance), APPS(R.string.apps_section), WORKSHOP(R.string.workshop),
+    // SailDash: el ecualizador de las apps (EqScreen.kt).
+    SOUND(R.string.ecualizador_section),
     TIRES(R.string.tires), WHEEL(R.string.wheel), MODULES(R.string.modules), SYSTEM(R.string.system),
 }
 
@@ -69,6 +71,7 @@ private fun SettingsSection.icon() = when (this) {
     SettingsSection.WHEEL -> Icons.wheel
     SettingsSection.WORKSHOP -> Icons.engine
     SettingsSection.TIRES -> Icons.tire
+    SettingsSection.SOUND -> EqSoundIcon
     SettingsSection.MODULES -> Icons.settings
     SettingsSection.SYSTEM -> Icons.info
 }
@@ -124,6 +127,7 @@ fun SettingsPanel(
                     // Con el OBD apagado el escáner ni se crea.
                     SettingsSection.WORKSHOP -> if (d.obdModule) Workshop(d, onTires)
                     SettingsSection.TIRES -> TiresSettings(d)
+                    SettingsSection.SOUND -> EqSettingsSection()
                     SettingsSection.MODULES -> Modules(d, revision, open = { section = it })
                     SettingsSection.SYSTEM -> SystemSettings(d)
                 }

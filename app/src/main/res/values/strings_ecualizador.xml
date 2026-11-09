@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash: Ajustes → Sonido (el ecualizador de las apps). -->
+<resources>
+    <string name="ecualizador_section">Sonido</string>
+    <string name="ecualizador_enable">Ecualizador activo</string>
+    <string name="ecualizador_enable_help">Para el sonido de las apps: Spotify, CarPlay (AutoKit), YouTube o NewPipe y la música de la USB.</string>
+
+    <string name="ecualizador_status_off">Apagado: el sonido sale tal cual.</string>
+    <string name="ecualizador_status_starting">Preparando el ecualizador…</string>
+    <string name="ecualizador_status_global">Activo en todo el sonido de las apps.</string>
+    <string name="ecualizador_status_apps">Activo en: %1$s</string>
+    <string name="ecualizador_status_apps_waiting">Listo: se pone solo cuando una app de música empiece a sonar.</string>
+    <string name="ecualizador_status_unsupported">No disponible: %1$s. Usa el ecualizador de fábrica (abajo).</string>
+    <string name="ecualizador_status_fallback">En esta pantalla no funcionó en todo el sonido, así que va app por app.</string>
+    <string name="ecualizador_reason_no_effect">esta pantalla no trae el ecualizador de Android</string>
+    <string name="ecualizador_reason_denied">Android no dejó usar el ecualizador</string>
+    <string name="ecualizador_reason_global">la pantalla no deja ecualizar todo el sonido; prueba App por app en Avanzado</string>
+    <string name="ecualizador_reason_control">otra app tiene el control del ecualizador</string>
+    <string name="ecualizador_reason_failed">el ecualizador dejó de responder</string>
+    <string name="ecualizador_loading">Leyendo el ecualizador de tu pantalla…</string>
+
+    <string name="ecualizador_style">Estilo</string>
+    <string name="ecualizador_preset_flat">Plano</string>
+    <string name="ecualizador_preset_techno">Techno / Electrónica</string>
+    <string name="ecualizador_preset_deep_bass">Bajo profundo</string>
+    <string name="ecualizador_preset_voice">Voz clara</string>
+    <string name="ecualizador_preset_rock">Rock</string>
+    <string name="ecualizador_preset_podcast">Podcast / Noticias</string>
+    <string name="ecualizador_preset_night">Noche</string>
+    <string name="ecualizador_curve_help">Arrastra cada punto hacia arriba o hacia abajo: los bajos a la izquierda y los agudos a la derecha. Lo de color es lo que de verdad suena.</string>
+    <string name="ecualizador_reset">Restablecer</string>
+    <string name="ecualizador_edited">Editado desde %1$s. Tócalo arriba para volver al original.</string>
+    <string name="ecualizador_capped">Bajo protegido no deja subir tanto esos bajos: por eso lo de color queda más abajo.</string>
+
+    <string name="ecualizador_quick">Ajustes rápidos</string>
+    <string name="ecualizador_protect">Bajo protegido</string>
+    <string name="ecualizador_protect_help">Les pone tope a los bajos y baja un poco toda la curva para que no distorsione; luego recupera el volumen sin saturar. Recomendado: tu carro ya trae bajos fuertes.</string>
+    <string name="ecualizador_bass">Refuerzo de bajos</string>
+    <string name="ecualizador_voice">Claridad de voz</string>
+    <string name="ecualizador_voice_help">Claridad de voz sube la presencia de las voces (de 1 a 4 kHz) y quita el “barro” de los 200 a 400 Hz.</string>
+
+    <string name="ecualizador_slots_title">Mis ajustes</string>
+    <string name="ecualizador_slots_help">Guarda cómo suena ahora (curva, bajos y voz) para volver con un toque desde Estilo.</string>
+    <string name="ecualizador_slot_default">Mis ajustes %1$d</string>
+    <string name="ecualizador_slot_empty">%1$s (vacío)</string>
+    <string name="ecualizador_slot_name_hint">Nombre (por ejemplo: Techno en carretera)</string>
+    <string name="ecualizador_save_to">Guardar en %1$s</string>
+    <string name="ecualizador_saved">Guardado ✓</string>
+
+    <string name="ecualizador_explain_title">¿Qué suena con este ecualizador?</string>
+    <string name="ecualizador_explain">Las apps: Spotify, CarPlay con AutoKit, YouTube o NewPipe y la música de la USB. La radio FM y la música por Bluetooth de la pantalla pasan por el chip de sonido del carro: para esas usa el ecualizador de fábrica.</string>
+    <string name="ecualizador_explain_tip">El de fábrica también se le suma a las apps: si usas los dos, deja el de fábrica plano o suave para que no distorsione.</string>
+    <string name="ecualizador_factory_open">Abrir el ecualizador de fábrica</string>
+    <string name="ecualizador_factory_open_named">Abrir %1$s (de fábrica)</string>
+    <string name="ecualizador_factory_searching">Buscando la app de sonido de fábrica…</string>
+    <string name="ecualizador_factory_none">No encontré la app de sonido de fábrica: ábrela desde el menú de la pantalla.</string>
+
+    <string name="ecualizador_advanced">Avanzado</string>
+    <string name="ecualizador_mode">Dónde se aplica</string>
+    <string name="ecualizador_mode_auto">Automático</string>
+    <string name="ecualizador_mode_global">Todo el sonido</string>
+    <string name="ecualizador_mode_apps">App por app</string>
+    <string name="ecualizador_mode_help">Automático usa Todo el sonido si la pantalla lo deja. Si una app no cambia, prueba App por app: sirve con las que avisan cuando suenan, como Spotify y NewPipe.</string>
+    <string name="ecualizador_virtualizer">Sonido envolvente</string>
+    <string name="ecualizador_virtualizer_help">Experimental: en el carro puede sonar raro. Apagado de fábrica.</string>
+    <string name="ecualizador_details_show">Ver detalles técnicos</string>
+    <string name="ecualizador_details_hide">Ocultar detalles técnicos</string>
+    <string name="ecualizador_details_bands">Bandas de la pantalla: %1$s Hz</string>
+    <string name="ecualizador_details_range">Cada banda va de %1$s a %2$s dB</string>
+    <string name="ecualizador_details_effects">Efectos de Android: %1$s</string>
+    <string name="ecualizador_details_output">Margen %1$s dB · volumen recuperado %2$s dB · refuerzo de bajos %3$d/1000</string>
+    <string name="ecualizador_details_sessions">Apps que avisaron: %1$s</string>
+    <string name="ecualizador_details_none">ninguna</string>
+    <string name="ecualizador_details_error">Último error: %1$s</string>
+</resources>
