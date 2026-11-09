@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SailDash: Solo velocidad (la velocidad en grande, a pantalla completa) -->
+    <string name="velocidad_title">Solo velocidad</string>
+    <string name="velocidad_searching">Buscando GPS…</string>
+    <string name="velocidad_gps_lost">Sin señal GPS</string>
+    <string name="velocidad_obd_waiting">Esperando al OBD…</string>
+    <string name="velocidad_no_permission">Sin permiso de ubicación</string>
+    <string name="velocidad_permission_help">Para ver la velocidad sin OBD, SailDash necesita la ubicación (el GPS del carro).</string>
+    <string name="velocidad_enable_gps">Activar GPS</string>
+    <string name="velocidad_tap_to_exit">Toca la pantalla para salir</string>
+    <string name="velocidad_alert_off">Sin alerta</string>
+    <string name="velocidad_alert_on">Alerta: %1$d %2$s</string>
+    <string name="velocidad_off">No</string>
+    <string name="velocidad_limit_title">Alerta de velocidad (%1$s)</string>
+    <string name="velocidad_limit_help">Si vas más rápido, el número se pone rojo.</string>
+    <string name="velocidad_beep">Pitido al pasarte</string>
+    <string name="velocidad_beep_help">Un pitido corto por el sonido de las apps (la música sigue). Con la radio FM puede que no se oiga.</string>
+    <string name="velocidad_auto_title">Abrir «Solo velocidad» al pasar de (%1$s)</string>
+    <string name="velocidad_auto_help">Solo si algo del inicio ya mide la velocidad (velocímetro, mapa, carretera, viaje u OBD): esto no prende el GPS. Si la cierras, se vuelve a abrir cuando bajes a menos de la mitad y pases otra vez.</string>
+</resources>
