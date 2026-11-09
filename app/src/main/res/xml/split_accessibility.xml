@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    SailDash: el servicio de la pantalla dividida (SplitAccessibilityService). Lo mínimo: sin tipos de
+    evento (no se le manda ninguno: no gasta CPU), sin leer el contenido de las ventanas y sin
+    banderas. Solo existe para pedirle a Android "pantalla dividida" (acción global, Android 7+).
+-->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:canRetrieveWindowContent="false"
+    android:description="@string/split_service_description"
+    android:notificationTimeout="0" />

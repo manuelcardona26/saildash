@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.IntentCompat
@@ -72,9 +73,11 @@ object SplitScreen {
 
     /** Abre [intent] dividida si toca; false = que se abra normal. */
     fun open(context: Context, intent: Intent, pkg: String): Boolean {
+        // SailDash: de Android 7 a 12, el mapa y la música lado a lado (SplitLegacy).
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S_V2) return SplitLegacy.open(context, intent, pkg)
         val d = (context.applicationContext as LiteDashApp).dependencies
         // Android solo divide la pantalla así desde la 12L: antes, la app se abre normal.
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S_V2 || !d.prefs.splitScreen || !supported()) return false
+        if (!d.prefs.splitScreen || !supported()) return false
         if (context.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) return false
         if (!isMapOrMusic(context, d, pkg)) return false
         start(context, intent, d.prefs.splitCarLeft)
@@ -229,17 +232,38 @@ private fun SplitBoard(d: Dependencies, onSwap: () -> Unit, onExit: () -> Unit) 
 @Composable
 fun SplitSettings(d: Dependencies) {
     val c = LocalColors.current
-    val supported = remember { SplitScreen.supported() }
+    val context = LocalContext.current
+    // SailDash: de Android 7 a 12, dos apps lado a lado (SplitLegacy); desde la 12L, la app y el auto.
+    val legacy = SplitLegacy.applies
+    val supported = remember { if (legacy) SplitLegacy.supported(context) else SplitScreen.supported() }
     // Sin pantalla dividida en este Android: solo se dice por qué no está disponible.
     if (!supported) {
         Label(stringResource(R.string.split_title), Typography.subtitle)
-        // Dos razones distintas: Android viejo, o un Android nuevo cuya pantalla no deja dividir.
-        val reason = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S_V2) stringResource(R.string.split_unsupported, Build.VERSION.RELEASE)
-        else stringResource(R.string.split_unsupported_screen)
+        // Tres razones: Android de antes del 7; Android 7 con la multiventana apagada de fábrica (se
+        // puede forzar en Opciones de desarrollador); o una pantalla más nueva que no deja dividir.
+        val reason = when {
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.N -> stringResource(R.string.split_legacy_needs, Build.VERSION.RELEASE)
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.O -> stringResource(R.string.split_legacy_unsupported)
+            else -> stringResource(R.string.split_unsupported_screen)
+        }
         Label(reason, Typography.small, c.textMuted)
         return
     }
-    SwitchRow(stringResource(R.string.split_title), d.prefs.splitScreen, { d.prefs.splitScreen = it }, stringResource(R.string.split_help))
+    SwitchRow(
+        stringResource(R.string.split_title),
+        d.prefs.splitScreen,
+        {
+            d.prefs.splitScreen = it
+            // Android 7 a 12: sin pantalla dividida, el servicio de accesibilidad no tiene por qué seguir prendido.
+            if (!it && legacy) SplitAccessibilityService.turnOff()
+        },
+        stringResource(if (legacy) R.string.split_legacy_help else R.string.split_help),
+    )
+    // Android 7 a 12: el servicio que divide, la app de cada mitad y Probar.
+    if (legacy) {
+        if (d.prefs.splitScreen) SplitLegacyOptions(d)
+        return
+    }
     if (d.prefs.splitScreen) {
         Label(stringResource(R.string.split_view), Typography.label, c.textMuted)
         Segmented(

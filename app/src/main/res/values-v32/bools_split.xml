@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 12L o más nuevo: SailDash divide sin servicio (SplitScreen); no aparece en Accesibilidad. -->
+    <bool name="split_service_enabled">false</bool>
+</resources>

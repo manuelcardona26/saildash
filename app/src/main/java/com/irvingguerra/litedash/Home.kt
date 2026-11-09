@@ -906,6 +906,8 @@ private fun Rail(
             }
         }
         if (prefs.barVolume == VolumePlace.END) Volume(volume, vertical = true)
+        // SailDash: Dividir, dos apps lado a lado (Android 7 a 12, con la pantalla dividida prendida).
+        SplitRailButton(prefs, button)
         if (voice != null && prefs.barVoice) IconButton(Icons.mic, { runCatching { context.startActivity(voice) } }, size = button)
         }
         // Siempre: sin Ajustes no habría cómo salir del inicio.
