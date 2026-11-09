@@ -213,6 +213,8 @@ private suspend fun submitReport(
     return ReportState.Sent(id.take(6).uppercase())
 }
 
+private const val SAILDASH_NO_REMOTE_REPORTS = true
+
 /** Escribe `reports/{id}` (nuevo, nunca pisa otro); regresa el id o null si no se pudo. */
 private suspend fun sendReport(
     context: Context,
@@ -224,6 +226,8 @@ private suspend fun sendReport(
     problem: ReportProblem,
     note: String,
 ): String? {
+    // SailDash: los reportes iban a la base de datos del autor de LiteDash; aquí no se manda nada.
+    if (SAILDASH_NO_REMOTE_REPORTS) return null
     // Lo de la música se arma aquí, en el hilo principal: su estado lo tocan los avisos que llegan ahí.
     val musicInfo = music.describe()
     val layout = dashboard.describe()

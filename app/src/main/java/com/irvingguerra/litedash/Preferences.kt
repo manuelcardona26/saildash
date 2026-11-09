@@ -66,6 +66,8 @@ internal object PrefKeys {
     const val BAR_FAVORITES = "bar_favorites"
     const val BAR_VOICE = "bar_voice"
     const val LOGO_INTRO = "logo_intro"
+    /** SailDash: fondo de espacio (tema Interestelar) cuando no hay foto de fondo. */
+    const val SPACE_BACKDROP = "space_backdrop"
     const val INTRO_MIGRATED = "intro_image_migrated"
     const val LIGHTS_KEY = "lights_key"
     const val LIGHTS_ON = "lights_on_value"
@@ -379,6 +381,8 @@ class Preferences(context: Context) {
 
     /** Al abrir LiteDash, tu imagen (o el logo de LiteDash) aparece unos instantes a pantalla completa. */
     var logoIntro by bool(PrefKeys.LOGO_INTRO, false)
+    /** SailDash: el fondo de estrellas y agujero negro (prendido de fábrica). */
+    var spaceBackdrop by bool(PrefKeys.SPACE_BACKDROP, true)
 
     /** Ajuste de la pantalla que dice si los faros están prendidos ("tabla/nombre"); null = sin aprender. */
     var lightsKey by string(PrefKeys.LIGHTS_KEY)

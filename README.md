@@ -1,89 +1,33 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="brand/png/litedash-horizontal-sobre-oscuro.png">
-    <img src="brand/png/litedash-horizontal-sobre-claro.png" alt="LiteDash" width="420">
-  </picture>
-</p>
+# SailDash
 
-<p align="center">
-  <b>Launcher para pantallas Android de autos y motos: ligero, rápido y elegante.</b><br>
-  <i>A light, fast and clean launcher for Android car and motorcycle screens.</i><br><br>
-  <a href="https://litedash.web.app/">Sitio</a> ·
-  <a href="https://github.com/IrvingGuerra/litedash/releases/latest">Descargar APK</a> ·
-  <a href="https://litedash.web.app/en/">English</a>
-</p>
+Launcher personal para la pantalla Android (Allwinner T3L, Android 7.1) de un **Chevrolet Sail**, con tema
+**Interestelar** y funciones para Colombia. Es una versión de [LiteDash](https://github.com/IrvingGuerra/litedash)
+de Irving Guerra (GPL-3.0); todo lo bueno de base es trabajo suyo.
 
-<p align="center">
-  <a href="https://ko-fi.com/irvingguerradev"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Apóyame en Ko-fi"></a>
-</p>
+Plan, diagnóstico de la pantalla y qué se puede y qué no: [`PLAN.md`](PLAN.md).
 
----
+## Lo que agrega SailDash
+- Tema Interestelar: fondo de estrellas y agujero negro dibujado una sola vez (no gasta procesador).
+- Pico y placa (Bogotá, Medellín, Cali u "Otra ciudad") con aviso al encender y festivos de Colombia calculados.
+  Las reglas se actualizan desde `app/src/main/res/raw/pico_y_placa.json` en GitHub sin reinstalar.
+- Nombre, ícono y paquete propios (`co.saildash.launcher`). Sin conteo anónimo ni reportes a servidores ajenos.
 
-## Qué es
-
-LiteDash es una pantalla de inicio limpia para las pantallas Android que se
-ponen en autos y motos, y también para tablets y teléfonos (de 6" a 11" o más).
-**Todo es opcional y viene apagado**, para que vuele hasta en una pantalla de
-1 GB de RAM: lo que está apagado no gasta memoria, batería ni permisos.
-
-**Tú acomodas tu inicio**: deja presionado para mover, agrandar o quitar piezas
-(tu auto, música, navegar, reloj, apps). Entre más grande la pantalla, más
-lugares. Sin anuncios, sin cuentas, sin rastreo: cada permiso se pide solo si
-activas la función que lo usa. Las funciones nuevas llegan dentro de la misma
-app, con actualizaciones frecuentes.
-
-## What it is (English)
-
-LiteDash is a clean home screen for Android car and motorcycle screens, tablets and phones
-(6"–11"+). **Everything is optional and off by default**, so it stays fast on
-low-end units. **You arrange your home**: long-press to move, resize or remove
-pieces (your car, music, navigation, clock, apps). No ads, no accounts, no
-tracking.
-
-## Instalar / Install
-
-1. Descarga el APK de [Releases](https://github.com/IrvingGuerra/litedash/releases/latest)
-   (pronto también en Google Play). Después se actualiza solo desde
-   Ajustes → Acerca de → Buscar actualizaciones.
-2. Instálalo y elige **LiteDash** como pantalla de inicio. En muchas pantallas de
-   auto esto está en Ajustes → Aplicaciones → Pantalla de inicio, o en un menú
-   del fabricante para elegir el launcher.
-
-Requiere Android 6.0 o más nuevo.
-
-## Compilar / Build
-
-JDK 17 y el SDK de Android con la plataforma 37.
+## Compilar
+JDK 17 y el SDK de Android (plataforma 37).
 
 ```bash
-./gradlew assemblePlayDebug        # versión para Google Play, depuración
-./gradlew assembleGithubRelease    # APK para GitHub
-tools/avd.sh                       # emuladores de pantallas de auto (1024×600 a 2000×1200)
-tools/spin.sh                      # qué tan fluido gira el auto (cuadros por segundo)
-tools/measure.sh                   # medir arranque, memoria y fluidez en un equipo conectado
+./gradlew assembleGithubRelease
 ```
 
-Hay dos variantes del mismo código: `play` (Google Play, sin permiso de
-internet) y `github` (APK; usa internet solo cuando tocas "Buscar
-actualizaciones" en Ajustes, para bajar e instalar la versión nueva).
+La llave de firma vive **fuera** del repositorio (`key.properties`, ignorado por git). Sin ella, firma de depuración.
 
-## Contribuir / Contributing
+## Publicar una actualización
+1. Cambia `VERSION_NAME` en `version.properties` y agrega su sección en `CHANGELOG.md`.
+2. `git tag v1.0.1 && git push --tags`
+3. GitHub Actions compila, firma y crea el Release. En el carro: Ajustes → Sistema → Actualizaciones.
 
-Lee [`CONTRIBUTING.md`](CONTRIBUTING.md). Los reportes de pantallas, sensores y
-cajas CAN son de lo más útil.
+Secretos del repositorio que necesita Actions: `SAILDASH_KEYSTORE_BASE64`, `SAILDASH_STORE_PASSWORD`,
+`SAILDASH_KEY_ALIAS`, `SAILDASH_KEY_PASSWORD`. En `gradle.properties`, `saildash.repo=usuario/repositorio`.
 
-## Licencia / License
-
-Código bajo [GPL-3.0](LICENSE). El nombre y el logo de LiteDash no están
-incluidos en esa licencia. *The LiteDash name and logo are not covered by the
-code license.*
-
-Las recetas para leer la presión de llantas de fábrica por OBD
-(`feature/obd/.../FactoryTires.kt`) son derivadas de [OBDb](https://github.com/OBDb),
-[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), adaptadas. *The factory
-tire-pressure recipes are derived from OBDb (CC BY-SA 4.0), adapted.*
-
-El control de la radio FM de las pantallas NWD (`feature/music/.../NwdRadio.kt`) usa la información
-de [OpenRadioFM](https://github.com/kapi21/OpenRadioFM) (Apache-2.0) y de
-[Radio+](https://github.com/edman01/radio-plus-open) (MIT). *NWD FM radio control is based on information
-from OpenRadioFM (Apache-2.0) and Radio+ (MIT).*
+## Licencia
+GPL-3.0 (igual que LiteDash). El nombre y logo de LiteDash no se usan en esta versión.

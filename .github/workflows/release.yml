@@ -1,10 +1,11 @@
 name: Lanzamiento
 
-# Al empujar una etiqueta vX.Y.Z[-beta.N|-rc.N].
-# Apagado (Irving, 2026-11-06: dejar GitHub Actions en $0). Las versiones se publican desde la Mac:
-# ./gradlew clean assembleGithubRelease (firma real) y `gh release create` con litedash-X.apk,
-# litedash.apk, SHA256SUMS.txt y la sección del CHANGELOG. Se puede correr a mano si hace falta.
+# SailDash: al empujar una etiqueta vX.Y.Z (igual a VERSION_NAME de version.properties), GitHub
+# compila el APK firmado y crea el Release. La pantalla del carro lo encuentra en
+# Ajustes → Sistema → Actualizaciones. Repos públicos: los minutos de Actions son gratis.
 on:
+  push:
+    tags: ["v*"]
   workflow_dispatch:
 
 permissions:
@@ -33,31 +34,30 @@ jobs:
 
       - name: Llave de firma
         env:
-          KEYSTORE_BASE64: ${{ secrets.LITEDASH_KEYSTORE_BASE64 }}
+          KEYSTORE_BASE64: ${{ secrets.SAILDASH_KEYSTORE_BASE64 }}
         run: |
           if [ -z "$KEYSTORE_BASE64" ]; then
-            echo "::error::Falta el secreto LITEDASH_KEYSTORE_BASE64: los APK de GitHub siempre van firmados con la llave real"
+            echo "::error::Falta el secreto SAILDASH_KEYSTORE_BASE64: los APK de GitHub siempre van firmados con la llave real"
             exit 1
           fi
-          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/litedash.jks"
-          echo "LITEDASH_STORE_FILE=$RUNNER_TEMP/litedash.jks" >> "$GITHUB_ENV"
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/saildash.jks"
+          echo "LITEDASH_STORE_FILE=$RUNNER_TEMP/saildash.jks" >> "$GITHUB_ENV"
 
       # Solo el APK de GitHub (Irving, 2026-11-03): el .aab para las tiendas se genera a mano
       # el día que él lo pida (`./gradlew bundlePlayRelease` con la llave real).
       - name: Compilar APK
         env:
-          LITEDASH_STORE_PASSWORD: ${{ secrets.LITEDASH_STORE_PASSWORD }}
-          LITEDASH_KEY_ALIAS: ${{ secrets.LITEDASH_KEY_ALIAS }}
-          LITEDASH_KEY_PASSWORD: ${{ secrets.LITEDASH_KEY_PASSWORD }}
-        run: ./gradlew assembleGithubRelease --console=plain
+          SAILDASH_REPO: ${{ github.repository }}
+          LITEDASH_STORE_PASSWORD: ${{ secrets.SAILDASH_STORE_PASSWORD }}
+          LITEDASH_KEY_ALIAS: ${{ secrets.SAILDASH_KEY_ALIAS }}
+          LITEDASH_KEY_PASSWORD: ${{ secrets.SAILDASH_KEY_PASSWORD }}
+        run: ./gradlew assembleGithubRelease -Psaildash.repo="$SAILDASH_REPO" --console=plain
 
       - name: Armar archivos y notas
         run: |
           mkdir -p out
-          cp app/build/outputs/apk/github/release/app-github-release.apk "out/litedash-$VERSION.apk"
+          cp app/build/outputs/apk/github/release/app-github-release.apk "out/saildash-$VERSION.apk"
           (cd out && sha256sum *.apk > SHA256SUMS.txt)
-          # El mismo APK con nombre fijo: el enlace directo de la web (releases/latest/download/litedash.apk).
-          cp "out/litedash-$VERSION.apk" out/litedash.apk
           # Notas = la sección de esta versión en CHANGELOG.md
           awk -v v="$VERSION" '
             $0 ~ "^## \\[" v "\\]" {on=1; next}
@@ -72,4 +72,4 @@ jobs:
         run: |
           extra=""
           case "$VERSION" in *-beta.*|*-rc.*) extra="--prerelease" ;; esac
-          gh release create "$GITHUB_REF_NAME" out/* --title "LiteDash $VERSION" --notes-file notes.md $extra
+          gh release create "$GITHUB_REF_NAME" out/* --title "SailDash $VERSION" --notes-file notes.md $extra

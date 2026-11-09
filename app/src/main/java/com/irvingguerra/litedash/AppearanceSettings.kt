@@ -257,6 +257,7 @@ private fun HomeSettings(d: Dependencies, onEdit: () -> Unit, onTemplates: () ->
         SwitchRow(stringResource(R.string.hide_status_bar), prefs.hideStatusBar, { prefs.hideStatusBar = it }, stringResource(R.string.hide_status_bar_help))
     }
     SettingsCard(stringResource(R.string.wallpaper_title), stringResource(R.string.wallpaper_help)) {
+        SwitchRow(stringResource(R.string.space_backdrop), prefs.spaceBackdrop, { prefs.spaceBackdrop = it }, stringResource(R.string.space_backdrop_help))
         WallpaperSettings()
     }
     // Sin título: el interruptor ya dice qué es.

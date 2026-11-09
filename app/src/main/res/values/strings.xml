@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="es">
-    <string name="app_name" translatable="false">LiteDash</string>
+    <string name="app_name" translatable="false">SailDash</string>
     <string name="your_car">Tu auto</string>
     <string name="my_car">Mi auto</string>
     <string name="name">Nombre</string>
@@ -58,7 +58,7 @@
     <string name="trip_max">máx. %1$s</string>
     <string name="tab_split">Pantalla dividida</string>
     <string name="split_title">Abrir mapa y música en pantalla dividida</string>
-    <string name="split_help">Al abrir Waze, Maps, Spotify u otra app de mapa o de música desde LiteDash, se abre en una mitad y tu auto (3D o en carretera) en la otra, sin los demás widgets. Solo con la pantalla acostada. Tu inicio no cambia: al regresar está como lo dejaste.</string>
+    <string name="split_help">Al abrir Waze, Maps, Spotify u otra app de mapa o de música desde SailDash, se abre en una mitad y tu auto (3D o en carretera) en la otra, sin los demás widgets. Solo con la pantalla acostada. Tu inicio no cambia: al regresar está como lo dejaste.</string>
     <string name="split_view">Al lado del mapa</string>
     <string name="split_side">Lado del auto</string>
     <string name="split_left">Izquierda</string>
@@ -144,38 +144,38 @@
     <string name="modules">Módulos</string>
     <string name="on_your_home">En tu inicio</string>
     <string name="hide_status_bar">Ocultarla</string>
-    <string name="hide_status_bar_help">La franja de hasta arriba con la hora y los avisos de Android (no es la de LiteDash). Para verla un momento, desliza desde arriba.</string>
+    <string name="hide_status_bar_help">La franja de hasta arriba con la hora y los avisos de Android (no es la de SailDash). Para verla un momento, desliza desde arriba.</string>
     <string name="stats_title">Estadísticas</string>
     <string name="stats_switch">Contar esta pantalla (anónimo)</string>
-    <string name="stats_help">Una vez al día manda un número al azar, la versión y de dónde la bajaste (GitHub o Play), Android, el idioma, el tamaño de la pantalla y desde qué día usas LiteDash, para saber cuánta gente usa LiteDash. Nada de ubicación, cuentas ni datos tuyos.</string>
+    <string name="stats_help">Una vez al día manda un número al azar, la versión y de dónde la bajaste (GitHub o Play), Android, el idioma, el tamaño de la pantalla y desde qué día usas SailDash, para saber cuánta gente usa SailDash. Nada de ubicación, cuentas ni datos tuyos.</string>
     <string name="back">Atrás</string>
     <string name="next">Siguiente</string>
     <string name="skip">Omitir</string>
     <string name="start">Empezar</string>
-    <string name="welcome_title">Bienvenido a LiteDash</string>
+    <string name="welcome_title">Bienvenido a SailDash</string>
     <string name="welcome_car">Empecemos por tu auto: ponle nombre y elige su color.</string>
     <string name="welcome_style_title">¿Cómo lo quieres?</string>
     <string name="welcome_style">Elige un acomodo para empezar. Después mueve y cambia de tamaño lo que quieras dejando presionado.</string>
     <string name="layout">Acomodo</string>
     <string name="welcome_change_later">Todo esto se cambia después en Ajustes.</string>
     <string name="welcome_home_title">Hazlo tu pantalla de inicio</string>
-    <string name="welcome_home">Así LiteDash aparece al encender la pantalla y al tocar el botón de inicio.</string>
-    <string name="make_home">Elegir LiteDash</string>
+    <string name="welcome_home">Así SailDash aparece al encender la pantalla y al tocar el botón de inicio.</string>
+    <string name="make_home">Elegir SailDash</string>
     <string name="welcome_home_help">Si tu pantalla no lo pregunta, búscalo en Ajustes → Aplicaciones → Aplicaciones predeterminadas → Pantalla de inicio, o en el menú del fabricante para elegir el launcher.</string>
-    <string name="welcome_already_home">LiteDash ya es tu pantalla de inicio</string>
+    <string name="welcome_already_home">SailDash ya es tu pantalla de inicio</string>
     <string name="check_updates">Buscar actualizaciones</string>
     <string name="checking">Buscando…</string>
     <string name="up_to_date">Tienes la versión más nueva.</string>
     <string name="update_error">No se pudo revisar. Revisa tu conexión e inténtalo otra vez.</string>
     <string name="update_download_error">No se pudo descargar: GitHub no respondió o se cortó la conexión. Inténtalo otra vez en unos minutos.</string>
-    <string name="new_version">LiteDash %1$s está lista</string>
+    <string name="new_version">SailDash %1$s está lista</string>
     <string name="download_install">Descargar e instalar · %.1f MB</string>
     <string name="downloading">Bajando… %d %%</string>
     <string name="installing">Abriendo el instalador de Android…</string>
-    <string name="install_permission">Android pide que permitas a LiteDash instalar apps (solo se usa para sus propias actualizaciones). Actívalo en la pantalla que se abrió y regresa.</string>
+    <string name="install_permission">Android pide que permitas a SailDash instalar apps (solo se usa para sus propias actualizaciones). Actívalo en la pantalla que se abrió y regresa.</string>
     <string name="already_allowed">Ya lo permití, instalar</string>
     <string name="install_error">Android no pudo instalarla: %1$s</string>
-    <string name="not_home_notice">LiteDash todavía no es tu pantalla de inicio.</string>
+    <string name="not_home_notice">SailDash todavía no es tu pantalla de inicio.</string>
     <string name="dont_ask">No preguntar</string>
     <string name="language">Idioma</string>
     <string name="language_system">Como el sistema</string>
@@ -191,7 +191,7 @@
     <string name="units_imperial">mph y millas</string>
     <string name="units_auto_now">Automático ahora: %1$s y %2$s (según tu idioma y región)</string>
     <string name="map_help">La app que abre el widget Navegar. Mientras navegas, el widget muestra la siguiente vuelta (usa el mismo acceso a notificaciones que la música).</string>
-    <string name="map_no_apps">Instala Waze o Google Maps para navegar desde LiteDash.</string>
+    <string name="map_no_apps">Instala Waze o Google Maps para navegar desde SailDash.</string>
     <string name="music">Música</string>
     <string name="music_help">Es la que suena en el widget Música y play la despierta. Sin app elegida, se muestra la que esté sonando (la radio tiene su propio widget).</string>
     <string name="template_cards">Tarjetas abajo</string>
@@ -270,7 +270,7 @@
     <string name="update_see">Ver</string>
     <string name="update_later">Después</string>
     <string name="wheel">Mandos al volante</string>
-    <string name="wheel_help">Presiona \"Aprender botón\" y luego el botón del volante: LiteDash lo reconoce y eliges qué hace. Los botones sin cambiar funcionan como siempre (música, volumen). Cualquier botón quita el modo estacionado.</string>
+    <string name="wheel_help">Presiona \"Aprender botón\" y luego el botón del volante: SailDash lo reconoce y eliges qué hace. Los botones sin cambiar funcionan como siempre (música, volumen). Cualquier botón quita el modo estacionado.</string>
     <string name="wheel_learn">Aprender botón</string>
     <string name="wheel_press">Presiona un botón del volante…</string>
     <string name="wheel_learned">Botón: %1$s</string>
@@ -302,10 +302,10 @@
     <string name="brightness_sun">Día y noche</string>
     <string name="brightness_day">Día</string>
     <string name="brightness_night">Noche</string>
-    <string name="brightness_all_apps_help">Solo en LiteDash no pide nada. En todas las apps cambia el brillo de la pantalla y Android pide permiso para modificar ajustes del sistema.</string>
-    <string name="brightness_only_litedash">Solo en LiteDash</string>
+    <string name="brightness_all_apps_help">Solo en SailDash no pide nada. En todas las apps cambia el brillo de la pantalla y Android pide permiso para modificar ajustes del sistema.</string>
+    <string name="brightness_only_litedash">Solo en SailDash</string>
     <string name="brightness_all_apps">En todas las apps</string>
-    <string name="brightness_permission">Falta el permiso: activa \"Modificar ajustes del sistema\" para LiteDash.</string>
+    <string name="brightness_permission">Falta el permiso: activa \"Modificar ajustes del sistema\" para SailDash.</string>
     <string name="car_home_help">En el inicio gira el auto con el dedo. Un toque lo muestra en grande (o sus llantas, si así lo elegiste en Llantas).</string>
     <string name="car_update">Actualizar · %1$.1f MB</string>
     <string name="car_update_notice">Hay un modelo 3D nuevo de tu %1$s</string>
@@ -414,7 +414,7 @@
     <string name="logo_remove">Quitar imagen</string>
     <string name="logo_intro">Animación de entrada</string>
     <string name="bar_position">Barra de apps</string>
-    <string name="bar_position_help">La de LiteDash, con la hora y tus apps. Automática: a la izquierda si la pantalla está acostada, abajo si está parada.</string>
+    <string name="bar_position_help">La de SailDash, con la hora y tus apps. Automática: a la izquierda si la pantalla está acostada, abajo si está parada.</string>
     <string name="bar_auto">Automática</string>
     <string name="bar_side">Izquierda</string>
     <string name="bar_bottom">Abajo</string>
@@ -436,15 +436,15 @@
     <string name="tab_updates">Actualizaciones</string>
     <string name="tile_car_help">Tu auto en 3D; gíralo con el dedo y un toque lo agranda</string>
     <string name="tile_road_help">Tu auto en carretera con la velocidad (OBD o GPS), los km del viaje y tus llantas</string>
-    <string name="tile_image_help">Una foto tuya, como el logo de tu marca; sin foto, el logo de LiteDash</string>
+    <string name="tile_image_help">Una foto tuya, como el logo de tu marca; sin foto, el logo de SailDash</string>
     <string name="image_title">Imagen del widget</string>
-    <string name="image_help">Elígela de tu galería: cada widget de imagen tiene la suya. LiteDash no trae logos de marcas.</string>
-    <string name="image_empty">Sin foto se muestra el logo de LiteDash.</string>
+    <string name="image_help">Elígela de tu galería: cada widget de imagen tiene la suya. SailDash no trae logos de marcas.</string>
+    <string name="image_empty">Sin foto se muestra el logo de SailDash.</string>
     <string name="tile_music_help">Lo que suena, con controles; un toque la abre en grande</string>
     <string name="tile_clock_help">Hora, fecha y clima</string>
     <string name="tile_phone_help">Abre el marcador</string>
-    <string name="logo_intro_help">Al abrir LiteDash, tu imagen (como el logo de tu marca) aparece unos segundos. Es aparte de los widgets de imagen.</string>
-    <string name="intro_no_image">Sin imagen se muestra el logo de LiteDash.</string>
+    <string name="logo_intro_help">Al abrir SailDash, tu imagen (como el logo de tu marca) aparece unos segundos. Es aparte de los widgets de imagen.</string>
+    <string name="intro_no_image">Sin imagen se muestra el logo de SailDash.</string>
     <string name="unit_rpm" translatable="false">rpm</string>
     <string name="unit_c" translatable="false">°C</string>
     <string name="unit_f" translatable="false">°F</string>
@@ -511,7 +511,7 @@
     <string name="obd_ble_failed">Android no dejó buscar ahorita. Espera unos segundos y vuelve a intentar.</string>
     <!-- Luces del auto como señal de noche (se aprenden de la pantalla). -->
     <string name="night_lights">Luces del auto</string>
-    <string name="lights_help">Cada pantalla avisa de los faros a su manera: LiteDash lo aprende comparando sus ajustes con las luces apagadas y prendidas. Sin señal, usa la hora del sol.</string>
+    <string name="lights_help">Cada pantalla avisa de los faros a su manera: SailDash lo aprende comparando sus ajustes con las luces apagadas y prendidas. Sin señal, usa la hora del sol.</string>
     <string name="lights_not_learned">Todavía no se aprende la señal de las luces.</string>
     <string name="lights_learn">Aprender luces</string>
     <string name="lights_forget">Olvidar</string>
@@ -534,7 +534,7 @@
     <string name="bt_pick_help">¿Qué app de tu pantalla reproduce la música del celular?</string>
     <string name="bt_own_help">El título y el artista los manda tu pantalla; si no aparecen, es que su app de Bluetooth no los envía.</string>
     <string name="bt_permission">Dar permisos de Bluetooth</string>
-    <string name="bt_permission_help">Para buscar y vincular celulares, LiteDash necesita permiso del Bluetooth (buscar cerca y emparejar).</string>
+    <string name="bt_permission_help">Para buscar y vincular celulares, SailDash necesita permiso del Bluetooth (buscar cerca y emparejar).</string>
     <string name="bt_connected">Celular conectado: %1$s</string>
     <string name="bt_not_connected">Ningún celular conectado todavía.</string>
     <string name="bt_screen_name">Esta pantalla se llama «%1$s»: búscala desde el celular.</string>
@@ -564,7 +564,7 @@
     <string name="radio_mode_title">Cómo escuchas la radio</string>
     <string name="radio_mode_help">Elige una: es la que suena en el widget Radio. Al cambiar, la otra se calla.</string>
     <string name="radio_fm_app">Radio de tu pantalla</string>
-    <string name="radio_fm_app_help">La app de radio FM que trae tu pantalla: LiteDash la controla desde el widget Radio (play, siguiente, anterior y abrirla).</string>
+    <string name="radio_fm_app_help">La app de radio FM que trae tu pantalla: SailDash la controla desde el widget Radio (play, siguiente, anterior y abrirla).</string>
     <string name="radio_internet_help">Estaciones de tu zona por GPS y de todo el mundo, con favoritas. Necesita internet; si no tienes, usa la radio de tu pantalla.</string>
     <string name="tab_health">Salud</string>
     <string name="tab_more">Más</string>
@@ -641,7 +641,7 @@
     <string name="tires_source_help">Receptor USB: los kits TPMS para pantallas de auto. Bluetooth: tapones o sensores con Bluetooth. Demo: datos de prueba para ver cómo se ve.</string>
     <string name="tires_grant">Dar permiso</string>
     <string name="tires_retry">Reintentar</string>
-    <string name="tires_usb_help">Si la app de llantas de tu pantalla se queda con el receptor, desconéctalo y vuelve a conectarlo, y elige LiteDash con «usar siempre».</string>
+    <string name="tires_usb_help">Si la app de llantas de tu pantalla se queda con el receptor, desconéctalo y vuelve a conectarlo, y elige SailDash con «usar siempre».</string>
     <string name="tires_source_obd">Auto (OBD)</string>
     <string name="tires_obd_help">Lee los sensores de fábrica de tu auto con el adaptador OBD del Taller: no hace falta otro kit. No todos los autos lo dan; se prueba según la marca.</string>
     <string name="tires_obd_connected">Sensores de fábrica · %1$s</string>
@@ -695,7 +695,7 @@
     <string name="tires_banner">Aviso arriba del inicio</string>
     <string name="tires_alerts_off_note">Con los avisos apagados no salen el aviso ni el testigo</string>
     <string name="tires_diagnostics">Diagnóstico</string>
-    <string name="tires_diagnostics_help">Lo que llega del receptor o de sensores que LiteDash no reconoce; cópialo y mándanoslo</string>
+    <string name="tires_diagnostics_help">Lo que llega del receptor o de sensores que SailDash no reconoce; cópialo y mándanoslo</string>
     <string name="tires_diagnostics_empty">Nada por ahora</string>
     <string name="tires_copy">Copiar</string>
     <string name="tires_tile">Widget Llantas</string>
@@ -734,9 +734,9 @@
     <string name="music_mode_title">Cómo escuchas música</string>
     <string name="music_mode_help">Elige uno: es el que suena en el widget Música. Al cambiar, el anterior se pausa.</string>
     <string name="image_no_permission">Sin el permiso de archivos no se puede buscar en la memoria.</string>
-    <string name="open_on_boot">Abrir LiteDash al encender</string>
-    <string name="open_on_boot_help">Para pantallas que regresan su launcher de fábrica al apagar y encender el auto: LiteDash se pone al frente solo. Si tu pantalla tiene en sus ajustes la opción «Launcher predeterminado», elige LiteDash ahí también.</string>
-    <string name="open_on_boot_permission">Falta el permiso «Mostrar sobre otras apps»: sin él, Android no deja que LiteDash se abra solo.</string>
+    <string name="open_on_boot">Abrir SailDash al encender</string>
+    <string name="open_on_boot_help">Para pantallas que regresan su launcher de fábrica al apagar y encender el auto: SailDash se pone al frente solo. Si tu pantalla tiene en sus ajustes la opción «Launcher predeterminado», elige SailDash ahí también.</string>
+    <string name="open_on_boot_permission">Falta el permiso «Mostrar sobre otras apps»: sin él, Android no deja que SailDash se abra solo.</string>
     <string name="open_on_boot_grant">Dar permiso</string>
     <string name="bar_right">Derecha</string>
     <string name="bar_size">TAMAÑO</string>
@@ -754,4 +754,36 @@
     <string name="bar_favorites_help">Cuáles salen: Ajustes → Apps → Favoritas.</string>
     <string name="bar_voice">Botón de voz</string>
     <string name="bar_settings_always">Ajustes siempre está en la barra: sin él no habría cómo salir del inicio.</string>
+    <!-- SailDash: pico y placa -->
+    <string name="pico_title">Pico y placa</string>
+    <string name="pico_help">Verifica siempre en la Secretaría de Movilidad de tu ciudad: las rotaciones cambian cada semestre. No aplica domingos ni festivos (se calculan solos).</string>
+    <string name="pico_enable">Avisarme de pico y placa</string>
+    <string name="pico_enable_help">Al encender el carro sale el aviso en el inicio si hoy tienes restricción, y desde las 5 p. m. si la tienes mañana.</string>
+    <string name="pico_city">Ciudad</string>
+    <string name="pico_custom_city">Otra ciudad</string>
+    <string name="pico_custom_days">¿Qué días tienes pico y placa?</string>
+    <string name="pico_custom_hours">Horario</string>
+    <string name="pico_digit">Último dígito de tu placa</string>
+    <string name="pico_mon">Lun</string>
+    <string name="pico_tue">Mar</string>
+    <string name="pico_wed">Mié</string>
+    <string name="pico_thu">Jue</string>
+    <string name="pico_fri">Vie</string>
+    <string name="pico_sat">Sáb</string>
+    <string name="pico_hours">Horario: %1$s</string>
+    <string name="pico_next">Próximos: %1$s</string>
+    <string name="pico_none_soon">Sin pico y placa en los próximos días.</string>
+    <string name="pico_outdated">Estas reglas ya vencieron: actualízalas o revisa la nueva rotación.</string>
+    <string name="pico_valid_until">Reglas vigentes hasta %1$s</string>
+    <string name="pico_check">Buscar reglas nuevas</string>
+    <string name="pico_checking">Buscando…</string>
+    <string name="pico_rules_updated">Reglas actualizadas</string>
+    <string name="pico_rules_same">Ya tienes las más nuevas</string>
+    <string name="pico_now">¡Estás en pico y placa ahora! (%1$s)</string>
+    <string name="pico_today">Hoy tienes pico y placa · %1$s</string>
+    <string name="pico_tomorrow">Mañana tienes pico y placa · %1$s</string>
+    <string name="pico_ok">Entendido</string>
+    <!-- SailDash: tema Interestelar -->
+    <string name="space_backdrop">Fondo Interestelar</string>
+    <string name="space_backdrop_help">Estrellas y un agujero negro con su disco dorado detrás del inicio, en el tema oscuro. Se dibuja una vez y no gasta procesador. Si eliges una foto de fondo, se usa la foto.</string>
 </resources>

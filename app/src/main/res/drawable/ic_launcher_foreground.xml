@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generado por brand/fuentes/construir.py: no editar a mano. -->
+<!-- SailDash: agujero negro con su disco dorado (zona segura de 66dp centrada). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp"
     android:viewportWidth="108" android:viewportHeight="108">
-    <group android:translateX="10.837" android:translateY="11.174"
-        android:scaleX="0.3372" android:scaleY="0.3372">
-        <path android:fillColor="#F4F6F8" android:pathData="M 60 109 H 100 A 18 18 0 0 1 118 127 V 127 A 18 18 0 0 1 100 145 H 60 A 18 18 0 0 1 42 127 V 127 A 18 18 0 0 1 60 109 Z M 132 127 A 17 17 0 1 1 166 127 A 17 17 0 1 1 132 127 Z" />
-        <path android:fillColor="#FFB224" android:pathData="M 180 127 A 17 17 0 1 1 214 127 A 17 17 0 1 1 180 127 Z" />
-    </group>
+    <path android:fillColor="#00000000" android:strokeColor="#FFD68C" android:strokeWidth="3.2"
+        android:pathData="M20,54 A34,6 0 1,1 88,54 A34,6 0 1,1 20,54 Z" />
+    <path android:fillColor="#00000000" android:strokeColor="#F7B955" android:strokeWidth="5"
+        android:pathData="M54,33.5 A20.5,20.5 0 1,1 53.99,33.5 Z" />
+    <path android:fillColor="#000000"
+        android:pathData="M54,38 A16,16 0 1,1 53.99,38 Z" />
+    <path android:fillColor="#00000000" android:strokeColor="#FFECBE" android:strokeWidth="1"
+        android:pathData="M54,37.4 A16.6,16.6 0 1,1 53.99,37.4 Z" />
+    <path android:fillColor="#00000000" android:strokeColor="#FFE3A6" android:strokeWidth="3.2"
+        android:pathData="M20,54 A34,6 0 0,0 88,54" />
 </vector>

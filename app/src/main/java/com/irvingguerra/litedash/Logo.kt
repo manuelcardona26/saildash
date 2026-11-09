@@ -340,7 +340,12 @@ fun LogoIntro(prefs: Preferences, onDone: () -> Unit) {
 @Composable
 fun HomeWallpaper(prefs: Preferences) {
     val c = LocalColors.current
-    val image = rememberImage(WALLPAPER).image ?: return
+    val image = rememberImage(WALLPAPER).image
+    if (image == null) {
+        // SailDash: sin foto propia, el espacio (solo en oscuro: de día se lee mejor el fondo liso).
+        if (c.dark && prefs.spaceBackdrop) SpaceBackdrop(Modifier.fillMaxSize())
+        return
+    }
     Box(Modifier.fillMaxSize()) {
         Image(image, null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
         Box(Modifier.fillMaxSize().background(c.background.copy(alpha = 0.4f)))

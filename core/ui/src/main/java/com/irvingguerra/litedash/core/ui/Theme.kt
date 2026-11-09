@@ -48,12 +48,14 @@ import androidx.compose.ui.unit.sp
 
 // Colores de la marca (los mismos de brand/logo).
 object Brand {
-    val LightWhite = Color(0xFFF4F6F8)
-    val Amber = Color(0xFFFFB224)
+    val LightWhite = Color(0xFFEAF0F7)
+    /** SailDash: el dorado del disco del agujero negro (tema Interestelar). */
+    val Amber = Color(0xFFF5B754)
 }
 
 /** Colores que se repiten entre los temas: tinta (fondo oscuro), tinta y papel del claro, y su ámbar. */
-private val Ink = Color(0xFF0E1013)
+// SailDash: tinta de espacio profundo (un negro con un toque de azul).
+private val Ink = Color(0xFF05080F)
 private val LightInk = Color(0xFF16181C)
 private val LightPaper = Color(0xFFE9ECF0)
 private val LightAmber = Color(0xFFE59500)
@@ -104,11 +106,11 @@ private fun contrast(a: Color, b: Color): Float {
 val DarkColors = Colors(
     dark = true,
     background = Ink,
-    surface = Color(0xFF1A1D22),
-    surfaceHigh = Color(0xFF262A31),
-    line = Color(0xFF2A2F37),
+    surface = Color(0xFF0E141E),
+    surfaceHigh = Color(0xFF18212F),
+    line = Color(0xFF1F2A3A),
     text = Brand.LightWhite,
-    textMuted = Color(0xFF8B939E),
+    textMuted = Color(0xFF8594A8),
     accent = Brand.Amber,
     danger = Color(0xFFFF6B5E),
     warning = Brand.Amber,

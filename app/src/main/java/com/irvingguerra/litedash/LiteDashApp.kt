@@ -47,8 +47,10 @@ class LiteDashApp : Application() {
             weather = WeatherRepository(this, prefs),
             trip = TripRepository(this, bus),
             reminders = ReminderRepository(this),
+            picoPlaca = PicoPlacaRepository(this, BuildConfig.PICO_URL),
             wheel = WheelKeys(this, prefs),
-            stats = Stats(this) { prefs.stats },
+            // SailDash: sin el conteo diario (iba a la base de datos de LiteDash).
+            stats = Stats(this) { false },
             pro = ProAccess(this),
             bus = bus,
             obdLazy = lazy { ObdRepository(this, bus) },

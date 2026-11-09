@@ -41,6 +41,12 @@ fun signingValue(key: String, env: String): String? = signing.getProperty(key) ?
 // emulador: ./gradlew ... -Pcatalog=http://10.0.2.2:8765/catalogo.json
 val CATALOG_URL = (findProperty("catalog") as String?)
     ?: "https://github.com/IrvingGuerra/litedash/releases/download/catalogo/catalogo.json"
+// SailDash: el repositorio de GitHub de donde salen las actualizaciones y las reglas de pico y placa
+// ("usuario/repositorio" en gradle.properties: saildash.repo). Vacío o sin cambiar = apagado.
+val SAILDASH_REPO: String = (findProperty("saildash.repo") as String?)?.trim().orEmpty()
+    .takeIf { it.isNotEmpty() && !it.startsWith("TU_USUARIO") }.orEmpty()
+val UPDATES_API = if (SAILDASH_REPO.isEmpty()) "" else "https://api.github.com/repos/$SAILDASH_REPO/releases?per_page=20"
+val PICO_URL = if (SAILDASH_REPO.isEmpty()) "" else "https://raw.githubusercontent.com/$SAILDASH_REPO/main/app/src/main/res/raw/pico_y_placa.json"
 val hasSigning = signingValue("storeFile", "LITEDASH_STORE_FILE") != null
 
 android {
@@ -48,7 +54,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.irvingguerra.litedash"
+        applicationId = "co.saildash.launcher"
         minSdk = 23
         targetSdk = 37
         versionCode = versionCodeFrom(appVersionName)
@@ -73,6 +79,7 @@ android {
     }
 
     defaultConfig {
+        buildConfigField("String", "PICO_URL", "\"$PICO_URL\"")
         buildConfigField("String", "RELEASE_NOTES", "\"" + releaseNotes.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n") + "\"")
     }
 
@@ -89,7 +96,7 @@ android {
             dimension = "channel"
             buildConfigField("String", "CHANNEL", "\"github\"")
             buildConfigField("String", "CATALOG_URL", "\"$CATALOG_URL\"")
-            buildConfigField("String", "UPDATES_URL", "\"https://api.github.com/repos/IrvingGuerra/litedash/releases?per_page=20\"")
+            buildConfigField("String", "UPDATES_URL", "\"$UPDATES_API\"")
         }
     }
 

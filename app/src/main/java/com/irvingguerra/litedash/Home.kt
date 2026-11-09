@@ -144,6 +144,8 @@ class Dependencies(
     val weather: WeatherRepository,
     val trip: TripRepository,
     val reminders: ReminderRepository,
+    /** SailDash: pico y placa (ciudad, dígito y reglas). */
+    val picoPlaca: PicoPlacaRepository,
     val wheel: WheelKeys,
     val stats: Stats,
     /** LiteDash Pro (en prueba): [ProAccess.isPro] lo leen las funciones Pro. */
@@ -560,6 +562,7 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
                 Column(Modifier.onSizeChanged { promptsHeight = it.height }) {
                     if (d.prefs.welcomeSeen && !editing) {
                         if (!d.prefs.dontAskHome && !isShortScreen()) HomePrompt(d.prefs, revision)
+                        PicoPlacaBanner(d.picoPlaca)
                         EngineAlertBanner(d, engineAlert)
                         TiresAlertBanner(d, actions.onTires)
                         if (!isShortScreen()) ReminderBanner(d.reminders)

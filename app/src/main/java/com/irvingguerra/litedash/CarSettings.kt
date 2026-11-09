@@ -72,7 +72,7 @@ internal fun CarSettings(d: Dependencies) {
     LaunchedEffect(cars.hasCatalog) {
         if (cars.hasCatalog) runCatching { cars.catalog() }.onSuccess { catalog = it }.onFailure { unreachable = true }
     }
-    val tab = tabs(listOf(R.string.tab_my_car, R.string.tab_models, R.string.reminders), "car")
+    val tab = tabs(listOf(R.string.tab_my_car, R.string.tab_models, R.string.reminders, R.string.pico_title), "car")
 
     if (tab == 0) SettingsCard {
         Box(Modifier.fillMaxWidth().widthIn(max = 520.dp).aspectRatio(1.8f)) {
@@ -111,6 +111,9 @@ internal fun CarSettings(d: Dependencies) {
     }
     if (tab == 2) SettingsCard(stringResource(R.string.reminders), stringResource(R.string.reminders_help)) {
         ReminderSettings(d.reminders)
+    }
+    if (tab == 3) SettingsCard(stringResource(R.string.pico_title), stringResource(R.string.pico_help)) {
+        PicoPlacaSettings(d.picoPlaca)
     }
 }
 
