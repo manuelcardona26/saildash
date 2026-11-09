@@ -17,6 +17,9 @@ import java.security.MessageDigest
 /** Cómo terminó un intento de activar un código. */
 enum class ProResult { ACTIVE, INVALID, TAKEN, OFFLINE }
 
+/** SailDash: Pro nunca habla con el servidor de LiteDash (Firestore del proyecto "litedash"). */
+private const val SAILDASH_NO_PRO = true
+
 /**
  * LiteDash Pro en prueba: se activa con un código que el dueño guarda en Firestore como
  * `pro_codes/{sha256}` (el código nunca sale de la pantalla, solo su huella). Un código se liga
@@ -41,6 +44,8 @@ class ProAccess(private val context: Context) {
 
     /** Al arrancar y al volver al inicio: lee lo guardado y, si toca, revisa el código en la nube. */
     suspend fun refresh() = lock.withLock {
+        // SailDash: la nube de Pro es de LiteDash; aquí no se revisa nada y Pro queda apagado.
+        if (SAILDASH_NO_PRO) return@withLock
         val now = SystemClock.elapsedRealtime()
         val canAttempt = lastAttempt == 0L || now - lastAttempt >= RECHECK_MS
         val state = withContext(Dispatchers.IO) { revalidate(canAttempt) }
@@ -51,6 +56,8 @@ class ProAccess(private val context: Context) {
 
     /** Activa [code] en esta pantalla (lo liga si está libre). */
     suspend fun activate(code: String): ProResult = lock.withLock {
+        // SailDash: igual que en refresh, sin la nube de LiteDash.
+        if (SAILDASH_NO_PRO) return@withLock ProResult.OFFLINE
         val result = withContext(Dispatchers.IO) { bind(code) }
         if (result == ProResult.ACTIVE) {
             isPro = true

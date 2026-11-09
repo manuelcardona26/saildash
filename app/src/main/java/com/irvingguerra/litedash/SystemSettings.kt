@@ -50,8 +50,6 @@ import com.irvingguerra.litedash.core.ui.Label
 import com.irvingguerra.litedash.core.ui.LocalColors
 import com.irvingguerra.litedash.core.ui.Radius
 import com.irvingguerra.litedash.core.ui.Switch
-import com.irvingguerra.litedash.core.ui.SwitchRow
-import com.irvingguerra.litedash.core.ui.TextInput
 import com.irvingguerra.litedash.core.ui.Typography
 import com.irvingguerra.litedash.feature.car.CAR_ASPECT
 import com.irvingguerra.litedash.feature.car.CarStill
@@ -62,13 +60,13 @@ import kotlinx.coroutines.launch
 
 /** Pestañas de Sistema; Actualizaciones va primero (ahí abre el aviso de versión nueva). */
 internal enum class SystemTab(val title: Int) {
-    UPDATES(R.string.tab_updates), ANDROID(R.string.android_settings), STATS(R.string.stats_title), YOUR_SCREEN(R.string.tab_your_screen),
+    UPDATES(R.string.tab_updates), ANDROID(R.string.android_settings), DIAGNOSTICS(R.string.diagnostico_tab), YOUR_SCREEN(R.string.tab_your_screen),
 }
 
 /**
- * Sistema: lo de LiteDash y de la pantalla en pestañas. Actualizaciones (la versión con sus
- * novedades y, en la de GitHub, buscar la siguiente), atajos a Ajustes de Android, estadísticas
- * anónimas e info de tu pantalla.
+ * Sistema: lo de SailDash y de la pantalla en pestañas. Actualizaciones (la versión con sus
+ * novedades y, en la de GitHub, buscar la siguiente), atajos a Ajustes de Android, el diagnóstico
+ * de la pantalla (radio, ecualizador, reversa, luces) e info de tu pantalla.
  */
 @Composable
 internal fun SystemSettings(d: Dependencies) {
@@ -78,70 +76,24 @@ internal fun SystemSettings(d: Dependencies) {
             if (d.updater.available) SettingsCard { Updates(d.updater) }
         }
         SystemTab.ANDROID -> AndroidSettings()
-        SystemTab.STATS -> SettingsCard {
-            SwitchRow(stringResource(R.string.stats_switch), d.prefs.stats, { d.prefs.stats = it }, stringResource(R.string.stats_help))
-        }
-        SystemTab.YOUR_SCREEN -> ScreenInfo(d)
+        // SailDash: en lugar de las estadísticas anónimas (iban a la base de datos de LiteDash).
+        SystemTab.DIAGNOSTICS -> DiagnosticsSettings()
+        SystemTab.YOUR_SCREEN -> ScreenInfo()
     }
 }
 
-/** La pantalla en unas líneas, LiteDash Pro ([ProCard]) y "Enviar un reporte" ([SendReport]). */
+/**
+ * La pantalla en unas líneas. SailDash: sin LiteDash Pro ni "Enviar un reporte" (los dos hablaban
+ * con el servidor de LiteDash); el detalle está en Diagnóstico.
+ */
 @Composable
-private fun ScreenInfo(d: Dependencies) {
+private fun ScreenInfo() {
     val context = LocalContext.current
     SettingsCard {
         val lines = remember { screenLines(context) }
         for (line in lines) Label(line, Typography.body, maxLines = 2)
     }
-    ProCard(d.pro)
-    SendReport(d.music, d.pro, d.dashboard)
 }
-
-/** LiteDash Pro en prueba: activarlo con un código o, si ya está, quitarlo de esta pantalla (solo lo local). */
-@Composable
-private fun ProCard(pro: ProAccess) {
-    val c = LocalColors.current
-    val scope = rememberCoroutineScope()
-    var code by remember { mutableStateOf("") }
-    var checking by remember { mutableStateOf(false) }
-    var error by remember { mutableStateOf<Int?>(null) }
-    SettingsCard(stringResource(R.string.pro_title)) {
-        if (pro.isPro) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Icon(Icons.done, c.accent, 24.dp)
-                Label(stringResource(R.string.pro_active), Typography.body)
-            }
-            Confirmed(stringResource(R.string.pro_remove), stringResource(R.string.pro_remove_question)) { scope.launch { pro.remove() } }
-        } else {
-            Label(stringResource(R.string.pro_help), Typography.small, c.textMuted)
-            TextInput(code, { code = it.take(PRO_CODE_MAX); error = null }, stringResource(R.string.pro_code), Modifier.fillMaxWidth())
-            val idle = !checking && ProCode.normalize(code).isNotEmpty()
-            Button(
-                stringResource(if (checking) R.string.pro_checking else R.string.pro_activate),
-                {
-                    if (!idle) return@Button
-                    checking = true
-                    error = null
-                    scope.launch {
-                        error = when (pro.activate(code)) {
-                            ProResult.ACTIVE -> null.also { code = "" }
-                            ProResult.INVALID -> R.string.pro_invalid
-                            ProResult.TAKEN -> R.string.pro_taken
-                            ProResult.OFFLINE -> R.string.pro_offline
-                        }
-                        checking = false
-                    }
-                },
-                Modifier.graphicsLayer { alpha = if (idle) 1f else 0.45f },
-                primary = true,
-            )
-            (error ?: R.string.pro_expired.takeIf { pro.expired })?.let { Label(stringResource(it), Typography.small, c.danger) }
-        }
-    }
-}
-
-/** Largo máximo de lo que se escribe como código. */
-private const val PRO_CODE_MAX = 64
 
 /** La versión en grande, sus novedades y tu auto a la derecha (como DuduAuto). */
 @Composable

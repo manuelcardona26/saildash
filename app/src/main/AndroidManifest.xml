@@ -44,6 +44,8 @@
     <uses-feature android:name="android.hardware.usb.host" android:required="false" />
     <!-- Brillo de día y noche en todas las apps: solo si lo activas (Android lo pide aparte). -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" tools:ignore="ProtectedPermissions" />
+    <!-- Diagnóstico: probar el ecualizador global de Android (permiso normal, sin pregunta). -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <application
         android:name=".LiteDashApp"
