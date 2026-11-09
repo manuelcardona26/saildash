@@ -75,6 +75,8 @@ class LiteDashApp : Application() {
             override fun onRemoved(notification: StatusBarNotification) = dependencies.navigation.removed(notification)
         }
         watchUsbOffer()
+        // SailDash: la música en reversa (lee sus ajustes fuera del hilo principal; escucha solo si está prendida y aprendida).
+        ReverseWatcher.start(this)
     }
 
     /**

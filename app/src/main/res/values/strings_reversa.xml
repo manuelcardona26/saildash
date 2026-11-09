@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash: la música en reversa (Ajustes → Tu auto → Reversa). -->
+<resources>
+    <string name="reversa_title">Reversa</string>
+    <string name="reversa_help">La cámara la maneja la pantalla y siempre queda encima: SailDash no la toca. Esto solo cambia el volumen de la música de las apps (Spotify, CarPlay con AutoKit, NewPipe, USB). En algunas pantallas la radio y la música por Bluetooth van por el chip de sonido y no siguen el volumen de Android: para esas, usa la opción de fábrica \"volumen en reversa\", si tu pantalla la tiene.</string>
+    <string name="reversa_music">Música al meter reversa</string>
+    <string name="reversa_none">No tocar</string>
+    <string name="reversa_lower">Bajar un poco</string>
+    <string name="reversa_half">Bajar a la mitad</string>
+    <string name="reversa_mute">Silenciar</string>
+    <string name="reversa_restore">Devolver el volumen al quitar la reversa</string>
+    <string name="reversa_restore_help">Vuelve como estaba 2 segundos después de quitarla. Si lo mueves en plena reversa, queda como lo dejaste.</string>
+    <string name="reversa_test">Probar</string>
+    <string name="reversa_testing">Probando…</string>
+    <string name="reversa_test_help">Pon música y toca Probar: suena 3 segundos como en reversa y vuelve.</string>
+    <string name="reversa_fixed">Tu pantalla tiene fijo el volumen de Android y SailDash no puede cambiarlo. Usa la opción de fábrica \"volumen en reversa\".</string>
+    <string name="reversa_signal">Cómo sabe SailDash que metiste reversa</string>
+    <string name="reversa_not_learned">Todavía no sé cuándo metes reversa. Enséñamelo una vez, con el carro encendido: toca Aprender la reversa, métela y déjala unos segundos.</string>
+    <string name="reversa_learn">Aprender la reversa</string>
+    <string name="reversa_relearn">Volver a aprender</string>
+    <string name="reversa_forget">Olvidar</string>
+    <string name="reversa_listening">Ya anoté cómo está todo sin reversa. Ahora mete reversa y déjala puesta unos segundos: la cámara va a tapar la pantalla, es normal. Quedan %1$d s.</string>
+    <string name="reversa_noticed">¡Ya noté el cambio! Deja la reversa un momentico más… (%1$d s)</string>
+    <string name="reversa_choose">Cambiaron varios ajustes; elige el de la reversa (si no funciona, aprende otra vez):</string>
+    <string name="reversa_learned">¡Listo! Ya sé cuándo metes reversa · %1$s</string>
+    <string name="reversa_now_on">En reversa ahora · %1$s</string>
+    <string name="reversa_now_off">Sin reversa ahora · %1$s</string>
+    <string name="reversa_broadcast">aviso %1$s</string>
+    <string name="reversa_nothing">No cambió nada: tu pantalla no les avisa a las apps cuando entra la reversa (o no alcanzaste a meterla). Intenta otra vez; si sigue igual, usa la opción de fábrica \"volumen en reversa\".</string>
+    <string name="reversa_retry">Intentar otra vez</string>
+</resources>
