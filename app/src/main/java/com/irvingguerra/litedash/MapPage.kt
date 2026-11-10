@@ -276,7 +276,7 @@ private fun QuickButtons(d: Dependencies, apps: List<App>, onClean: () -> Unit) 
     val context = LocalContext.current
     val links = rememberLinks()
     QuickButton(if (links.wifi) IceIcons.wifi else IceIcons.wifiOff, Modifier.offset(776.dp, 22.dp), on = links.wifi) { openSystemSettings(context, Settings.ACTION_WIFI_SETTINGS) }
-    QuickButton(IceIcons.bluetooth, Modifier.offset(836.dp, 22.dp), on = links.bluetooth) { openSystemSettings(context, Settings.ACTION_BLUETOOTH_SETTINGS) }
+    QuickButton(IceIcons.bluetooth, Modifier.offset(836.dp, 22.dp), on = links.bluetooth) { openCarBluetooth(context, d) }
     QuickButton(IceIcons.whatsApp, Modifier.offset(896.dp, 22.dp), tint = Color(0xFF7EE2A8)) {
         d.apps.firstOf(apps, "com.whatsapp", "com.whatsapp.w4b")?.let { d.apps.open(context, it) }
     }

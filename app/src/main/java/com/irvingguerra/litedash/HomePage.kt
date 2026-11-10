@@ -125,7 +125,7 @@ fun InicioPage(d: Dependencies, apps: List<App>, revision: Int, visible: Boolean
         Header(d)
         Destinations(d, apps, actions)
         WeatherCard(d, Modifier.offset(592.dp, 16.dp).size(364.dp, 140.dp)) { actions.onPanel(Panel.Settings) }
-        ConnectionTiles(Modifier.offset(592.dp, 168.dp).size(364.dp, 58.dp), actions.onBluetooth)
+        ConnectionTiles(d, Modifier.offset(592.dp, 168.dp).size(364.dp, 58.dp), actions.onBluetooth)
         TelemetryPill(d, Modifier.offset(592.dp, 238.dp).size(364.dp, 46.dp)) { actions.onPanel(Panel.Workshop) }
         MusicCard(d, revision, Modifier.offset(592.dp, 298.dp).size(364.dp, 210.dp), actions.onMusic)
     }
@@ -460,7 +460,7 @@ internal fun PicoPill(repo: PicoPlacaRepository, modifier: Modifier, height: and
 // ---------------------------------------------------------------- Wi-Fi y Bluetooth
 
 @Composable
-private fun ConnectionTiles(modifier: Modifier, onBluetooth: () -> Unit) {
+private fun ConnectionTiles(d: Dependencies, modifier: Modifier, onBluetooth: () -> Unit) {
     val context = LocalContext.current
     val links = rememberLinks()
     Row(modifier, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -474,7 +474,7 @@ private fun ConnectionTiles(modifier: Modifier, onBluetooth: () -> Unit) {
             if (links.bluetooth) links.bluetoothName ?: stringResource(R.string.bt_tile_connected) else stringResource(R.string.bt_disconnected), links.bluetooth,
             Modifier.weight(1f),
             onLongClick = onBluetooth,
-        ) { openSystemSettings(context, Settings.ACTION_BLUETOOTH_SETTINGS) }
+        ) { openCarBluetooth(context, d) }
     }
 }
 

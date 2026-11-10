@@ -3,6 +3,11 @@
 SailDash es una versión personal de [LiteDash](https://github.com/IrvingGuerra/litedash) (GPL-3.0)
 para un Chevrolet Sail con pantalla Android T3L. Lo de LiteDash está en `CHANGELOG-LITEDASH.md`.
 
+## [1.1.1] - 2026-11-10
+
+### Cambiado
+- Los botones de Bluetooth (inicio, Carro y Mapa) abren la app de Bluetooth de tu pantalla (Teléfono / Música BT), no los ajustes de Android. Si abre otra, elígela en Ajustes → Apps → Música → Bluetooth.
+
 ## [1.1.0] - 2026-11-10
 
 ### Diseño nuevo: "Hielo y órbita"

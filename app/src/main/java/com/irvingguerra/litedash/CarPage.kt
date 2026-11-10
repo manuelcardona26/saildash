@@ -265,7 +265,7 @@ private fun Callouts(d: Dependencies, actions: PageActions) {
             .clickable { d.prefs.theme = if (ice.dark) ThemeMode.LIGHT else ThemeMode.DARK },
         contentAlignment = Alignment.Center,
     ) { Icon(IceIcons.contrast, ice.title, 24.dp) }
-    Callout(stringResource(R.string.bt_title), Modifier.offset(712.dp, 92.dp), onClick = { openSystemSettings(context, Settings.ACTION_BLUETOOTH_SETTINGS) }) {
+    Callout(stringResource(R.string.bt_title), Modifier.offset(712.dp, 92.dp), onClick = { openCarBluetooth(context, d) }) {
         Icon(IceIcons.bluetooth, ice.ice, 20.dp)
         Spacer(Modifier.width(8.dp))
         CalloutValue(if (links.bluetooth) links.bluetoothName ?: stringResource(R.string.bt_tile_connected) else stringResource(R.string.bt_disconnected))
