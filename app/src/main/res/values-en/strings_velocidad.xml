@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SailDash: Speed only (big speed, full screen) -->
+    <string name="velocidad_title">Speed only</string>
+    <string name="velocidad_searching">Searching for GPS…</string>
+    <string name="velocidad_gps_lost">No GPS signal</string>
+    <string name="velocidad_obd_waiting">Waiting for the OBD…</string>
+    <string name="velocidad_no_permission">No location permission</string>
+    <string name="velocidad_permission_help">To show your speed without OBD, SailDash needs location (the car\'s GPS).</string>
+    <string name="velocidad_enable_gps">Turn on GPS</string>
+    <string name="velocidad_tap_to_exit">Tap the screen to exit</string>
+    <string name="velocidad_alert_off">No alert</string>
+    <string name="velocidad_alert_on">Alert: %1$d %2$s</string>
+    <string name="velocidad_off">Off</string>
+    <string name="velocidad_limit_title">Speed alert (%1$s)</string>
+    <string name="velocidad_limit_help">If you go faster, the number turns red.</string>
+    <string name="velocidad_beep">Beep when over</string>
+    <string name="velocidad_beep_help">A short beep through the apps\' sound (the music keeps playing). It may not be heard over FM radio.</string>
+    <string name="velocidad_auto_title">Open «Speed only» above (%1$s)</string>
+    <string name="velocidad_auto_help">Only if something on the home screen already measures speed (speedometer, map, road, trip or OBD): this doesn\'t turn on the GPS. If you close it, it opens again after you slow down below half and go past it again.</string>
+</resources>

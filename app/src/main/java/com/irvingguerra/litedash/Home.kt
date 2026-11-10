@@ -131,6 +131,8 @@ sealed interface Panel {
     data class CustomizeCar(val tileId: String) : Panel
     /** Ajustes abiertos en Llantas (desde la vista de llantas o la pieza sin configurar). */
     data object TiresSettings : Panel
+    /** SailDash: solo la velocidad, en grande y a pantalla completa (SpeedOnly.kt). */
+    data object SpeedOnly : Panel
 }
 
 class Dependencies(
@@ -421,6 +423,8 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
     // aviso del motor (si no, abrir Ajustes cortaría el viaje y "Entendido" se olvidaría).
     val engineAlert = remember { EngineAlertState() }
     if (d.prefs.welcomeSeen) TripRecorderEffect(d)
+    // SailDash: "Solo velocidad" se abre sola al pasar de la velocidad elegida (apagado de fábrica), solo con el inicio tal cual.
+    SpeedOnlyAutoOpen(d, idle = d.prefs.welcomeSeen && panel == null && !editing && expanded == null && !carOnly && !tiresOpen) { panel = Panel.SpeedOnly }
 
     BackHandler(enabled = (panel != null || editing || expanded != null || carOnly || tiresOpen) && d.prefs.welcomeSeen) {
         when {
@@ -540,6 +544,7 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
                   favorites = favorites,
                   onApps = { panel = Panel.Drawer },
                   onSettings = { panel = Panel.Settings },
+                  onSpeedOnly = { openSpeedOnly(d) { panel = Panel.SpeedOnly } },
               )
           }
           Row(Modifier.fillMaxSize()) {
@@ -678,6 +683,7 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
             is Panel.CustomizeImage -> CustomizeImagePanel(d, p.tileId, close = { panel = null })
             is Panel.CustomizeMap -> CustomizeMapPanel(d, p.tileId, close = { panel = null })
             is Panel.CustomizeCar -> CustomizeCarPanel(d, p.tileId, close = { panel = null })
+            Panel.SpeedOnly -> SpeedOnlyPanel(d, close = { panel = null })
         }
 
         val big = bigTile
@@ -864,6 +870,7 @@ private fun Rail(
     favorites: List<App>,
     onApps: () -> Unit,
     onSettings: () -> Unit,
+    onSpeedOnly: () -> Unit,
 ) {
     val c = LocalColors.current
     val context = LocalContext.current
@@ -908,6 +915,8 @@ private fun Rail(
         if (prefs.barVolume == VolumePlace.END) Volume(volume, vertical = true)
         if (voice != null && prefs.barVoice) IconButton(Icons.mic, { runCatching { context.startActivity(voice) } }, size = button)
         }
+        // SailDash: "Solo velocidad", siempre a la vista como Ajustes.
+        SpeedOnlyButton(onSpeedOnly, button)
         // Siempre: sin Ajustes no habría cómo salir del inicio.
         IconButton(Icons.settings, onSettings, size = button)
     }
