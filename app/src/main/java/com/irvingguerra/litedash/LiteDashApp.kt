@@ -75,6 +75,7 @@ class LiteDashApp : Application() {
             override fun onRemoved(notification: StatusBarNotification) = dependencies.navigation.removed(notification)
         }
         watchUsbOffer()
+        EqEngine.start(this) // SailDash: ecualizador (apagado no hace nada; prendido, lo pone en su propio hilo).
     }
 
     /**

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash: Settings → Sound (the equalizer for apps). -->
+<resources>
+    <string name="ecualizador_section">Sound</string>
+    <string name="ecualizador_enable">Equalizer on</string>
+    <string name="ecualizador_enable_help">For app sound: Spotify, CarPlay (AutoKit), YouTube or NewPipe and USB music.</string>
+
+    <string name="ecualizador_status_off">Off: sound plays as is.</string>
+    <string name="ecualizador_status_starting">Getting the equalizer ready…</string>
+    <string name="ecualizador_status_global">On for all app sound.</string>
+    <string name="ecualizador_status_apps">On for: %1$s</string>
+    <string name="ecualizador_status_apps_waiting">Ready: it kicks in when a music app starts playing.</string>
+    <string name="ecualizador_status_unsupported">Not available: %1$s. Use the factory equalizer (below).</string>
+    <string name="ecualizador_status_fallback">All sound didn\'t work on this screen, so it goes app by app.</string>
+    <string name="ecualizador_reason_no_effect">this screen doesn\'t have Android\'s equalizer</string>
+    <string name="ecualizador_reason_denied">Android didn\'t allow the equalizer</string>
+    <string name="ecualizador_reason_global">this screen doesn\'t allow equalizing all sound; try Per app in Advanced</string>
+    <string name="ecualizador_reason_control">another app controls the equalizer</string>
+    <string name="ecualizador_reason_failed">the equalizer stopped responding</string>
+    <string name="ecualizador_loading">Reading your screen\'s equalizer…</string>
+
+    <string name="ecualizador_style">Style</string>
+    <string name="ecualizador_preset_flat">Flat</string>
+    <string name="ecualizador_preset_techno">Techno / Electronic</string>
+    <string name="ecualizador_preset_deep_bass">Deep bass</string>
+    <string name="ecualizador_preset_voice">Clear vocals</string>
+    <string name="ecualizador_preset_rock">Rock</string>
+    <string name="ecualizador_preset_podcast">Podcast / News</string>
+    <string name="ecualizador_preset_night">Night</string>
+    <string name="ecualizador_curve_help">Drag each point up or down: lows on the left, highs on the right. The colored area is what you actually hear.</string>
+    <string name="ecualizador_reset">Reset</string>
+    <string name="ecualizador_edited">Edited from %1$s. Tap it above to go back to the original.</string>
+    <string name="ecualizador_capped">Protected bass doesn\'t let those lows go that high: that\'s why the colored area sits lower.</string>
+
+    <string name="ecualizador_quick">Quick adjustments</string>
+    <string name="ecualizador_protect">Protected bass</string>
+    <string name="ecualizador_protect_help">Caps the bass and lowers the whole curve a little so it doesn\'t distort, then brings the volume back without clipping. Recommended: your car already has strong bass.</string>
+    <string name="ecualizador_bass">Bass boost</string>
+    <string name="ecualizador_voice">Vocal clarity</string>
+    <string name="ecualizador_voice_help">Vocal clarity lifts voice presence (1 to 4 kHz) and removes the “mud” around 200 to 400 Hz.</string>
+
+    <string name="ecualizador_slots_title">My sounds</string>
+    <string name="ecualizador_slots_help">Save how it sounds now (curve, bass and vocals) to come back with one tap from Style.</string>
+    <string name="ecualizador_slot_default">My sound %1$d</string>
+    <string name="ecualizador_slot_empty">%1$s (empty)</string>
+    <string name="ecualizador_slot_name_hint">Name (for example: Highway techno)</string>
+    <string name="ecualizador_save_to">Save to %1$s</string>
+    <string name="ecualizador_saved">Saved ✓</string>
+
+    <string name="ecualizador_explain_title">What does this equalizer affect?</string>
+    <string name="ecualizador_explain">Apps: Spotify, CarPlay with AutoKit, YouTube or NewPipe and USB music. FM radio and the screen\'s Bluetooth music go through the car\'s sound chip: for those, use the factory equalizer.</string>
+    <string name="ecualizador_explain_tip">The factory one also adds to app sound: if you use both, keep the factory one flat or gentle so it doesn\'t distort.</string>
+    <string name="ecualizador_factory_open">Open the factory equalizer</string>
+    <string name="ecualizador_factory_open_named">Open %1$s (factory)</string>
+    <string name="ecualizador_factory_searching">Looking for the factory sound app…</string>
+    <string name="ecualizador_factory_none">Couldn\'t find the factory sound app: open it from the screen\'s menu.</string>
+
+    <string name="ecualizador_advanced">Advanced</string>
+    <string name="ecualizador_mode">Where it applies</string>
+    <string name="ecualizador_mode_auto">Automatic</string>
+    <string name="ecualizador_mode_global">All sound</string>
+    <string name="ecualizador_mode_apps">Per app</string>
+    <string name="ecualizador_mode_help">Automatic uses All sound if the screen allows it. If an app doesn\'t change, try Per app: it works with apps that announce when they play, like Spotify and NewPipe.</string>
+    <string name="ecualizador_virtualizer">Surround sound</string>
+    <string name="ecualizador_virtualizer_help">Experimental: it may sound odd in a car. Off by default.</string>
+    <string name="ecualizador_details_show">Show technical details</string>
+    <string name="ecualizador_details_hide">Hide technical details</string>
+    <string name="ecualizador_details_bands">Screen bands: %1$s Hz</string>
+    <string name="ecualizador_details_range">Each band goes from %1$s to %2$s dB</string>
+    <string name="ecualizador_details_effects">Android effects: %1$s</string>
+    <string name="ecualizador_details_output">Headroom %1$s dB · volume restored %2$s dB · bass boost %3$d/1000</string>
+    <string name="ecualizador_details_sessions">Apps that announced: %1$s</string>
+    <string name="ecualizador_details_none">none</string>
+    <string name="ecualizador_details_error">Last error: %1$s</string>
+</resources>

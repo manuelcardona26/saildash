@@ -25,6 +25,10 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.HOME" />
         </intent>
+        <!-- Ajustes → Sonido: el panel de efectos de Android, si la pantalla no trae app de sonido con ícono. -->
+        <intent>
+            <action android:name="android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL" />
+        </intent>
     </queries>
 
     <!-- "Abrir LiteDash al encender" (apagado de fábrica): saber que la pantalla encendió y, desde
@@ -44,7 +48,7 @@
     <uses-feature android:name="android.hardware.usb.host" android:required="false" />
     <!-- Brillo de día y noche en todas las apps: solo si lo activas (Android lo pide aparte). -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" tools:ignore="ProtectedPermissions" />
-    <!-- Diagnóstico: probar el ecualizador global de Android (permiso normal, sin pregunta). -->
+    <!-- Ecualizador (Ajustes → Sonido) y Diagnóstico: efectos de sonido globales (permiso normal, sin pregunta). -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <application
@@ -116,6 +120,20 @@
                 <action android:name="com.glsx.boot.ACCON" />
                 <action android:name="com.cayboy.action.ACC_ON" />
                 <action android:name="com.carboy.action.ACC_ON" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Ecualizador app por app: Spotify, NewPipe y casi todos los reproductores avisan cuando abren
+             o cierran su sesión de audio. Apagado mientras el ecualizador esté apagado (EqEngine lo
+             prende). Hasta Android 7.1 llega aquí aunque SailDash esté cerrado; desde Android 8,
+             EqEngine también lo escucha mientras la app corre. -->
+        <receiver
+            android:name=".EqSessionReceiver"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.action.OPEN_AUDIO_EFFECT_CONTROL_SESSION" />
+                <action android:name="android.media.action.CLOSE_AUDIO_EFFECT_CONTROL_SESSION" />
             </intent-filter>
         </receiver>
 
