@@ -268,4 +268,84 @@ class EqCurveTest {
         assertEquals(0, EqFactoryApps.score("SoundCloud", "com.soundcloud.android", false))
         assertEquals(0, EqFactoryApps.score("Equalizer FX", "com.devdnua.equalizer", false))
     }
+
+    // ---- Grupo Urbano: Reggaetón, Techno y Electrónica ----
+
+    private fun db(p: EqPreset, hz: Float) = p.curve.at(hz)
+
+    @Test
+    fun urbanIsItsOwnGroup() {
+        val ids = EqPresets.urban.map { it.id }
+        assertEquals(listOf(EqPresets.REGGAETON, EqPresets.URBAN_TECHNO, EqPresets.ELECTRONICA), ids)
+        // Aparte de los de siempre, pero se encuentran y se guardan igual.
+        assertTrue(EqPresets.normal.none { it.id in ids })
+        assertEquals(EqPresets.normal + EqPresets.urban, EqPresets.all)
+        assertEquals(EqPresets.all.size, EqPresets.all.map { it.id }.distinct().size)
+        for (p in EqPresets.urban) {
+            assertEquals(p, EqPresets.byId(p.id))
+            assertEquals(p.curve, EqCurve.decode(p.curve.encode()))
+            assertEquals(0f, p.extraDb, eps)
+        }
+    }
+
+    @Test
+    fun reggaetonPunchesTheSubBassAndKeepsTheVoiceClear() {
+        val r = preset(EqPresets.REGGAETON)
+        // El golpe en ~60 Hz es lo más alto de toda la curva.
+        assertEquals(EQ_STANDARD_HZ.maxOf { db(r, it) }, db(r, 62f), eps)
+        assertTrue(db(r, 62f) >= 5f)
+        // Medios un poco hundidos (sin exagerar)…
+        assertTrue(db(r, 500f) < 0f && db(r, 500f) >= -3f)
+        assertTrue(db(r, 1000f) < 0f)
+        // …y la voz clara en 2–4 kHz, por encima de los medios.
+        assertTrue(db(r, 2000f) > 1f && db(r, 4000f) > 2f)
+        assertTrue(db(r, 3000f) > db(r, 1000f) + 3f)
+    }
+
+    @Test
+    fun urbanTechnoHasATightKickAndCrispHats() {
+        val t = preset(EqPresets.URBAN_TECHNO)
+        // Bombo: 60–100 Hz arriba; el subgrave casi no se toca (seco, sin retumbe).
+        assertTrue(db(t, 62f) >= 4f && db(t, 100f) >= 3.5f)
+        assertTrue(db(t, 31f) < db(t, 62f) - 3f)
+        // Medios-graves bajo control.
+        assertTrue(db(t, 250f) < 0f && db(t, 400f) < 0f)
+        // Hi-hats brillantes en 8–12 kHz.
+        assertTrue(db(t, 8000f) >= 4f && db(t, 12000f) >= 3f)
+        // Es distinto del Techno de siempre.
+        assertFalse(t.curve == preset(EqPresets.TECHNO).curve)
+    }
+
+    @Test
+    fun electronicaIsAWideSmileWithAiryHighs() {
+        val e = preset(EqPresets.ELECTRONICA)
+        val mids = db(e, 1000f)
+        // Sonrisa: graves y agudos por encima de los medios, que son lo más bajo.
+        assertTrue(mids < 0f)
+        assertEquals(EQ_STANDARD_HZ.minOf { db(e, it) }, mids, eps)
+        assertTrue(db(e, 62f) > mids + 5f && db(e, 16000f) > mids + 5f)
+        // Aire: lo más alto de arriba está en 16 kHz.
+        assertEquals(listOf(4000f, 8000f, 16000f).maxOf { db(e, it) }, db(e, 16000f), eps)
+    }
+
+    @Test
+    fun urbanPresetsRespectProtectedBass() {
+        for (bands in listOf(fiveBands, tenBands)) for (p in EqPresets.urban) {
+            val s = EqSettings().withPreset(p)
+            val out = EqMath.compute(s, bands, all)
+            // Con Bajo protegido ninguna banda pasa su tope ni el pico pasa el margen.
+            out.heard.forEachIndexed { i, v -> assertTrue("${p.id} ${bands.hz[i]} Hz: $v", v <= EqMath.capAt(bands.hz[i]) + eps) }
+            assertTrue("${p.id}: ${out.levels.max()}", out.levels.max() <= EqMath.HEADROOM_DB + eps)
+            // Y aun así el golpe se oye: los bajos quedan arriba de los medios.
+            val low = out.heard[bands.hz.indexOfFirst { it >= 55f }]
+            val mid = out.heard[bands.hz.indexOfFirst { it >= 900f }]
+            assertTrue("${p.id}: bajo $low, medio $mid", low > mid)
+        }
+        // En la pantalla de 5 bandas, el 60 Hz del Reggaetón queda justo en el tope de los bajos.
+        val reg = EqMath.compute(EqSettings().withPreset(preset(EqPresets.REGGAETON)), fiveBands, none)
+        assertEquals(EqMath.LOW_CAP_DB, reg.heard[0], eps)
+        // Sin protección el mismo estilo pide más de lo que el tope deja.
+        val raw = EqMath.compute(EqSettings(protect = false).withPreset(preset(EqPresets.REGGAETON)), fiveBands, none)
+        assertTrue(raw.heard[0] > EqMath.LOW_CAP_DB)
+    }
 }

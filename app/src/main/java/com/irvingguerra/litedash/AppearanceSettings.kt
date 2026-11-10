@@ -68,6 +68,9 @@ private enum class AppearanceTab(val title: Int) {
 
 @Composable
 internal fun Appearance(d: Dependencies, revision: Int, onEdit: () -> Unit, onTemplates: () -> Unit, onTires: () -> Unit) {
+    // Diseño C: tema, fondo espacial, color de acento y widgets, como en el mockup; lo demás, en pestañas debajo.
+    AppearanceHero(d, onEdit)
+    AppearanceGap()
     when (AppearanceTab.entries[tabs(AppearanceTab.entries.map { it.title }, "appearance")]) {
         AppearanceTab.HOME -> HomeSettings(d, onEdit, onTemplates)
         AppearanceTab.INTERFACE -> InterfaceSettings(d)

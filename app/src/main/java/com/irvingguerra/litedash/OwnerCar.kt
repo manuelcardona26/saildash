@@ -58,6 +58,10 @@ class OwnerCar private constructor(private val context: Context) {
     var image by mutableStateOf<OwnerCarImage?>(null)
         private set
 
+    /** La foto es una que eligió el usuario (no la del Sail de los assets). */
+    var custom by mutableStateOf(false)
+        private set
+
     /** Ya se buscó la foto (con o sin resultado): hasta entonces el inicio no pinta el respaldo. */
     var loaded by mutableStateOf(false)
         private set
@@ -69,6 +73,7 @@ class OwnerCar private constructor(private val context: Context) {
             seedFromAssets()
             read()
         }
+        custom = File(dir, CUSTOM).exists()
         loaded = true
     }
 
@@ -86,9 +91,13 @@ class OwnerCar private constructor(private val context: Context) {
                 tmp.renameTo(front) || error("no se pudo guardar")
                 // Los faros eran de la foto anterior.
                 frontJson.delete()
+                File(dir, CUSTOM).createNewFile()
             }.isSuccess
         }
-        if (ok) image = withContext(Dispatchers.IO) { read() }
+        if (ok) {
+            image = withContext(Dispatchers.IO) { read() }
+            custom = true
+        }
         loaded = true
         ok
     }
@@ -98,7 +107,9 @@ class OwnerCar private constructor(private val context: Context) {
         withContext(Dispatchers.IO) {
             front.delete()
             frontJson.delete()
+            File(dir, CUSTOM).delete()
         }
+        custom = false
         image = null
         loaded = true
     }
@@ -110,8 +121,10 @@ class OwnerCar private constructor(private val context: Context) {
     suspend fun restoreFromAssets() = lock.withLock {
         image = withContext(Dispatchers.IO) {
             copyAssets(overwrite = true)
+            File(dir, CUSTOM).delete()
             read()
         }
+        custom = false
         loaded = true
     }
 
@@ -153,6 +166,7 @@ class OwnerCar private constructor(private val context: Context) {
         private const val FRONT = "front_floor.png"
         private const val FRONT_JSON = "front.json"
         private const val SEEDED = ".seeded"
+        private const val CUSTOM = ".custom"
         private const val ASSETS = "private/car"
         private const val MAX_WIDTH = 1100
 

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash 1.1 · diseño C, parte 2: Ajustes, Bienvenida, Aplicaciones, Música, Radio FM, Bluetooth y Sonido. -->
+<resources>
+    <!-- Ajustes -->
+    <string name="settings">Ajustes</string>
+    <string name="settings_saved_auto">Se guarda solo</string>
+    <string name="settings_workshop_off">El Taller lee tu carro por el OBD. Préndelo en Módulos para ver la salud del carro y los códigos.</string>
+    <string name="p2_theme">Tema</string>
+    <string name="p2_theme_help">Cómo se ve SailDash de día y de noche</string>
+    <string name="p2_changes_by">Cambia por</string>
+    <string name="p2_by_sun">Hora del sol</string>
+    <string name="p2_by_lights">Luces del carro</string>
+    <string name="p2_theme_ice">Hielo y órbita</string>
+    <string name="p2_theme_ice_help">Oscuro, con el espacio</string>
+    <string name="p2_theme_light">Claro</string>
+    <string name="p2_theme_light_help">Para el sol del mediodía</string>
+    <string name="p2_theme_auto">Automático</string>
+    <string name="p2_theme_auto_help">Hoy oscurece a las %1$s</string>
+    <string name="p2_space">Fondo espacial</string>
+    <string name="p2_space_help">Estrellas y agujero negro</string>
+    <string name="p2_accent">Color de acento</string>
+    <string name="p2_accent_help">Botones y barras</string>
+    <string name="p2_widgets">Widgets y páginas</string>
+    <string name="p2_widgets_count">%1$d páginas · %2$d widgets</string>
+    <string name="p2_edit_home">Editar inicio</string>
+    <string name="p2_photo_title">Foto de tu carro</string>
+    <string name="p2_photo_help">Una imagen PNG con el fondo transparente, de frente. Sale en el inicio, la música y la bienvenida.</string>
+    <string name="p2_photo_pick">Elegir foto de tu carro</string>
+    <string name="p2_photo_restore">Volver al Sail realista</string>
+    <string name="p2_photo_clear">Quitar la foto</string>
+
+    <!-- Bienvenida -->
+    <string name="p2_welcome_title">Bienvenido a</string>
+    <string name="p2_welcome_text">Tres pasos y tu Sail queda listo.\nTodo se elige tocando, sin teclado.</string>
+    <string name="p2_welcome_step">Paso %1$d de 3</string>
+    <string name="p2_welcome_done">Listo</string>
+    <string name="p2_welcome_start">Empezar</string>
+    <string name="p2_name_mine">Mi Sail</string>
+    <string name="p2_name_the">El Sail</string>
+    <string name="p2_name_other">Otro</string>
+    <string name="p2_photo_real">Sail realista</string>
+    <string name="p2_photo_mine">Mi foto</string>
+    <string name="p2_color_gray">gris</string>
+    <string name="p2_color_white">blanco</string>
+    <string name="p2_color_silver">plata</string>
+    <string name="p2_color_red">rojo</string>
+    <string name="p2_pico_title">Pico y placa</string>
+    <string name="p2_pico_side">Para avisarte al encender</string>
+    <string name="p2_pico_digit">Último número de tu placa</string>
+    <string name="p2_pico_none">Sin pico y placa esta semana</string>
+    <string name="p2_pico_today_yes">hoy sí</string>
+    <string name="p2_pico_today_no">hoy no</string>
+    <string name="p2_home_title">Tu inicio</string>
+    <string name="p2_home_text">Que SailDash aparezca al prender la pantalla y con el botón de inicio.</string>
+    <string name="p2_home_make">Hacer SailDash mi inicio</string>
+    <string name="p2_home_already">Ya es tu inicio</string>
+
+    <!-- Aplicaciones -->
+    <string name="p2_apps_title">Aplicaciones</string>
+    <string name="p2_apps_count">%1$d apps</string>
+    <string name="p2_apps_search">Buscar una app</string>
+    <string name="p2_apps_all">Todas</string>
+    <string name="p2_apps_recommended">Recomendadas</string>
+    <string name="p2_bt_music">Música Bluetooth</string>
+    <string name="p2_equalizer">Ecualizador</string>
+    <string name="p2_rec_newpipe_kind">Para YouTube</string>
+    <string name="p2_rec_newpipe">Videos y música de YouTube sin anuncios. Liviana, y suena con la pantalla apagada.</string>
+    <string name="p2_rec_maps_kind">Mapas sin internet</string>
+    <string name="p2_rec_maps">Bajas el mapa de Colombia una vez y navegas sin datos. Rápida en 2 GB.</string>
+    <string name="p2_rec_autokit_kind">Para CarPlay</string>
+    <string name="p2_rec_autokit">La app del adaptador Carlinkit. Con ella abren Waze, Google Maps y WhatsApp del iPhone.</string>
+    <string name="p2_rec_spotify_kind">Tu música</string>
+    <string name="p2_rec_spotify">Play, siguiente y carátula desde el inicio y con los mandos del volante.</string>
+    <string name="p2_rec_installed">Instalada</string>
+    <string name="p2_rec_get">Cómo conseguirla</string>
+    <string name="p2_rec_why">¿Por qué estas?</string>
+    <string name="p2_rec_why_1">"Tu pantalla tiene "</string>
+    <string name="p2_rec_why_2">Android 7.1 y 2 GB de RAM</string>
+    <string name="p2_rec_why_3">. Estas apps abren rápido y no se comen la memoria. La app oficial de YouTube ya no se actualiza en Android 7, y Waze y Google Maps van mejor por CarPlay.</string>
+    <string name="p2_rec_via">Van por CarPlay:</string>
+
+    <!-- Música -->
+    <string name="p2_src_bluetooth">Bluetooth</string>
+    <string name="p2_music_opening">Abriendo %1$s…</string>
+    <string name="p2_music_pick">Elige de dónde suena</string>
+    <string name="p2_lib_folders">Carpetas</string>
+    <string name="p2_lib_artists">Artistas</string>
+    <string name="p2_lib_albums">Álbumes</string>
+    <string name="p2_lib_n_folders">%1$d carpetas</string>
+    <string name="p2_lib_n_artists">%1$d artistas</string>
+    <string name="p2_lib_n_albums">%1$d álbumes</string>
+    <string name="p2_lib_songs">%1$d canciones</string>
+    <string name="p2_lib_albums_songs">%1$d álbumes · %2$d canciones</string>
+    <plurals name="p2_lib_albums_n">
+        <item quantity="one">%1$d álbum</item>
+        <item quantity="other">%1$d álbumes</item>
+    </plurals>
+    <plurals name="p2_lib_songs_n">
+        <item quantity="one">%1$d canción</item>
+        <item quantity="other">%1$d canciones</item>
+    </plurals>
+    <string name="p2_lib_no_usb">Conecta una memoria USB con música y aquí aparecen sus carpetas, artistas y álbumes.</string>
+
+    <!-- Radio FM -->
+    <string name="p2_radio_seek">Buscar</string>
+    <string name="p2_radio_drag">‹ arrastra ›</string>
+    <string name="p2_radio_note">Para sintonizar directo falta el diagnóstico de tu pantalla</string>
+    <string name="p2_radio_mine">Mis emisoras</string>
+    <plurals name="p2_radio_saved">
+        <item quantity="one">%1$d guardada</item>
+        <item quantity="other">%1$d guardadas</item>
+    </plurals>
+    <string name="p2_radio_scan">Buscar y guardar todas</string>
+    <string name="p2_radio_save">Guardar</string>
+    <string name="p2_radio_on_air">Al aire</string>
+    <string name="p2_radio_paused">En pausa</string>
+    <string name="p2_radio_searching">Buscando</string>
+    <string name="p2_radio_playing_at">Suena la %1$s</string>
+    <string name="p2_radio_name_hint">Nombre de la emisora</string>
+    <string name="p2_radio_rename">Guardar nombre</string>
+    <string name="p2_radio_delete">Borrar</string>
+
+    <!-- Bluetooth -->
+    <string name="p2_bt_no_phone">Ningún celular</string>
+    <string name="p2_bt_connected">Conectado · llamadas y música</string>
+    <string name="p2_bt_waiting">Esperando al celular</string>
+    <string name="p2_bt_off">Bluetooth apagado</string>
+    <string name="p2_bt_reconnect">Reconectar</string>
+    <string name="p2_bt_others">Otros teléfonos</string>
+    <string name="p2_bt_paired_idle">Emparejado · no conectado</string>
+    <string name="p2_bt_connect">Conectar</string>
+    <string name="p2_bt_pair_new">Emparejar teléfono nuevo</string>
+    <string name="p2_bt_from">desde %1$s</string>
+    <string name="p2_bt_nothing">Nada suena por Bluetooth</string>
+    <string name="p2_bt_nothing_help">Pon música en el celular o toca play</string>
+
+    <!-- Sonido -->
+    <string name="p2_eq_switch">Ecualizador</string>
+    <string name="p2_eq_lead">Ecualizador de las apps</string>
+    <string name="p2_eq_global">Activo en todo el sonido</string>
+    <string name="p2_eq_off">Apagado</string>
+    <string name="p2_eq_off_short">apagado</string>
+    <string name="p2_eq_protect_sub">Sin distorsión</string>
+    <string name="p2_eq_mine">Mis ajustes</string>
+    <string name="p2_eq_techno">Techno</string>
+    <string name="p2_eq_podcast">Podcast</string>
+    <string name="p2_eq_urban">Urbano</string>
+    <string name="p2_eq_reggaeton">Reggaetón</string>
+    <string name="p2_eq_electronica">Electrónica</string>
+    <string name="p2_eq_cap">tope</string>
+    <string name="p2_eq_fx_title">Radio FM y Bluetooth</string>
+    <string name="p2_eq_fx_text">Pasan por el chip de sonido del carro, así que usan el ecualizador de fábrica.</string>
+    <string name="p2_eq_fx_open">Abrir ecualizador de fábrica</string>
+    <string name="p2_eq_fx_none">Sin ecualizador de fábrica</string>
+    <string name="p2_eq_sound_title">Sonido: %1$s</string>
+    <string name="p2_eq_protect_short">Bajo protegido</string>
+    <string name="p2_eq_voice_short">voz clara</string>
+    <string name="p2_eq_bass_short">bajos reforzados</string>
+    <string name="p2_eq_tap_to_turn_on">Toca para prenderlo</string>
+</resources>

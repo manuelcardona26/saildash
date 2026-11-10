@@ -1,6 +1,7 @@
 package com.irvingguerra.litedash.core.ui.ice
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,6 +44,7 @@ fun IceDock(
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     clock: (@Composable () -> Unit)? = null,
+    onLongClick: ((String) -> Unit)? = null,
 ) {
     val ice = LocalIce.current
     Row(
@@ -67,7 +69,7 @@ fun IceDock(
     ) {
         for (e in entries) {
             if (e.separatorBefore) DockSeparator()
-            DockButton(e, e.key == active, Modifier.weight(1f)) { onClick(e.key) }
+            DockButton(e, e.key == active, Modifier.weight(1f), onLongClick?.let { l -> { l(e.key) } }) { onClick(e.key) }
         }
         if (clock != null) {
             DockSeparator()
@@ -82,13 +84,14 @@ private fun DockSeparator() {
     VDivider(28.dp, if (ice.dark) Color(190, 225, 255).copy(alpha = 0.14f) else ice.line)
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun DockButton(e: DockEntry, on: Boolean, modifier: Modifier, onClick: () -> Unit) {
+private fun DockButton(e: DockEntry, on: Boolean, modifier: Modifier, onLongClick: (() -> Unit)?, onClick: () -> Unit) {
     val ice = LocalIce.current
     Box(
         modifier
             .fillMaxHeight()
-            .clickable(remember { MutableInteractionSource() }, indication = null, onClick = onClick)
+            .combinedClickable(remember { MutableInteractionSource() }, indication = null, onLongClick = onLongClick, onClick = onClick)
             .then(if (on) Modifier.activeMark(ice) else Modifier),
         contentAlignment = Alignment.Center,
     ) {

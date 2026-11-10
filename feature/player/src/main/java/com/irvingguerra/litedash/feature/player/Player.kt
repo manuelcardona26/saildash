@@ -215,6 +215,12 @@ object Player {
             setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
             setOnPreparedListener {
                 if (myLoad != load) return@setOnPreparedListener
+                // SailDash: las canciones leídas por carpeta no traen duración; la da el reproductor (para la barra).
+                if (item is Track && item.durationMs <= 0L && it.duration > 0) runCatching {
+                    session?.controller?.metadata?.let { m ->
+                        session?.setMetadata(MediaMetadata.Builder(m).putLong(MediaMetadata.METADATA_KEY_DURATION, it.duration.toLong()).build())
+                    }
+                }
                 if (requestFocus()) {
                     it.start()
                     update(playing = true, buffering = false)

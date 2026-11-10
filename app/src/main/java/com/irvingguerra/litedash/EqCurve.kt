@@ -93,8 +93,13 @@ object EqPresets {
     const val PODCAST = "podcast"
     const val NIGHT = "night"
 
+    // Grupo Urbano: para la música que más suena en el carro. Van aparte de los de siempre.
+    const val REGGAETON = "urban_reggaeton"
+    const val URBAN_TECHNO = "urban_techno"
+    const val ELECTRONICA = "urban_electronica"
+
     //                             31   62  125   250   500    1k    2k   4k   8k  16k
-    val all = listOf(
+    val normal = listOf(
         EqPreset(FLAT, listOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)),
         // Bombo hondo pero controlado, agudos nítidos (hi-hats) y la voz presente.
         EqPreset(TECHNO, listOf(1f, 4f, 2.5f, -1f, -1.5f, -0.5f, 1f, 2f, 3f, 2f)),
@@ -107,6 +112,24 @@ object EqPresets {
         // A volumen bajo el oído pierde bajos y agudos (curva de sonoridad): se compensan.
         EqPreset(NIGHT, listOf(2f, 4f, 2.5f, 0.5f, 0f, 0f, 0f, 1f, 2.5f, 3f), extraDb = 4f),
     )
+
+    /**
+     * Urbano. Pensados con Bajo protegido prendido: el golpe va en 62 Hz (lo que dan los parlantes de
+     * puerta), el subgrave de 31 Hz sube poco porque ahí distorsiona, y los 250–500 Hz bajan para
+     * que la voz y los platillos no se tapen.
+     */
+    //                             31   62  125   250   500    1k    2k   4k   8k  16k
+    val urban = listOf(
+        // Reggaetón: el dembow con golpe en 60 Hz, medios un poco hundidos y la voz clara en 2–4 kHz.
+        EqPreset(REGGAETON, listOf(2.5f, 6.5f, 3f, -0.5f, -2f, -1f, 2f, 3f, 1f, 0.5f)),
+        // Techno: bombo seco en 60–100 Hz, los medios-graves bajo control y los hi-hats brillantes en 8–12 kHz.
+        EqPreset(URBAN_TECHNO, listOf(0.5f, 5f, 4f, -2f, -2.5f, -1f, 0f, 1.5f, 4.5f, 3f)),
+        // Electrónica: sonrisa ancha (graves y agudos arriba, medios abajo) con aire arriba de 10 kHz.
+        EqPreset(ELECTRONICA, listOf(2f, 5f, 3.5f, 0.5f, -1.5f, -2f, -1f, 1.5f, 3.5f, 5f)),
+    )
+
+    /** Todos: los de siempre y los urbanos. */
+    val all = normal + urban
 
     fun byId(id: String?) = all.firstOrNull { it.id == id }
 }

@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import androidx.core.net.toUri
 import com.irvingguerra.litedash.core.ui.Button
 import com.irvingguerra.litedash.core.ui.Icon
@@ -63,6 +64,8 @@ import com.irvingguerra.litedash.feature.car.PaintFinish
 @Composable
 internal fun CarSettings(d: Dependencies) {
     val prefs = d.prefs
+    // SailDash: la foto de tu carro (la del inicio, la música y la bienvenida).
+    OwnerCarPhotoCard()
     val cars = d.cars
     val c = LocalColors.current
     val pkg = cars.pkg(prefs.carModel)
@@ -361,6 +364,25 @@ private fun CarPreview(e: CatalogEntry, cars: CarRepository, progress: Float?, o
                 Button(stringResource(R.string.download_mb, e.bytes / 1e6f), onDownload, primary = true)
                 Button(stringResource(R.string.cancel), onClose)
             }
+        }
+    }
+}
+
+/** Ajustes → Tu carro: elegir la foto de tu carro (PNG con transparencia) o volver a la del Sail. */
+@androidx.compose.runtime.Composable
+private fun OwnerCarPhotoCard() {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    val owner = remember { OwnerCar.of(context) }
+    LaunchedEffect(owner) { owner.load() }
+    val pick = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) scope.launch { owner.setFront(uri) }
+    }
+    SettingsCard(stringResource(R.string.p2_photo_title), stringResource(R.string.p2_photo_help)) {
+        androidx.compose.foundation.layout.Row(horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(10.dp)) {
+            Button(stringResource(R.string.p2_photo_pick), { pick.launch("image/png") }, primary = true)
+            if (owner.hasPrivateAssets() && (owner.custom || owner.image == null)) Button(stringResource(R.string.p2_photo_restore), { scope.launch { owner.restoreFromAssets() } })
+            else if (owner.image != null) Button(stringResource(R.string.p2_photo_clear), { scope.launch { owner.clearFront() } })
         }
     }
 }

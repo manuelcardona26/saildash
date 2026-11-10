@@ -80,7 +80,7 @@ android {
 
     defaultConfig {
         buildConfigField("String", "PICO_URL", "\"$PICO_URL\"")
-        buildConfigField("String", "RELEASE_NOTES", "\"" + releaseNotes.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n") + "\"")
+        buildConfigField("String", "RELEASE_NOTES", "\"" + releaseNotes.replace("\r", "").replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n") + "\"")
     }
 
     flavorDimensions += "channel"

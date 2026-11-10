@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -104,6 +105,8 @@ class InicioActions(
     val onPanel: (Panel) -> Unit,
     val onMusic: () -> Unit,
     val onCar: () -> Unit,
+    /** La tarjeta de Bluetooth (dejando presionado el mosaico de Bluetooth). */
+    val onBluetooth: () -> Unit = {},
 )
 
 /**
@@ -123,7 +126,7 @@ fun InicioPage(d: Dependencies, apps: List<App>, revision: Int, visible: Boolean
         Header(d)
         Destinations(d, apps, actions)
         WeatherCard(d, Modifier.offset(592.dp, 16.dp).size(364.dp, 140.dp)) { actions.onPanel(Panel.Settings) }
-        ConnectionTiles(Modifier.offset(592.dp, 168.dp).size(364.dp, 58.dp))
+        ConnectionTiles(Modifier.offset(592.dp, 168.dp).size(364.dp, 58.dp), actions.onBluetooth)
         TelemetryPill(d, Modifier.offset(592.dp, 238.dp).size(364.dp, 46.dp)) { actions.onPanel(Panel.Workshop) }
         MusicCard(d, revision, Modifier.offset(592.dp, 298.dp).size(364.dp, 210.dp), actions.onMusic)
     }
@@ -458,7 +461,7 @@ private fun PicoPill(repo: PicoPlacaRepository, modifier: Modifier, onClick: () 
 // ---------------------------------------------------------------- Wi-Fi y Bluetooth
 
 @Composable
-private fun ConnectionTiles(modifier: Modifier) {
+private fun ConnectionTiles(modifier: Modifier, onBluetooth: () -> Unit) {
     val context = LocalContext.current
     val links = rememberLinks()
     Row(modifier, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -471,19 +474,21 @@ private fun ConnectionTiles(modifier: Modifier) {
             IceIcons.bluetooth, stringResource(R.string.bt_title),
             if (links.bluetooth) links.bluetoothName ?: stringResource(R.string.bt_tile_connected) else stringResource(R.string.bt_disconnected), links.bluetooth,
             Modifier.weight(1f),
+            onLongClick = onBluetooth,
         ) { openSystemSettings(context, Settings.ACTION_BLUETOOTH_SETTINGS) }
     }
 }
 
 /** Mosaico de conexión (.tile): prendido, vidrio azul con brillo y punto; apagado, vidrio normal. */
 @Composable
-private fun LinkTile(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, subtitle: String, on: Boolean, modifier: Modifier, onClick: () -> Unit) {
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
+private fun LinkTile(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, subtitle: String, on: Boolean, modifier: Modifier, onLongClick: (() -> Unit)? = null, onClick: () -> Unit) {
     val ice = LocalIce.current
     val shape = RoundedCornerShape(18.dp)
     val surface = if (on) Modifier.glass(ice.tileOn, ice.tileOnBorder, if (ice.dark) Color(235, 246, 255).copy(alpha = 0.18f) else ice.sheen, 18.dp, angle = 135f)
     else Modifier.iceGlass(18.dp)
     Row(
-        modifier.fillMaxSize().then(surface).clip(shape).clickable(onClick = onClick).padding(horizontal = 16.dp),
+        modifier.fillMaxSize().then(surface).clip(shape).combinedClickable(onLongClick = onLongClick, onClick = onClick).padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val iconColor = if (on) (if (ice.dark) Color(0xFFD8F0FF) else ice.ice2) else ice.ink3
@@ -611,7 +616,7 @@ private const val SPOTIFY = "com.spotify.music"
 
 /** La carátula de 88 dp; sin carátula, el agujero negro del mockup (.art) dibujado. */
 @Composable
-private fun Artwork(song: Song?, modifier: Modifier) {
+internal fun Artwork(song: Song?, modifier: Modifier) {
     val shape = RoundedCornerShape(14.dp)
     val bmp = song?.artwork
     Box(modifier.clip(shape)) {
