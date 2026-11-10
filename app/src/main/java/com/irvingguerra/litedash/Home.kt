@@ -349,6 +349,9 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
     val car = d.cars.pkg(d.prefs.carModel)
     var panel by remember { mutableStateOf<Panel?>(null) }
     var editing by remember { mutableStateOf(false) }
+    // SailDash 1.1: las piezas como estaban al entrar a acomodar ("deshacer" vuelve ahí).
+    var editStart by remember { mutableStateOf(emptyList<com.irvingguerra.litedash.feature.dashboard.Tile>()) }
+    LaunchedEffect(editing) { if (editing) editStart = d.dashboard.tiles }
     // La música, la radio o el mapa a media pantalla; null = el tablero normal.
     var expanded by remember { mutableStateOf<Expanded?>(null) }
     // El widget que creció (por id: si cambia el acomodo se lee el de ahora): da el lado y, al mapa, su estilo.
@@ -677,6 +680,14 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
           }
         }
 
+        if (panel == null && editing) EditChrome(
+            d, editStart,
+            onDone = { editing = false },
+            onPickApp = { panel = Panel.PickApp(null) },
+            onPickGauge = { panel = Panel.PickGauge(null) },
+            onTiresSettings = { panel = Panel.TiresSettings },
+        )
+
         when (val p = panel) {
             null -> Unit
             Panel.Drawer -> DrawerPanel(d, apps, close = { panel = null })
@@ -695,6 +706,7 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
                     else -> SettingsSection.CAR
                 },
                 onTires = { panel = null; openTires() },
+                onPanel = { panel = it },
             )
             Panel.Templates -> TemplatesPanel(d.dashboard, d.prefs, close = { panel = null })
             Panel.AddTile -> AddTilePanel(
@@ -757,16 +769,8 @@ private fun Parked(d: Dependencies, onWake: () -> Unit) {
     ) {
         // Sin imagen guardada, el reloj.
         if (d.prefs.parkedView == ParkedView.IMAGE && parkedImageShown(d.prefs)) return@Box
-        val clock = rememberClock()
-        val hello = greeting(d.prefs.driverName)
-        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            // Siempre en colores oscuros: de noche no deslumbra.
-            LiteDashTheme(dark = true, scale = 1f, accent = d.prefs.accentColor) {
-                BigTime(clock, Typography.clock.copy(fontSize = 120.sp))
-                Label(hello?.let { "$it · ${clock.date}" } ?: clock.date, Typography.subtitle, LocalColors.current.textMuted, maxLines = 1)
-                Box(Modifier.padding(top = 12.dp)) { WeatherChip(d.weather) }
-            }
-        }
+        // SailDash 1.1: el reloj del diseño C (ParkedIce.kt), siempre oscuro para no deslumbrar.
+        ParkedC(d)
     }
 }
 
@@ -800,6 +804,8 @@ private fun TopBar(editing: Boolean, showTime: Boolean, driverName: String?, wea
     val c = LocalColors.current
     // Sin nada que mostrar (la hora ya está en una pieza), la barra no aparta espacio: el tablero sube.
     if (!editing && !showTime) return Spacer(Modifier.height(TOP_BAR_HIDDEN))
+    // SailDash 1.1: acomodando, la píldora del diseño C va encima (EditIce.kt); aquí solo su lugar.
+    if (editing) return Spacer(Modifier.fillMaxWidth().height(topBarHeight()))
     Row(
         Modifier.fillMaxWidth().height(topBarHeight()).padding(horizontal = 24.dp),
         verticalAlignment = Alignment.CenterVertically,

@@ -59,7 +59,8 @@ enum class SettingsSection(val title: Int) {
  * la que ya está abierta sí (al prender Llantas se entra a elegir su fuente).
  */
 private fun SettingsSection.shown(d: Dependencies, current: SettingsSection) = this == current || when (this) {
-    SettingsSection.WORKSHOP -> d.obdModule
+    // SailDash: el Taller funciona sin OBD (viaje, odómetro, tanqueadas y bitácora con el GPS).
+    SettingsSection.WORKSHOP -> true
     SettingsSection.TIRES -> d.hasTpmsSource
     else -> true
 }
@@ -90,9 +91,14 @@ fun SettingsPanel(
     start: SettingsSection = SettingsSection.CAR,
     /** Las llantas a pantalla completa (desde la tarjeta de Salud). */
     onTires: () -> Unit = {},
+    /** SailDash: el dock del diseño C abre paneles del inicio (Apps). */
+    onPanel: (Panel) -> Unit = {},
 ) {
     val c = LocalColors.current
     var section by rememberSaveable { mutableStateOf(start) }
+    // SailDash 1.1: las secciones ya pasadas al diseño C van a pantalla completa con su menú y el dock.
+    val extra = if (d.hasTpmsSource || section == SettingsSection.TIRES) listOf(SettingsSection.TIRES) else emptyList()
+    if (iceSection(d, section, { section = it }, close, onPanel, onTires, extra)) return
     BoxWithConstraints(
         Modifier
             .fillMaxSize()
@@ -152,13 +158,20 @@ internal fun tabs(titles: List<Int>, key: String): Int {
 internal const val SYSTEM_TABS = "system"
 
 /** Ajustes → Sistema abre en Actualizaciones (desde el aviso de versión nueva). */
-internal fun openUpdates() = selectTab(SYSTEM_TABS, SystemTab.UPDATES.ordinal)
+internal fun openUpdates() {
+    selectTab(SYSTEM_TABS, SystemTab.UPDATES.ordinal)
+    // SailDash 1.1: Sistema en el diseño C.
+    openUpdatesC()
+}
 
 /**
  * La pestaña elegida en cada sección (al cambiar de sección, o cerrar y abrir Ajustes, sigue ahí).
  * Solo en memoria: no se guarda, así que sus claves pueden cambiar sin migrar nada.
  */
 private val TabMemory = mutableStateMapOf<String, Int>()
+
+/** La pestaña elegida de la sección [key] (0 si nunca se eligió). */
+internal fun currentTab(key: String) = TabMemory[key] ?: 0
 
 /** Cambia a otra pestaña de la sección [key] desde su contenido (p. ej. de Salud a Códigos). */
 internal fun selectTab(key: String, index: Int) {

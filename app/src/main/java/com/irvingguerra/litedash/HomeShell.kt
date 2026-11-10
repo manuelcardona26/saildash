@@ -151,7 +151,7 @@ fun HomeShell(
 }
 
 @Composable
-private fun dockEntries(): List<DockEntry> {
+internal fun dockEntries(): List<DockEntry> {
     val home = stringResource(R.string.dock_home)
     val apps = stringResource(R.string.dock_apps)
     val phone = stringResource(R.string.dock_phone)
@@ -175,7 +175,7 @@ private fun dockEntries(): List<DockEntry> {
 }
 
 /** Lo que hace cada botón del dock. */
-private fun onDock(
+internal fun onDock(
     context: Context,
     d: Dependencies,
     apps: List<App>,

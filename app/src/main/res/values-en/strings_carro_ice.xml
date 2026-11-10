@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rev_apps">Spotify, CarPlay (AutoKit), NewPipe and USB</string>
+    <string name="rev_none_sub">As it is</string>
+    <string name="rev_lower_sub">−30 %</string>
+    <string name="rev_half_sub">50 %</string>
+    <string name="rev_mute_sub">No sound</string>
+    <string name="rev_restore_help">It comes back 2 seconds later. If you change it while reversing, it stays as you left it.</string>
+    <string name="rev_missing">Not taught yet</string>
+    <string name="rev_learned">Learned</string>
+    <string name="rev_listening_tag">Listening · %1$d s</string>
+    <string name="rev_step1_plain">With the car on, tap Learn reverse.</string>
+    <string name="rev_step2">Shift into reverse and keep it a few seconds.</string>
+    <string name="rev_step2_sub">The camera covers the screen: that is normal.</string>
+    <string name="rev_step3">SailDash notes what changed and it is ready.</string>
+    <string name="rev_test_title">Test</string>
+    <string name="rev_normal">Normal</string>
+    <string name="rev_reverse">Reverse</string>
+    <string name="rev_chip_note_b">The car\'s chip draws the camera.</string>
+    <string name="rev_chip_note">SailDash only changes the volume.</string>
+    <string name="rev_test_btn">Test 3 seconds</string>
+
+    <string name="rev_view_title">SailDash reverse view</string>
+    <string name="rev_view_ready">Camera %1$s ready</string>
+    <string name="rev_view_help">Your screen gives Android a camera: open it whenever you want to look back with three guide lines you calibrate. It never touches the factory reverse camera, drawn by the car\'s chip.</string>
+    <string name="rev_view_open">Open reverse view</string>
+    <string name="rev_view_calibrate">Calibrate lines</string>
+    <string name="rev_view_mirror">Mirror</string>
+    <string name="rev_view_calibrated">Lines calibrated on this screen</string>
+    <string name="rev_view_not_calibrated">Lines not calibrated</string>
+    <string name="rev_view_none_title">No camera for Android</string>
+    <string name="rev_view_none">Your reverse camera goes straight to the car\'s chip and Android cannot open it, so SailDash cannot draw lines over it.</string>
+    <string name="rev_view_factory">What works: turn on the factory parking lines in the camera menu (Factory settings → Reverse → Parking lines), or install a reverse sensor kit that beeps with the distance.</string>
+    <string name="rev_view_check">Check cameras</string>
+    <string name="rev_view_checking">Checking…</string>
+    <string name="rev_view_permission">SailDash needs camera permission to check it.</string>
+    <string name="rev_cal_help">Put three marks on the floor 0.5 m, 1 m and 2 m behind the bumper and drag each line onto its mark.</string>
+    <string name="rev_cal_save">Save lines</string>
+    <string name="rev_cal_reset">Reset</string>
+    <string name="rev_view_close">Close</string>
+    <string name="rev_view_error">Could not open the camera (%1$s).</string>
+
+    <string name="cam_row_none">Cameras: Android sees none.</string>
+    <string name="cam_row_none_sub">The reverse one goes through the car\'s chip.</string>
+    <string name="cam_row_ok">Camera: %1$d works · %2$s</string>
+    <string name="cam_row_fail">Cameras: %1$d, none opens.</string>
+    <string name="cam_row_sub">%1$s · the factory one is never touched</string>
+    <string name="cam_row_unchecked">Cameras: not checked.</string>
+    <string name="cam_row_unchecked_sub">Tap to open each one briefly.</string>
+    <string name="cam_back">back</string>
+    <string name="cam_front">front</string>
+    <string name="cam_external">external</string>
+
+    <string name="pp_notify">Notify me on start</string>
+    <string name="pp_digit">Last digit\nof your plate</string>
+    <string name="pp_next">Next days</string>
+    <string name="pp_day_rule">%1$s: plates %2$s</string>
+    <string name="pp_today">Today</string>
+    <string name="pp_holiday">Holiday · does not apply</string>
+    <string name="pp_valid">Rules valid until</string>
+    <string name="pp_search">Check for new</string>
+    <string name="pp_preview">How it shows on start</string>
+    <string name="pp_plate">Plate ending in %1$d</string>
+    <string name="pp_note">No Sundays or holidays: worked out automatically. From 5 p.m. it warns you if tomorrow applies.</string>
+    <string name="pp_off">Turn the notice on to pick your city and plate.</string>
+    <string name="pp_none">No restriction in the coming weeks.</string>
+    <string name="pp_and">%1$s and %2$s</string>
+
+    <string name="rc_add">Add</string>
+    <string name="rc_due_on">Due on</string>
+    <string name="rc_yearly">every year</string>
+    <string name="rc_yearly_same">every year, same date</string>
+    <string name="rc_every_months">every %1$d months</string>
+    <string name="rc_no_repeat">does not repeat</string>
+    <string name="rc_or">or</string>
+    <string name="rc_km_left">%1$s km left</string>
+    <string name="rc_in_home">On the home screen</string>
+    <string name="rc_days_before">Warns days before</string>
+    <string name="rc_nothing_home">Nothing for now</string>
+    <string name="rc_empty">Add the SOAT, inspection, oil change and the rest: SailDash reminds you on the home screen a few days before.</string>
+    <plurals name="rc_in_months">
+        <item quantity="one">%1$d month left</item>
+        <item quantity="other">%1$d months left</item>
+    </plurals>
+    <plurals name="rc_in_years">
+        <item quantity="one">%1$d year left</item>
+        <item quantity="other">%1$d years left</item>
+    </plurals>
+    <string name="rc_pick_type">What should I remind you of?</string>
+    <string name="rc_pick_date">%1$s: what day is it due?</string>
+    <string name="rc_remove">Remove</string>
+    <string name="rc_next_km">Next mileage (optional)</string>
+</resources>

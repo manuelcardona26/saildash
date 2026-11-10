@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash 1.1 · diseño C: Sistema (Diagnóstico, Actualizaciones, Acerca de) y Mandos al volante. -->
+<resources>
+    <string name="sys_tab_diag">Diagnóstico</string>
+    <string name="sys_tab_updates">Actualizaciones</string>
+    <string name="sys_tab_about">Acerca de</string>
+    <string name="sys_important">Lo más importante</string>
+    <string name="sys_only_looks">Solo mira: no cambia nada.</string>
+    <string name="sys_checking">Revisando tu pantalla…</string>
+    <string name="sys_details">Ver el detalle técnico</string>
+    <string name="sys_details_hide">Ocultar el detalle técnico</string>
+    <string name="sys_split_sub">Mapa y música lado a lado</string>
+    <string name="sys_eq_sub">%1$d bandas para las apps; la radio va por la MCU</string>
+    <string name="sys_apps_sub">Radio, sonido, carro, reversa, Bluetooth, MCU</string>
+    <string name="sys_ram">%1$s de RAM</string>
+    <string name="sys_rec_idle">Listo para grabar · 3 min</string>
+    <string name="sys_rec_running">Grabando · quedan %1$s</string>
+    <string name="sys_rec_count">%1$d eventos · todos van al archivo</string>
+    <string name="sys_rec_empty">Toca grabar y mete reversa, prende las luces o cambia de emisora.</string>
+    <string name="sys_usb_sub">Reporte, eventos y apps clave</string>
+    <string name="sys_you_have">Tienes</string>
+    <string name="sys_installed">Versión de %1$s · instalada el %2$s</string>
+    <string name="sys_last_check">Última búsqueda</string>
+    <string name="sys_never">Nunca</string>
+    <string name="sys_today_at">Hoy, %1$s</string>
+    <string name="sys_from">De dónde baja</string>
+    <string name="sys_from_github">GitHub Releases de SailDash</string>
+    <string name="sys_from_none">Esta versión no se actualiza sola</string>
+    <string name="sys_privacy">Sin cuentas ni rastreo. Busca sola de vez en cuando al volver al inicio.</string>
+    <string name="sys_search">Buscar actualización</string>
+    <string name="sys_found">Encontramos una nueva</string>
+    <string name="sys_ready">SailDash %1$s está lista</string>
+    <string name="sys_size">%1$s MB</string>
+    <string name="sys_brings">Qué trae</string>
+    <string name="sys_verified">Verificada: la huella SHA-256 coincide</string>
+    <string name="sys_verify_note">Se revisa con SHA-256 antes de instalar</string>
+    <string name="sys_downloaded">Descargada</string>
+    <string name="sys_of">%1$s de %2$s</string>
+    <string name="sys_later">Después</string>
+    <string name="sys_install">Instalar</string>
+    <string name="sys_up_to_date">Estás al día</string>
+    <string name="sys_up_to_date_sub">No hay una versión más nueva de SailDash.</string>
+    <string name="sys_no_news">Toca «Buscar actualización» para ver si hay una versión nueva.</string>
+    <string name="sys_about_screen">Tu pantalla</string>
+    <string name="sys_about_android">Ajustes de Android</string>
+
+    <!-- Mandos al volante -->
+    <string name="wh_factory">Como de fábrica</string>
+    <string name="wh_learned">Botones aprendidos</string>
+    <string name="wh_learned_sub">Los que no cambies funcionan como de fábrica.</string>
+    <string name="wh_button">Botón %1$s</string>
+    <string name="wh_key">Tecla %1$s</string>
+    <string name="wh_none">Todavía no has cambiado ningún botón. Toca «Aprender botón» y presiona uno del timón.</string>
+    <string name="wh_learn_cap">Aprender botón</string>
+    <string name="wh_press">Presiona un botón del volante…</string>
+    <string name="wh_waiting">Esperando · quedan %1$d s</string>
+    <string name="wh_idle">Toca y presiona un botón del timón</string>
+    <string name="wh_idle_sub">SailDash lo reconoce y eliges qué hace</string>
+    <string name="wh_got">Botón %1$s</string>
+    <string name="wh_pick">¿Qué hace?</string>
+    <string name="sys_this_version">Esta versión</string>
+    <string name="sys_any_new">¿Hay una nueva?</string>
+    <string name="park_hint">Modo estacionado: sale tras 5 minutos sin tocar, con el carro quieto.\nUn toque o cualquier botón del volante lo quita.</string>
+    <string name="park_daynight">Día y noche, solo</string>
+    <string name="park_daynight_help">De noche todo queda oscuro y baja el brillo. De día, el inicio se aclara:</string>
+    <string name="park_day_look">Así se ve de día</string>
+    <string name="park_when">¿Cuándo es de noche?</string>
+    <string name="park_sun">Hora del sol</string>
+    <string name="park_sensor">Sensor de luz</string>
+    <string name="park_lights">Luces del carro</string>
+    <string name="park_night_from_in">Hoy en %1$s: noche desde las %2$s</string>
+    <string name="park_night_from">Hoy: noche desde las %1$s</string>
+    <string name="edit_title">Editando el inicio</string>
+    <string name="edit_add">Agregar widget</string>
+    <string name="edit_add_sub">Toca uno para ponerlo en el inicio</string>
+    <string name="edit_templates">Plantillas</string>
+    <string name="edit_templates_note">Cambian todo el acomodo; tus widgets se guardan</string>
+</resources>

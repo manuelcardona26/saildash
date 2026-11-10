@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash 1.1 · diseño C: Tu carro (Reversa, Pico y placa, Recordatorios), cámaras y la vista de reversa. -->
+<resources>
+    <!-- Reversa -->
+    <string name="rev_apps">Spotify, CarPlay (AutoKit), NewPipe y USB</string>
+    <string name="rev_none_sub">Como está</string>
+    <string name="rev_lower_sub">−30 %</string>
+    <string name="rev_half_sub">50 %</string>
+    <string name="rev_mute_sub">Sin sonido</string>
+    <string name="rev_restore_help">Vuelve como estaba 2 segundos después. Si lo mueves en reversa, queda como lo dejaste.</string>
+    <string name="rev_missing">Falta enseñarle</string>
+    <string name="rev_learned">Aprendida</string>
+    <string name="rev_listening_tag">Escuchando · %1$d s</string>
+    <string name="rev_step1_plain">Con el carro encendido, toca Aprender la reversa.</string>
+    <string name="rev_step2">Mete reversa y déjala unos segundos.</string>
+    <string name="rev_step2_sub">La cámara tapa la pantalla: es normal.</string>
+    <string name="rev_step3">SailDash anota qué cambió y queda listo.</string>
+    <string name="rev_test_title">Probar</string>
+    <string name="rev_normal">Normal</string>
+    <string name="rev_reverse">Reversa</string>
+    <string name="rev_chip_note_b">La cámara la dibuja el chip del carro.</string>
+    <string name="rev_chip_note">SailDash solo cambia el volumen.</string>
+    <string name="rev_test_btn">Probar 3 segundos</string>
+
+    <!-- Vista de reversa de SailDash -->
+    <string name="rev_view_title">Vista de reversa de SailDash</string>
+    <string name="rev_view_ready">Cámara %1$s lista</string>
+    <string name="rev_view_help">Tu pantalla le pasa una cámara a Android: ábrela cuando quieras ver atrás con tres líneas guía que tú calibras. No toca la cámara de reversa de fábrica, que dibuja el chip del carro.</string>
+    <string name="rev_view_open">Abrir vista de reversa</string>
+    <string name="rev_view_calibrate">Calibrar líneas</string>
+    <string name="rev_view_mirror">Espejo</string>
+    <string name="rev_view_calibrated">Líneas calibradas en esta pantalla</string>
+    <string name="rev_view_not_calibrated">Líneas sin calibrar</string>
+    <string name="rev_view_none_title">Sin cámara para Android</string>
+    <string name="rev_view_none">Tu cámara de reversa va directo al chip del carro y Android no la puede abrir, así que SailDash no puede dibujar líneas sobre ella.</string>
+    <string name="rev_view_factory">Lo que sí sirve: prende las líneas de parqueo de fábrica en el menú de la cámara (Ajustes de fábrica → Reversa → Líneas de parqueo), o instala un kit de sensores de reversa que pita según la distancia.</string>
+    <string name="rev_view_check">Revisar cámaras</string>
+    <string name="rev_view_checking">Revisando…</string>
+    <string name="rev_view_permission">SailDash necesita permiso de cámara para revisarla.</string>
+    <string name="rev_cal_help">Pon tres marcas en el piso a 0,5 m, 1 m y 2 m detrás del bómper y arrastra cada línea hasta su marca.</string>
+    <string name="rev_cal_save">Guardar líneas</string>
+    <string name="rev_cal_reset">Como venían</string>
+    <string name="rev_view_close">Cerrar</string>
+    <string name="rev_view_error">No se pudo abrir la cámara (%1$s).</string>
+
+    <!-- Diagnóstico: cámaras -->
+    <string name="cam_row_none">Cámaras: Android no ve ninguna.</string>
+    <string name="cam_row_none_sub">La de reversa va por el chip del carro.</string>
+    <string name="cam_row_ok">Cámara: %1$d sirve · %2$s</string>
+    <string name="cam_row_fail">Cámaras: %1$d, ninguna abre.</string>
+    <string name="cam_row_sub">%1$s · la de fábrica no se toca</string>
+    <string name="cam_row_unchecked">Cámaras: sin revisar.</string>
+    <string name="cam_row_unchecked_sub">Toca para abrir cada una un momento.</string>
+    <string name="cam_back">atrás</string>
+    <string name="cam_front">adelante</string>
+    <string name="cam_external">externa</string>
+
+    <!-- Pico y placa -->
+    <string name="pp_notify">Avisarme al encender</string>
+    <string name="pp_digit">Último dígito\nde tu placa</string>
+    <string name="pp_next">Próximos días</string>
+    <string name="pp_day_rule">%1$s: placas %2$s</string>
+    <string name="pp_today">Hoy</string>
+    <string name="pp_holiday">Festivo · no aplica</string>
+    <string name="pp_valid">Reglas vigentes hasta el</string>
+    <string name="pp_search">Buscar nuevas</string>
+    <string name="pp_preview">Así sale al encender</string>
+    <string name="pp_plate">Placa terminada en %1$d</string>
+    <string name="pp_note">Sin domingos ni festivos: se calculan solos. Desde las 5 p. m. te avisa si mañana tienes.</string>
+    <string name="pp_off">Prende el aviso para elegir tu ciudad y tu placa.</string>
+    <string name="pp_none">Sin pico y placa en las próximas semanas.</string>
+    <string name="pp_and">%1$s y %2$s</string>
+
+    <!-- Recordatorios -->
+    <string name="rc_add">Agregar</string>
+    <string name="rc_due_on">Vence el</string>
+    <string name="rc_yearly">cada año</string>
+    <string name="rc_yearly_same">cada año, misma fecha</string>
+    <string name="rc_every_months">cada %1$d meses</string>
+    <string name="rc_no_repeat">no se repite</string>
+    <string name="rc_or">o</string>
+    <string name="rc_km_left">faltan %1$s km</string>
+    <string name="rc_in_home">En el inicio</string>
+    <string name="rc_days_before">Avisa días antes</string>
+    <string name="rc_nothing_home">Nada por ahora</string>
+    <string name="rc_empty">Agrega el SOAT, la técnico-mecánica, el cambio de aceite y lo demás: SailDash te avisa en el inicio unos días antes.</string>
+    <plurals name="rc_in_months">
+        <item quantity="one">falta %1$d mes</item>
+        <item quantity="other">faltan %1$d meses</item>
+    </plurals>
+    <plurals name="rc_in_years">
+        <item quantity="one">falta %1$d año</item>
+        <item quantity="other">faltan %1$d años</item>
+    </plurals>
+    <string name="rc_pick_type">¿Qué quieres que te recuerde?</string>
+    <string name="rc_pick_date">%1$s: ¿qué día vence?</string>
+    <string name="rc_remove">Quitar</string>
+    <string name="rc_next_km">Km del próximo (opcional)</string>
+</resources>

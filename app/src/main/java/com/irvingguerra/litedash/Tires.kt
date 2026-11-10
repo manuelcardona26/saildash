@@ -1,5 +1,10 @@
 package com.irvingguerra.litedash
 
+import com.irvingguerra.litedash.core.ui.ice.glass
+import com.irvingguerra.litedash.core.ui.ice.LocalIce
+import com.irvingguerra.litedash.core.ui.ice.IceText
+import com.irvingguerra.litedash.core.ui.ice.IceFrame
+import com.irvingguerra.litedash.core.ui.ice.IceBackdrop
 import com.irvingguerra.litedash.feature.obd.ObdState
 import com.irvingguerra.litedash.feature.obd.FactoryTires
 import com.irvingguerra.litedash.feature.car.WheelSpots
@@ -29,6 +34,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -344,6 +350,8 @@ private fun TireCard(
     onClick: () -> Unit,
     modifier: Modifier,
 ) {
+    // SailDash 1.1: la grande en el diseño C (llantas.html): vidrio, punto de estado, la presión delgada y la línea abajo.
+    if (!compact) return TireCardC(name, pressure, unit, temp, status, series, sparkSpan, selected, onClick, modifier)
     val c = LocalColors.current
     val shape = RoundedCornerShape(Radius.inner)
     val color = severityColor(status.severity)
@@ -444,58 +452,49 @@ private const val TIRES_START_SCALE = 0.96f
  */
 @Composable
 fun TiresFull(d: Dependencies, progress: () -> Float, onClose: () -> Unit, onSettings: () -> Unit, onReady: () -> Unit) {
-    val c = LocalColors.current
     var chart by remember { mutableStateOf<Wheel?>(null) }
-    // La transparencia a cada cosa al dibujarla (sin capa aparte de toda la pantalla en cada cuadro del fundido).
+    val ice = LocalIce.current
+    // SailDash 1.1: el diseño C (catalogo/llantas): el espacio de fondo, el encabezado con la fuente y el panel de vidrio.
     Box(Modifier.fillMaxSize().graphicsLayer { alpha = progress(); compositingStrategy = CompositingStrategy.ModulateAlpha }) {
         Box(
             Modifier
                 .fillMaxSize()
-                .background(c.background)
+                .background(ice.bg)
                 .clickable(remember { MutableInteractionSource() }, indication = null, onClick = onClose),
         )
-        Column(
-            Modifier
-                .windowInsetsPadding(WindowInsets.safeDrawing)
-                .padding(16.dp)
-                .fillMaxSize()
-                .graphicsLayer {
-                    val s = TIRES_START_SCALE + (1f - TIRES_START_SCALE) * progress()
-                    scaleX = s
-                    scaleY = s
-                }
-                // Lo de adentro no cierra: solo el fondo.
-                .clickable(remember { MutableInteractionSource() }, indication = null) {},
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
+        IceFrame(Modifier.windowInsetsPadding(WindowInsets.safeDrawing)) {
+            IceBackdrop(R.drawable.bg_espacio)
             val repo = d.tpms
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Icon(Icons.tire, c.accent, 26.dp)
-                Label(stringResource(R.string.tires), Typography.title, maxLines = 1)
-                if (repo.source != null) Label(tiresStatusText(repo), Typography.small, c.textMuted, maxLines = 1, modifier = Modifier.weight(1f))
-                else Spacer(Modifier.weight(1f))
-                IconButton(Icons.settings, onSettings, background = c.surfaceHigh)
-                IconButton(Icons.close, onClose, background = c.surfaceHigh)
-            }
-            BoxWithConstraints(Modifier.weight(1f).fillMaxWidth()) {
-                val portrait = maxHeight > maxWidth
-                val view = @Composable { m: Modifier ->
-                    Card(m) {
-                        TiresView(
-                            d, compact = false, onWheel = { chart = if (chart == it) null else it }, Modifier.fillMaxSize().padding(18.dp),
-                            selected = chart, onSettings = onSettings, onReady = onReady,
-                        )
-                    }
+            // Encabezado: el ícono, "Llantas", la fuente en una píldora y los botones redondos.
+            Row(Modifier.at(24, 20, 976, 52), verticalAlignment = Alignment.CenterVertically) {
+                Icon(SetIcons.tire, Kc.ice, 30.dp)
+                Spacer(Modifier.width(14.dp))
+                IceText(stringResource(R.string.tires), ts(30f, 300, spacing = 0.01f), Color.White)
+                Spacer(Modifier.width(16.dp))
+                if (repo.source != null) Row(
+                    Modifier.height(34.dp).clip(RoundedCornerShape(17.dp)).background(Color(170, 210, 255).copy(alpha = 0.06f))
+                        .border(1.dp, ice.line2, RoundedCornerShape(17.dp)).padding(horizontal = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    KDot(if (repo.status == TpmsStatus.CONNECTED) Kc.mint else Kc.warn)
+                    Spacer(Modifier.width(8.dp))
+                    IceText(tiresStatusText(repo), ts(13f, display = false), ice.ink2)
                 }
-                val graph = @Composable { m: Modifier, w: Wheel -> Card(m) { TireHistoryChart(d, w, { chart = null }, Modifier.fillMaxSize().padding(18.dp)) } }
-                if (portrait) Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    view(Modifier.fillMaxWidth().weight(1f))
-                    chart?.let { graph(Modifier.fillMaxWidth().weight(0.8f), it) }
-                } else Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    view(Modifier.fillMaxHeight().weight(1f))
-                    chart?.let { graph(Modifier.fillMaxHeight().weight(0.8f), it) }
-                }
+                Spacer(Modifier.weight(1f))
+                RoundBtn(SetIcons.sliders, onSettings, size = 48.dp, iconSize = 22.dp, tint = ice.ink, border = ice.line)
+                Spacer(Modifier.width(16.dp))
+                RoundBtn(SetIcons.close, onClose, size = 48.dp, iconSize = 22.dp, tint = ice.ink, border = ice.line)
             }
+            val panel = Modifier.glass(ice.glass, ice.line, ice.sheen, 20.dp)
+                .clickable(remember { MutableInteractionSource() }, indication = null) {}
+            val w = chart
+            Box(Modifier.at(16, 80, if (w == null) 992 else 610, 432).then(panel)) {
+                TiresView(
+                    d, compact = false, onWheel = { chart = if (chart == it) null else it }, Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 20.dp),
+                    selected = chart, onSettings = onSettings, onReady = onReady,
+                )
+            }
+            if (w != null) Box(Modifier.at(638, 80, 370, 432).then(panel)) { TireHistoryChart(d, w, { chart = null }, Modifier.fillMaxSize().padding(18.dp)) }
         }
     }
 }
@@ -884,4 +883,38 @@ internal suspend fun factoryTires(d: Dependencies): FactoryTires {
     val obd = d.obd
     if (obd.state == ObdState.OFF) obd.connect()
     return obd.factoryTires()
+}
+
+/** La tarjeta de una llanta en el diseño C (la de Llantas a pantalla completa). */
+@Composable
+private fun TireCardC(
+    name: String, pressure: String, unit: String, temp: String?, status: TireStatus, series: List<Float>?,
+    sparkSpan: Float, selected: Boolean, onClick: () -> Unit, modifier: Modifier,
+) {
+    val ice = LocalIce.current
+    val color = severityColor(status.severity)
+    val tone = if (status.problem) Kc.warn else null
+    Box(
+        modifier.glass(
+            tone?.let { listOf(0f to it.copy(alpha = 0.12f), 1f to it.copy(alpha = 0.03f)) } ?: ice.glass,
+            if (selected) Kc.ice.copy(alpha = 0.6f) else tone?.copy(alpha = 0.40f) ?: ice.line, ice.sheen, 16.dp,
+        ).clip(RoundedCornerShape(16.dp)).clickable(onClick = onClick),
+    ) {
+        Column(Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 14.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                KDot(if (status.problem) Kc.warn else color ?: Kc.mint)
+                Spacer(Modifier.width(8.dp))
+                IceText(name, ts(14f, display = false), ice.ink2)
+            }
+            Row(Modifier.padding(top = 12.dp), verticalAlignment = Alignment.Bottom) {
+                IceText(pressure, ts(36f, 300), if (status.problem) Color(0xFFFFD99C) else Color.White)
+                IceText(unit, ts(16f), ice.ink2, modifier = Modifier.padding(start = 6.dp, bottom = 4.dp))
+            }
+            val word = stringResource(status.state.word())
+            IceText(listOfNotNull(temp, word).joinToString(" · "), ts(13f, display = false), if (status.problem) Color(0xFFFFD99C) else ice.ink2, modifier = Modifier.padding(top = 8.dp))
+            Spacer(Modifier.weight(1f))
+            if (series != null) Sparkline(series, if (status.problem) Kc.warn else Color(200, 230, 255).copy(alpha = 0.55f), Modifier.fillMaxWidth().height(18.dp), capacity = SPARK_POINTS, minSpan = sparkSpan)
+            else Box(Modifier.fillMaxWidth().height(2.dp).background(Color(200, 230, 255).copy(alpha = 0.35f)))
+        }
+    }
 }

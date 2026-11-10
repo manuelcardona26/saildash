@@ -35,6 +35,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -191,6 +192,7 @@ object ReminderJson {
 
 /** Recordatorios guardados en el dispositivo; nada corre en segundo plano: se revisan al ver el inicio. */
 class ReminderRepository(context: Context) {
+    private val app = context.applicationContext
     private val store = context.getSharedPreferences(STORE, Context.MODE_PRIVATE)
     private val loaded = ReminderJson.parse(store.getString(KEY, null))
 
@@ -200,8 +202,13 @@ class ReminderRepository(context: Context) {
     var all by mutableStateOf(loaded.reminders)
         private set
 
-    /** Los que vencen en los próximos [DAYS_BEFORE] días o ya vencieron, el más próximo primero. */
-    fun due(today: Day = Day.today()) = all.filter { !it.date.isAfter(today.plusDays(DAYS_BEFORE)) }.sortedBy { it.date }
+    /**
+     * Los que vencen en los próximos [DAYS_BEFORE] días o ya vencieron, el más próximo primero.
+     * SailDash: también los que llevan km y les faltan [KM_BEFORE] o menos con el odómetro por GPS.
+     */
+    fun due(today: Day = Day.today(), odometerKm: Double? = runCatching { Garage.get(app).odometer?.km }.getOrNull()) = all.filter {
+        !it.date.isAfter(today.plusDays(DAYS_BEFORE)) || (it.km != null && odometerKm != null && kmLeft(it.km, odometerKm) <= KM_BEFORE)
+    }.sortedBy { it.date }
 
     fun add(type: ReminderType, date: Day, km: Int? = null) =
         save(all + Reminder(System.currentTimeMillis(), type, date, km.takeIf { type.hasKm }))
@@ -220,6 +227,7 @@ class ReminderRepository(context: Context) {
         const val STORE = "reminders"
         const val KEY = "list"
         const val DAYS_BEFORE = 7L
+        const val KM_BEFORE = 500L
     }
 }
 
@@ -240,11 +248,14 @@ private fun whenText(date: Day): String {
     }
 }
 
-/** "a los 85.000 km" (null si no tiene km). */
+/** "a los 85.000 km" y, con el odómetro por GPS puesto, "faltan 400 km" (null si no tiene km). */
 @Composable
 private fun kmText(r: Reminder): String? {
     val km = r.km ?: return null
-    return stringResource(R.string.recordatorios_at_km, ReminderKm.format(km, currentLocale()))
+    val at = stringResource(R.string.recordatorios_at_km, ReminderKm.format(km, currentLocale()))
+    val odo = Garage.get(LocalContext.current).odometer ?: return at
+    val left = kmLeft(km, odo.km)
+    return if (left >= 0) "$at · " + stringResource(R.string.rc_km_left, ReminderKm.format(left.toInt(), currentLocale())) else at
 }
 
 /** Esconde el teclado y suelta el campo (al guardar o cancelar). */
@@ -386,7 +397,7 @@ private fun KmField(value: String, onChange: (String) -> Unit, lift: Boolean = f
 
 /** Calendario dentro de la tarjeta (sin ventanas emergentes): un mes a la vista, ‹ › para cambiarlo. */
 @Composable
-private fun DatePicker(onPick: (Day) -> Unit) {
+internal fun DatePicker(onPick: (Day) -> Unit) {
     val c = LocalColors.current
     val locale = currentLocale()
     val today = remember { Day.today() }

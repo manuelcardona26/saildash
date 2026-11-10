@@ -50,6 +50,9 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" tools:ignore="ProtectedPermissions" />
     <!-- Ecualizador (Ajustes → Sonido) y Diagnóstico: efectos de sonido globales (permiso normal, sin pregunta). -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <!-- SailDash: Diagnóstico → cámaras y la vista de reversa con líneas (solo si la abres; nunca la de fábrica). -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
         android:name=".LiteDashApp"

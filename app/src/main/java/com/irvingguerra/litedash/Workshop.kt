@@ -191,7 +191,7 @@ fun EngineAlertBanner(d: Dependencies, state: EngineAlertState) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun Connection(d: Dependencies) {
+internal fun Connection(d: Dependencies) {
     val c = LocalColors.current
     val obd = d.obd
     var permitted by remember { mutableStateOf(obd.hasPermission()) }
@@ -318,7 +318,7 @@ private fun turnOffBluetooth(context: Context) {
 }
 
 /** Cómo está guardado un código: encendió la luz, el auto lo vigila o ya no se borra a mano. */
-private enum class CodeKind(val label: Int) {
+internal enum class CodeKind(val label: Int) {
     STORED(R.string.code_stored),
     PENDING(R.string.code_pending),
     PERMANENT(R.string.code_permanent),
@@ -506,7 +506,7 @@ fun sensorText(signal: String, v: Float, units: UnitChoice, locale: java.util.Lo
     }
 }
 
-private fun monitorName(m: MonitorName) = when (m) {
+internal fun monitorName(m: MonitorName) = when (m) {
     MonitorName.MISFIRE -> R.string.monitor_misfire
     MonitorName.FUEL -> R.string.monitor_fuel
     MonitorName.COMPONENTS -> R.string.monitor_components

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash 1.1 · diseño C: el Taller (con y sin OBD), tanqueadas y bitácora. -->
+<resources>
+    <string name="taller_title">Taller</string>
+    <string name="taller_save">Guardar</string>
+
+    <!-- Pestañas -->
+    <string name="taller_tab_trip">Viaje</string>
+    <string name="taller_tab_odometer">Odómetro</string>
+    <string name="taller_tab_fuel">Tanqueadas</string>
+    <string name="taller_tab_log">Bitácora</string>
+    <string name="taller_tab_obd">OBD</string>
+    <string name="taller_tab_health">Salud</string>
+    <string name="taller_tab_codes">Códigos de falla</string>
+    <string name="taller_tab_sensors">Sensores</string>
+    <string name="taller_tab_charts">Gráficas</string>
+    <string name="taller_tab_more">Más</string>
+    <string name="taller_tab_connection">Conexión</string>
+
+    <!-- Píldora de estado -->
+    <string name="taller_pill_gps">GPS</string>
+    <string name="taller_pill_gps_on">· midiendo · sin OBD</string>
+    <string name="taller_pill_gps_idle">· en espera · sin OBD</string>
+    <string name="taller_pill_obd_on">· %1$s · conectado</string>
+    <string name="taller_pill_obd_off">· sin conectar</string>
+
+    <!-- Viaje -->
+    <string name="taller_trip_now">Viaje actual</string>
+    <string name="taller_trip_since">Desde %1$s · el tiempo cuenta solo en movimiento</string>
+    <string name="taller_trip_waiting">Empieza a contar cuando el carro arranque</string>
+    <string name="taller_trip_time">Tiempo</string>
+    <string name="taller_trip_moving">en movimiento</string>
+    <string name="taller_trip_average">Promedio</string>
+    <string name="taller_trip_average_sub">velocidad promedio</string>
+    <string name="taller_trip_new">Nuevo viaje</string>
+    <string name="taller_total">Total</string>
+    <string name="taller_total_since">desde %1$s</string>
+    <string name="taller_total_line">%1$s en movimiento · %2$s promedio</string>
+    <string name="taller_total_reset">Reiniciar total</string>
+    <string name="taller_trips_before">Viajes anteriores</string>
+    <string name="taller_trips_empty">Un viaje se cierra solo tras 2 horas sin moverte, o con «Nuevo viaje».</string>
+    <string name="taller_gps_permission">SailDash necesita la ubicación para medir los viajes con el GPS.</string>
+    <string name="taller_gps_allow">Permitir ubicación</string>
+    <string name="taller_hours_minutes">%1$d h %2$02d min</string>
+
+    <!-- Odómetro -->
+    <string name="taller_odo_title">Odómetro aproximado</string>
+    <string name="taller_odo_unset">Sin poner</string>
+    <string name="taller_odo_unset_help">Escribe una vez lo que marca el tablero. SailDash le suma lo que mide el GPS mientras ya está prendido (mapa, velocímetro o viaje).</string>
+    <string name="taller_odo_set">Poner kilometraje</string>
+    <string name="taller_odo_fix">Corregir con el tablero</string>
+    <string name="taller_odo_from">Desde %1$s km el %2$s · +%3$s km con GPS</string>
+    <string name="taller_odo_factor">Ajuste del GPS: ×%1$s, aprendido de tus correcciones</string>
+    <string name="taller_odo_note">Nunca deja el GPS prendido solo para esto: suma cuando el mapa, el velocímetro o el viaje ya lo usan. Corrígelo de vez en cuando con el tablero.</string>
+    <string name="taller_odo_pad">¿Cuánto marca el tablero?</string>
+    <string name="taller_odo_pad_hint">El número del odómetro del carro, en km.</string>
+    <string name="taller_oil">Cambio de aceite</string>
+    <string name="taller_oil_left">faltan %1$s km</string>
+    <string name="taller_oil_over">te pasaste %1$s km</string>
+    <string name="taller_oil_at">a los %1$s km</string>
+    <string name="taller_oil_at_date">a los %1$s km · o el %2$s</string>
+    <string name="taller_oil_no_km">Sin kilometraje</string>
+    <string name="taller_oil_no_km_help">Ponle a qué km toca el próximo cambio y aquí sale cuánto falta.</string>
+    <string name="taller_oil_none">Sin recordatorio</string>
+    <string name="taller_oil_none_help">Agrega el cambio de aceite con su kilometraje y SailDash te dice cuánto falta.</string>
+    <string name="taller_oil_need_odo">Pon el odómetro para saber cuánto falta.</string>
+    <string name="taller_oil_set_km">Poner km del cambio</string>
+    <string name="taller_oil_pad">¿A los cuántos km es el próximo cambio?</string>
+    <string name="taller_rotation">Rotación de llantas</string>
+    <string name="taller_last_service">Último servicio</string>
+    <string name="taller_last_service_none">Anótalo en la Bitácora y aquí sale.</string>
+
+    <!-- Tanqueadas -->
+    <string name="taller_fuel_economy">Rendimiento</string>
+    <string name="taller_fuel_unit">km/gal</string>
+    <string name="taller_fuel_cost_km">%1$s por km · %2$d tanqueadas</string>
+    <string name="taller_fuel_need_two">Con dos tanqueadas de tanque lleno sale el rendimiento.</string>
+    <string name="taller_fuel_month">Este mes</string>
+    <string name="taller_fuel_gallon">Último galón</string>
+    <string name="taller_fuel_add">Agregar tanqueada</string>
+    <string name="taller_fuel_history">Historial</string>
+    <string name="taller_fuel_empty">Anota cada tanqueada, ojalá con el tanque lleno: SailDash calcula cuántos km te rinde el galón y cuánto te cuesta cada km.</string>
+    <string name="taller_fuel_row">%1$s gal · %2$s · %3$s km</string>
+    <string name="taller_fuel_partial">a medias</string>
+    <string name="taller_fuel_new">Nueva tanqueada</string>
+    <string name="taller_fuel_gallons">Galones</string>
+    <string name="taller_fuel_price">Valor pagado</string>
+    <string name="taller_fuel_km">Kilometraje</string>
+    <string name="taller_fuel_full">Tanque lleno</string>
+    <string name="taller_fuel_full_help">Así el rendimiento sale exacto. Si fue a medias, se suma a la siguiente.</string>
+    <string name="taller_fuel_per_gallon">%1$s el galón</string>
+    <string name="taller_fuel_km_hint">Sale del odómetro aproximado; corrígelo si el tablero dice otra cosa.</string>
+    <string name="taller_tap_to_write">Tocar para escribir</string>
+    <string name="taller_pesos_unit">pesos</string>
+    <string name="taller_gal_unit">gal</string>
+    <string name="taller_km_unit">km</string>
+
+    <!-- Bitácora -->
+    <string name="taller_log_add">Anotar en la bitácora</string>
+    <string name="taller_log_history">Lo que le has hecho al carro</string>
+    <string name="taller_log_empty">Anota servicios, llantas, frenos y batería con su fecha y kilometraje: así sabes qué toca y cuándo se hizo.</string>
+    <string name="taller_log_service">Servicio</string>
+    <string name="taller_log_oil">Aceite</string>
+    <string name="taller_log_tires">Llantas</string>
+    <string name="taller_log_brakes">Frenos</string>
+    <string name="taller_log_battery">Batería</string>
+    <string name="taller_log_other">Otro</string>
+    <string name="taller_log_new">Anotar: %1$s</string>
+    <string name="taller_log_date">Fecha</string>
+    <string name="taller_log_cost">Costo (opcional)</string>
+    <string name="taller_log_note">Nota (opcional)</string>
+    <string name="taller_log_note_hint">Ej.: pastillas delanteras, taller de la 33</string>
+    <string name="taller_today">hoy</string>
+
+    <!-- OBD sin conectar -->
+    <string name="taller_obd_title">Con un adaptador OBD, el Taller lee el motor</string>
+    <string name="taller_obd_help">Un ELM327 (Bluetooth, Wi-Fi o USB) en el puerto OBD, debajo del timón, y aquí salen la salud del carro, los códigos de falla, los sensores en vivo y las gráficas. Sin adaptador, todo lo demás del Taller funciona con el GPS.</string>
+    <string name="taller_obd_module">Usar adaptador OBD</string>
+    <string name="taller_obd_module_help">Apagado no se conecta nada ni se busca nada.</string>
+    <string name="taller_obd_point1">Salud del carro por sistema</string>
+    <string name="taller_obd_point2">Códigos de falla y la prueba de gases</string>
+    <string name="taller_obd_point3">Sensores, gráficas y 0 a 100</string>
+
+    <!-- Con OBD -->
+    <string name="taller_read_ago">leído hace %1$d s</string>
+    <string name="taller_issues_detail">%1$d para atender pronto · %2$d en observación</string>
+    <string name="taller_idle">Ralentí estable</string>
+    <string name="taller_fan_note">Normal</string>
+    <string name="taller_charging">El alternador carga bien</string>
+    <string name="taller_no_codes_saved">Sin fallas guardadas</string>
+    <string name="taller_codes_count">Códigos de falla · %1$d</string>
+    <string name="taller_code_stored_do">Prendió la luz del motor. Llévalo a revisar.</string>
+    <string name="taller_code_pending_do">El carro lo está vigilando; si se repite, prende la luz.</string>
+    <string name="taller_code_permanent_do">Se borra solo cuando el carro confirme que se arregló.</string>
+    <string name="taller_clear_q">¿Borrar los códigos?</string>
+    <string name="taller_clear_step">Paso %1$d de 2</string>
+    <string name="taller_clear_p1">Apaga la luz, pero no arregla nada y reinicia los monitores.</string>
+    <string name="taller_clear_p2">Último paso: el carro debe estar encendido y quieto.</string>
+    <string name="taller_gases">Prueba de gases</string>
+    <string name="taller_gases_q">¿Pasas la revisión\ntécnico-mecánica?</string>
+    <string name="taller_gases_no">Todavía no</string>
+    <string name="taller_gases_yes">Sí, pasarías</string>
+    <string name="taller_mil">Luz del motor</string>
+    <string name="taller_mil_on">Encendida</string>
+    <string name="taller_mil_off">Apagada</string>
+    <string name="taller_live">En vivo · 90 s · elige hasta dos</string>
+    <string name="taller_ago_90">hace 90 s</string>
+    <string name="taller_ago_45">hace 45 s</string>
+    <string name="taller_now">ahora</string>
+    <string name="taller_timer">Cronómetro</string>
+    <string name="taller_seconds">SEGUNDOS</string>
+    <string name="taller_best">Mejor</string>
+    <string name="taller_previous">Anterior</string>
+    <string name="taller_sensors_live">Sensores en vivo · %1$d</string>
+    <string name="taller_more_title">Lo demás del Taller</string>
+    <string name="taller_more_back">Volver a Más</string>
+    <string name="taller_more_connection_sub">Adaptador, alertas del motor y viajes guardados</string>
+    <string name="taller_log_count">%1$d anotaciones</string>
+</resources>

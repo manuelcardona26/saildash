@@ -403,7 +403,7 @@ private fun WeatherCard(d: Dependencies, modifier: Modifier, onSettings: () -> U
 }
 
 /** El ícono del clima en el trazo de la tarjeta (1.5). */
-private fun iceWeatherIcon(sky: Sky, day: Boolean) = when (sky) {
+internal fun iceWeatherIcon(sky: Sky, day: Boolean) = when (sky) {
     Sky.CLEAR -> if (day) IceIcons.sun else IceIcons.moon
     Sky.PARTLY -> if (day) IceIcons.partly else IceIcons.moon
     Sky.CLOUDY -> IceIcons.cloud

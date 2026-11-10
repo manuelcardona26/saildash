@@ -77,7 +77,7 @@ private val MAP_TEMPLATES = listOf(Template.MAP_CAR, Template.COPILOT, Template.
  * con la carretera en lugar del auto ([hero]), solo velocímetro (sin OBD: usa el GPS) o para
  * lucir tu fondo, como BYD (ahí va la Mínima: hora y música, sin velocímetro).
  */
-private enum class TemplateTab(val title: Int, val templates: List<Template>, val hero: String = TileTypes.CAR) {
+internal enum class TemplateTab(val title: Int, val templates: List<Template>, val hero: String = TileTypes.CAR) {
     CAR(R.string.templates_tab_car, Template.entries.filter { it.hasCar && it !in MAP_TEMPLATES }),
     MAP(R.string.templates_tab_map, MAP_TEMPLATES),
     ROAD(R.string.templates_tab_road, listOf(Template.MAP_CAR, Template.CARDS, Template.CENTER, Template.CAR_SPEED, Template.SPORT, Template.VERTICAL), TileTypes.ROAD),
@@ -144,7 +144,7 @@ fun TemplatesPanel(dashboard: DashboardState, prefs: Preferences, close: () -> U
 
 /** Dibujo de la plantilla en chiquito, con las proporciones de esta pantalla. */
 @Composable
-private fun TemplateThumbnail(p: Template, grid: Grid, hero: String, skip: (String) -> Boolean) {
+internal fun TemplateThumbnail(p: Template, grid: Grid, hero: String, skip: (String) -> Boolean) {
     val c = LocalColors.current
     BoxWithConstraints(Modifier.fillMaxWidth().aspectRatio(grid.columns.toFloat() / grid.rows).clip(RoundedCornerShape(Radius.inner)).background(c.background)) {
         val cw = maxWidth / grid.columns
