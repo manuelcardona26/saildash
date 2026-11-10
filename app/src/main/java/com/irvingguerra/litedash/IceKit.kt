@@ -2,6 +2,7 @@
 // pestañas, interruptor, tarjetas, el menú de Ajustes en sus tres formas, el dock y el teclado de números).
 package com.irvingguerra.litedash
 
+import com.irvingguerra.litedash.core.ui.ice.iceCard
 import com.irvingguerra.litedash.core.ui.ice.IceIconButton
 import com.irvingguerra.litedash.core.ui.ice.IceButton
 import com.irvingguerra.litedash.core.ui.ice.IceButtonKind
@@ -148,19 +149,11 @@ fun CapLabel(text: String, modifier: Modifier = Modifier, spacing: Float = 0.2f,
     IceText(text.uppercase(currentLocale()), ts(size, 500, spacing = spacing), color, modifier = modifier)
 }
 
-/** El relleno de lo elegido (`span.on`, `.it.on`, `.op.on`): degradado hielo a 135°, borde de luz por dentro y reflejo arriba. */
-fun Modifier.segOn(radius: Dp, alpha: Float = 0.30f, border: Float = 0.34f, sheen: Float = 0.18f): Modifier = drawWithCache {
-    val b = cssLinearGradient(135f, size, listOf(0f to Color(120, 190, 255).copy(alpha = alpha), 1f to Color(90, 150, 235).copy(alpha = alpha * 0.4f)))
-    val r = CornerRadius(radius.toPx())
-    val px = 1.dp.toPx()
-    onDrawBehind {
-        drawRoundRect(b, cornerRadius = r)
-        drawRoundRect(Color(170, 215, 255).copy(alpha = border), Offset(px / 2, px / 2), Size(size.width - px, size.height - px), r, style = androidx.compose.ui.graphics.drawscope.Stroke(px))
-        drawRect(Color(235, 246, 255).copy(alpha = sheen), Offset(radius.toPx() * 0.6f, px), Size(size.width - radius.toPx() * 1.2f, px))
-    }
-}
 
-/** Una tarjeta de vidrio en [x],[y] de su caja, con [w]×[h] (`.card.glass`); [hi] = la resaltada. */
+/**
+ * Una tarjeta de vidrio (`.card.glass`): la de siempre de core.ui.ice ([iceCard], [hi] = la
+ * resaltada); con [tint], teñida de un color de estado (ámbar, coral).
+ */
 @Composable
 fun IceCard(
     modifier: Modifier = Modifier,
@@ -170,17 +163,9 @@ fun IceCard(
     content: @Composable BoxScope.() -> Unit,
 ) {
     val ice = LocalIce.current
-    val fill = when {
-        tint != null -> listOf(0f to tint.copy(alpha = 0.11f), 1f to tint.copy(alpha = 0.02f))
-        hi -> listOf(0f to Color(150, 205, 255).copy(alpha = 0.17f), 0.6f to Color(110, 160, 230).copy(alpha = 0.07f), 1f to Color(90, 130, 190).copy(alpha = 0.04f))
-        else -> ice.glass
-    }
-    val border = when {
-        tint != null -> tint.copy(alpha = 0.32f)
-        hi -> Color(170, 215, 255).copy(alpha = 0.42f)
-        else -> ice.line
-    }
-    Box(modifier.glass(fill, border, ice.sheen, radius), content = content)
+    val m = if (tint == null) modifier.iceCard(radius, hi)
+    else modifier.glass(listOf(0f to tint.copy(alpha = 0.11f), 1f to tint.copy(alpha = 0.02f)), tint.copy(alpha = 0.32f), ice.sheen, radius)
+    Box(m, content = content)
 }
 
 /** Una tarjeta chica de dato (`.card` del Taller): degradado más tenue y borde `--line-2`. */
@@ -194,21 +179,6 @@ fun IceTile(modifier: Modifier = Modifier, tint: Color? = null, onClick: (() -> 
     Box(m, content = content)
 }
 
-/** Pozo redondo con ícono (`.well`): 44 dp, luz arriba a la izquierda. */
-@Composable
-fun Well(icon: ImageVector, tint: Color = Kc.ice, size: Dp = 44.dp, iconSize: Dp = 22.dp, modifier: Modifier = Modifier) {
-    val ice = LocalIce.current
-    Box(
-        modifier.size(size).drawWithCache {
-            val brush = Brush.radialGradient(
-                0f to Color.White.copy(alpha = 0.14f), 1f to Color.White.copy(alpha = 0.03f),
-                center = Offset(this.size.width * 0.35f, this.size.height * 0.30f), radius = this.size.width * 0.75f,
-            )
-            onDrawBehind { drawCircle(brush) }
-        }.border(1.dp, ice.line2, CircleShape),
-        contentAlignment = Alignment.Center,
-    ) { Icon(icon, tint, iconSize) }
-}
 
 /** Ficha chica de estado (`.st`, "Falta enseñarle", "Hoy"): fondo de su color y punto opcional. */
 @Composable

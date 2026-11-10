@@ -69,7 +69,8 @@ fun ParkedC(d: Dependencies) {
         // .clk
         Column(Modifier.offset(56.dp, 92.dp)) {
             Row(verticalAlignment = Alignment.Bottom) {
-                IceText(time, ts(212f, 200, spacing = -0.03f), Color(206, 226, 246).copy(alpha = 0.66f))
+                // "10:00 p. m." no cabe a 212 antes de la línea de la derecha (668 dp): las horas de dos cifras, más chicas.
+                IceText(time, ts(if (time.length >= 5) 176f else 212f, 200, spacing = -0.03f), Color(206, 226, 246).copy(alpha = 0.66f))
                 if (marker != null) IceText(marker, ts(34f, 300, spacing = 0.04f), Color(170, 196, 224).copy(alpha = 0.5f), modifier = Modifier.padding(start = 16.dp, bottom = 24.dp))
             }
             val date = remember(now, locale) {

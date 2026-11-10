@@ -2,6 +2,8 @@
 // Las cuentas son las de siempre (Health.kt, Workshop.kt, WorkshopAdvanced.kt); aquí solo cambia cómo se ve.
 package com.irvingguerra.litedash
 
+import com.irvingguerra.litedash.core.ui.ice.iceSelected
+import com.irvingguerra.litedash.core.ui.ice.IconWell
 import com.irvingguerra.litedash.core.ui.ice.IceToggle
 import com.irvingguerra.litedash.core.ui.ice.IceDot
 import com.irvingguerra.litedash.core.ui.ice.IceButton
@@ -513,7 +515,7 @@ private fun ChartPanels(d: Dependencies) {
                     val shape = RoundedCornerShape(22.dp)
                     var m = Modifier.weight(1f).height(44.dp).clip(shape)
                     m = if (on && idx == 1) m.background(Brush.linearGradient(listOf(Color(255, 216, 138).copy(alpha = 0.24f), Color(255, 190, 90).copy(alpha = 0.08f)))).border(1.dp, Color(255, 216, 138).copy(alpha = 0.40f), shape)
-                    else if (on) m.segOn(22.dp, 0.30f, 0.36f, 0.18f)
+                    else if (on) m.iceSelected(22.dp, Color(170, 215, 255).copy(alpha = 0.36f))
                     else m.background(Color(170, 210, 255).copy(alpha = 0.04f)).border(1.dp, ice.line2, shape)
                     Row(
                         m.clickable {
@@ -668,7 +670,7 @@ private fun BoxScope.MorePanel(d: Dependencies, garage: Garage) {
             for (row in items.withIndex().chunked(3)) Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 for ((i, item) in row) IceTile(Modifier.weight(1f).height(140.dp), onClick = { moreOpen = i }) {
                     Column(Modifier.padding(16.dp)) {
-                        Well(item.first, Kc.ice, 40.dp, 20.dp)
+                        IconWell(item.first, Kc.ice, 40.dp, 20.dp)
                         IceText(stringResource(item.second), ts(18f, 500), Color.White, modifier = Modifier.padding(top = 14.dp))
                         IceText(item.third, ts(13f, display = false, lh = 1.3f), ice.ink2, maxLines = 2, modifier = Modifier.padding(top = 7.dp))
                     }

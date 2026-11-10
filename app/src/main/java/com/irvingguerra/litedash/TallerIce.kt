@@ -2,6 +2,7 @@
 // tanqueadas y bitácora. Con el OBD conectado: salud, códigos, sensores y gráficas (TallerObdIce.kt).
 package com.irvingguerra.litedash
 
+import com.irvingguerra.litedash.core.ui.ice.IconWell
 import com.irvingguerra.litedash.core.ui.ice.IceIconButton
 import com.irvingguerra.litedash.core.ui.ice.IceSegmented
 import com.irvingguerra.litedash.core.ui.ice.IceToggle
@@ -440,7 +441,7 @@ private fun BoxScope.LogPart(garage: Garage, onAdd: (LogKind) -> Unit) {
         for (row in LogKind.entries.chunked(2)) Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             for (k in row) IceTile(Modifier.weight(1f).height(84.dp), onClick = { onAdd(k) }) {
                 Row(Modifier.fillMaxSize().padding(horizontal = 14.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Well(k.icon(), Kc.ice, 40.dp, 20.dp)
+                    IconWell(k.icon(), Kc.ice, 40.dp, 20.dp)
                     Spacer(Modifier.width(12.dp))
                     IceText(stringResource(k.title()), ts(16f, 500), Color.White, modifier = Modifier.weight(1f))
                     Icon(SetIcons.plus, ice.ink3, 18.dp)
@@ -457,7 +458,7 @@ private fun BoxScope.LogPart(garage: Garage, onAdd: (LogKind) -> Unit) {
         for (e in log) {
             HLine()
             Row(Modifier.height(62.dp), verticalAlignment = Alignment.CenterVertically) {
-                Well(e.kind.icon(), Kc.ice, 36.dp, 18.dp)
+                IconWell(e.kind.icon(), Kc.ice, 36.dp, 18.dp)
                 Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
                     IceText(e.note.ifBlank { stringResource(e.kind.title()) }, ts(15f, display = false), ice.ink)
@@ -554,7 +555,7 @@ private fun NoObdPanel(d: Dependencies) {
     val ice = LocalIce.current
     TallerPanel {
         Column(Modifier.at(24, 24, 330)) {
-            Well(IceIcons.plug, Kc.ice)
+            IconWell(IceIcons.plug, Kc.ice, 44.dp, 22.dp)
             IceText(stringResource(R.string.taller_obd_title), ts(20f, 500, lh = 1.2f), Color.White, maxLines = 2, modifier = Modifier.padding(top = 16.dp))
             IceText(stringResource(R.string.taller_obd_help), ts(13f, display = false, lh = 1.45f), ice.ink2, maxLines = 6, modifier = Modifier.padding(top = 10.dp))
             for (p in listOf(R.string.taller_obd_point1, R.string.taller_obd_point2, R.string.taller_obd_point3)) {

@@ -3,6 +3,8 @@
 // PicoPlacaRepository, ReminderRepository); aquí cambia cómo se ve y se suma la vista de reversa.
 package com.irvingguerra.litedash
 
+import com.irvingguerra.litedash.core.ui.ice.iceSelected
+import com.irvingguerra.litedash.core.ui.ice.IconWell
 import com.irvingguerra.litedash.core.ui.ice.IceIconButton
 import com.irvingguerra.litedash.core.ui.ice.IceToggle
 import com.irvingguerra.litedash.core.ui.ice.IceButton
@@ -135,7 +137,7 @@ private fun BoxScope.ReversePage(back: () -> Unit, openView: (Boolean) -> Unit) 
                         val shape = RoundedCornerShape(16.dp)
                         Box(
                             Modifier.weight(1f).fillMaxHeight().clip(shape)
-                                .then(if (on) Modifier.segOn(16.dp, 0.30f, 0.45f, 0.18f) else Modifier.background(Color(170, 210, 255).copy(alpha = 0.05f)).border(1.dp, ice.line2, shape))
+                                .then(if (on) Modifier.iceSelected(16.dp, Color(170, 215, 255).copy(alpha = 0.45f)) else Modifier.background(Color(170, 210, 255).copy(alpha = 0.05f)).border(1.dp, ice.line2, shape))
                                 .clickable { r.pick(mode) },
                         ) {
                             Row(Modifier.fillMaxSize().padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -630,7 +632,7 @@ private fun BoxScope.RemindersPage(d: Dependencies, back: () -> Unit) {
                     else -> Kc.ice
                 }
                 Row(Modifier.height(60.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Well(r.type.icon(), if (urgent || soon) tone else Kc.ice, 42.dp, 22.dp)
+                    IconWell(r.type.icon(), if (urgent || soon) tone else Kc.ice, 42.dp, 22.dp)
                     Spacer(Modifier.width(14.dp))
                     Column(Modifier.weight(1f)) {
                         IceText(stringResource(r.type.title), ts(17f, 500, lh = 1.1f), ice.ink)
@@ -751,7 +753,7 @@ private fun AddReminder(repo: ReminderRepository, garage: Garage, onPad: (PadReq
                 for (row in ReminderType.entries.chunked(3)) Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     for (rt in row) IceTile(Modifier.weight(1f).height(70.dp), onClick = { type = rt; km = garage.odometer?.let { ((it.km / 1000).toLong() * 1000 + 5000).toString() } ?: "" }) {
                         Row(Modifier.fillMaxSize().padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Well(rt.icon(), Kc.ice, 36.dp, 18.dp)
+                            IconWell(rt.icon(), Kc.ice, 36.dp, 18.dp)
                             Spacer(Modifier.width(10.dp))
                             IceText(stringResource(rt.title), ts(14f, 500, lh = 1.15f), Color.White, maxLines = 2)
                         }

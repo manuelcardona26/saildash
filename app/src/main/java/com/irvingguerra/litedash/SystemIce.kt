@@ -2,6 +2,7 @@
 // (catalogo/mandos-volante). La lógica es la de siempre (Diagnostics, Updater, WheelKeys).
 package com.irvingguerra.litedash
 
+import com.irvingguerra.litedash.core.ui.ice.IconWell
 import com.irvingguerra.litedash.core.ui.ice.IceIconButton
 import com.irvingguerra.litedash.core.ui.ice.IceSegmented
 import com.irvingguerra.litedash.core.ui.ice.IceButton
@@ -129,7 +130,7 @@ private fun BoxScope.DiagnosticsC() {
             for (row in summaryRows(context, report)) {
                 HLine()
                 Row(Modifier.height(54.dp).then(if (row.onClick != null) Modifier.clickable(onClick = row.onClick) else Modifier), verticalAlignment = Alignment.CenterVertically) {
-                    Well(row.icon, row.tint, 40.dp, 20.dp)
+                    IconWell(row.icon, row.tint, 40.dp, 20.dp)
                     Spacer(Modifier.width(12.dp))
                     Column {
                         IceText(row.title, ts(15f, display = false, lh = 1.25f), ice.ink)
@@ -278,7 +279,7 @@ private fun UsbC(report: DiagReport?) {
     val export = DiagnosticsExport
     IceCard(Modifier.at(684, 368, 294, 124), radius = 18.dp) {
         Row(Modifier.at(18, 14, 258), verticalAlignment = Alignment.CenterVertically) {
-            Well(SetIcons.usb, Kc.ice)
+            IconWell(SetIcons.usb, Kc.ice, 44.dp, 22.dp)
             Spacer(Modifier.width(10.dp))
             Column {
                 IceText(stringResource(R.string.diagnostico_export_title), ts(15f, display = false, lh = 1.25f), ice.ink)
