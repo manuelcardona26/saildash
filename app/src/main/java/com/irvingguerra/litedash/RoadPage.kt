@@ -221,9 +221,11 @@ private fun SpeedGauge(d: Dependencies, onSpeed: () -> Unit, askGps: (() -> Unit
         val glow = if (ice.dark) Shadow(Color(150, 210, 255).copy(alpha = 0.3f), Offset.Zero, 24f) else null
         IceText(shown.toString(), iceStyle(88f, FontWeight.ExtraLight, spacing = -0.02f).copy(shadow = glow, textAlign = TextAlign.Center), ice.speed)
         IceText(
-            stringResource(if (askGps != null) R.string.tap_to_enable else if (miles) R.string.speed_unit_mph else R.string.speed_unit_kmh),
+            stringResource(if (miles) R.string.speed_unit_mph else R.string.speed_unit_kmh),
             iceStyle(18f, FontWeight.Light, spacing = 0.06f), ice.ink2, modifier = Modifier.padding(top = 4.dp),
         )
+        // Sin GPS ni OBD: la ayuda chiquita debajo (no encima del arco).
+        if (askGps != null) IceText(stringResource(R.string.road_gps_tap), iceStyle(13f, display = false), ice.ice, modifier = Modifier.padding(top = 10.dp))
     }
 }
 

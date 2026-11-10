@@ -1,5 +1,6 @@
 package com.irvingguerra.litedash
 
+import com.irvingguerra.litedash.core.ui.ice.iceSelected
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -397,7 +398,7 @@ private fun KmField(value: String, onChange: (String) -> Unit, lift: Boolean = f
 
 /** Calendario dentro de la tarjeta (sin ventanas emergentes): un mes a la vista, ‹ › para cambiarlo. */
 @Composable
-internal fun DatePicker(onPick: (Day) -> Unit) {
+internal fun DatePicker(onPick: (Day) -> Unit, cell: androidx.compose.ui.unit.Dp = 48.dp, gap: androidx.compose.ui.unit.Dp = 4.dp) {
     val c = LocalColors.current
     val locale = currentLocale()
     val today = remember { Day.today() }
@@ -413,11 +414,13 @@ internal fun DatePicker(onPick: (Day) -> Unit) {
     val length = (month.plusMonths(1).epochDay - month.epochDay).toInt()
     // Casillas vacías antes del día 1 (1970-01-01 fue jueves = 5 en Calendar).
     val lead = ((month.epochDay + 4).mod(7L).toInt() + 1 - firstWeekday).mod(7)
-    Column(Modifier.widthIn(max = 420.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    val ice = com.irvingguerra.litedash.core.ui.ice.LocalIce.current
+    Column(Modifier.widthIn(max = 420.dp), verticalArrangement = Arrangement.spacedBy(gap)) {
+        // Diseño C: ‹ mes › con los botones redondos de vidrio; el mes en Outfit.
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(Icons.chevron, { month = month.plusMonths(-1) }, Modifier.graphicsLayer(scaleX = -1f), size = 48.dp)
-            Label(title, Typography.subtitle, maxLines = 1, modifier = Modifier.weight(1f).padding(horizontal = 8.dp))
-            IconButton(Icons.chevron, { month = month.plusMonths(1) }, size = 48.dp)
+            com.irvingguerra.litedash.core.ui.ice.IceIconButton(SetIcons.back, { month = month.plusMonths(-1) }, size = cell - 4.dp, iconSize = 18.dp, tint = ice.ink)
+            com.irvingguerra.litedash.core.ui.ice.IceText(title, com.irvingguerra.litedash.core.ui.ice.IceText2.h3, ice.title, maxLines = 1, modifier = Modifier.weight(1f).padding(horizontal = 12.dp))
+            com.irvingguerra.litedash.core.ui.ice.IceIconButton(SetIcons.chevronRight, { month = month.plusMonths(1) }, size = cell - 4.dp, iconSize = 18.dp, tint = ice.ink)
         }
         Row(Modifier.fillMaxWidth()) {
             for (w in weekdays) Label(w, Typography.small.copy(textAlign = TextAlign.Center), c.textMuted, 1, Modifier.weight(1f))
@@ -426,13 +429,14 @@ internal fun DatePicker(onPick: (Day) -> Unit) {
             Row(Modifier.fillMaxWidth()) {
                 for (col in 0 until 7) {
                     val n = week * 7 + col - lead + 1
-                    Box(Modifier.weight(1f).height(48.dp), contentAlignment = Alignment.Center) {
+                    Box(Modifier.weight(1f).height(cell), contentAlignment = Alignment.Center) {
                         if (n in 1..length) {
                             val day = Day(month.year, month.month, n)
                             val isToday = day == today
                             Box(
-                                Modifier.size(44.dp).clip(CircleShape)
-                                    .background(if (isToday) c.surfaceHigh else Color.Transparent)
+                                Modifier.size(cell - 4.dp)
+                                    .then(if (isToday) Modifier.iceSelected((cell - 4.dp) / 2) else Modifier)
+                                    .clip(CircleShape)
                                     .clickable { onPick(day) },
                                 contentAlignment = Alignment.Center,
                             ) { Label("$n", Typography.body, if (day < today) c.textMuted else c.text, 1) }

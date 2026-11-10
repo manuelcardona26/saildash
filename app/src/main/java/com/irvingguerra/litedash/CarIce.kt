@@ -766,8 +766,9 @@ private fun AddReminder(repo: ReminderRepository, garage: Garage, onPad: (PadReq
                     onPad(PadRequest(title, "km", km, format = ::groupDigits) { km = it })
                 }
             }
-            Box(Modifier.weight(1f).height(290.dp).verticalScroll(rememberScrollState())) {
-                DatePicker(onPick = { day -> repo.add(t, day, ReminderKm.parse(km)); close() })
+            // Las seis semanas caben sin deslizar (la última no se corta).
+            Box(Modifier.weight(1f).height(300.dp)) {
+                DatePicker(onPick = { day -> repo.add(t, day, ReminderKm.parse(km)); close() }, cell = 38.dp, gap = 2.dp)
             }
         }
     }

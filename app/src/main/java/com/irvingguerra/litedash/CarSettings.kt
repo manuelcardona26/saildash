@@ -1,6 +1,9 @@
 // Ajustes → Tu auto: el auto elegido, sus modelos descargados y el catálogo.
 package com.irvingguerra.litedash
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.graphics.asImageBitmap
 import com.irvingguerra.litedash.core.ui.Radius
 import android.content.Intent
 import androidx.compose.foundation.Image
@@ -64,8 +67,6 @@ import com.irvingguerra.litedash.feature.car.PaintFinish
 @Composable
 internal fun CarSettings(d: Dependencies) {
     val prefs = d.prefs
-    // SailDash: la foto de tu carro (la del inicio, la música y la bienvenida).
-    OwnerCarPhotoCard()
     val cars = d.cars
     val c = LocalColors.current
     val pkg = cars.pkg(prefs.carModel)
@@ -77,24 +78,35 @@ internal fun CarSettings(d: Dependencies) {
     }
     val tab = tabs(listOf(R.string.tab_my_car, R.string.tab_models, R.string.reminders, R.string.pico_title, R.string.reversa_title), "car")
 
-    if (tab == 0) SettingsCard {
-        Box(Modifier.fillMaxWidth().widthIn(max = 520.dp).aspectRatio(1.8f)) {
-            if (pkg != null) {
-                // Arriba el auto; abajo queda lugar para su sombra y su reflejo en el piso.
-                CarTurntable(cars, pkg, prefs.carPaint, Modifier.fillMaxWidth().fillMaxHeight(0.72f), prefs.carAngle, { prefs.carAngle = it })
-            } else {
-                CarDrawing(prefs.carColor, Modifier.fillMaxWidth().align(Alignment.Center))
+    // Diseño C: una tarjeta con tu carro (la foto, o el 3D, o el dibujo) junto al nombre, y el color abajo.
+    if (tab == 0) SettingsCard(stringResource(R.string.tab_my_car)) {
+        val ice = com.irvingguerra.litedash.core.ui.ice.LocalIce.current
+        val context = LocalContext.current
+        val owner = remember { OwnerCar.of(context) }
+        LaunchedEffect(owner) { owner.load() }
+        Row(horizontalArrangement = Arrangement.spacedBy(20.dp), verticalAlignment = Alignment.CenterVertically) {
+            val shape = RoundedCornerShape(16.dp)
+            Box(
+                Modifier.width(260.dp).height(150.dp).clip(shape).background(androidx.compose.ui.graphics.Color(6, 12, 22).copy(alpha = 0.45f)).border(1.dp, ice.line2, shape),
+                contentAlignment = Alignment.Center,
+            ) {
+                val photo = owner.image
+                when {
+                    photo != null -> Image(photo.bitmap.asImageBitmap(), null, Modifier.fillMaxSize().padding(10.dp), contentScale = ContentScale.Fit)
+                    pkg != null -> CarTurntable(cars, pkg, prefs.carPaint, Modifier.fillMaxSize(), prefs.carAngle, { prefs.carAngle = it })
+                    else -> CarDrawing(prefs.carColor, Modifier.fillMaxWidth().padding(16.dp))
+                }
+            }
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                com.irvingguerra.litedash.core.ui.ice.IceText(stringResource(R.string.name), com.irvingguerra.litedash.core.ui.ice.IceText2.sub, ice.ink2)
+                TextInput(prefs.carName ?: "", { prefs.carName = it.take(24).ifBlank { null } }, pkg?.name ?: stringResource(R.string.my_car), Modifier.fillMaxWidth())
+                com.irvingguerra.litedash.core.ui.ice.IceText(stringResource(R.string.car_home_help), com.irvingguerra.litedash.core.ui.ice.IceText2.sub, ice.ink3, maxLines = 4)
             }
         }
-        Label(stringResource(R.string.car_home_help), Typography.small, c.textMuted)
-        Label(stringResource(R.string.name), Typography.label, c.textMuted)
-        TextInput(prefs.carName ?: "", { prefs.carName = it.take(24).ifBlank { null } }, pkg?.name ?: stringResource(R.string.my_car), Modifier.fillMaxWidth())
-        Label(stringResource(R.string.color), Typography.label, c.textMuted)
+        com.irvingguerra.litedash.core.ui.ice.IceText(stringResource(R.string.color), com.irvingguerra.litedash.core.ui.ice.IceText2.sub, ice.ink2)
         ColorPicker(prefs.carColor, prefs::previewCarColor) { prefs.carColor = it }
         if (pkg != null) FinishPicker(prefs, cars, pkg, catalog?.firstOrNull { it.id == pkg.id })
     }
-    // SailDash: la foto de tu carro para el Inicio (OwnerCar.kt).
-    if (tab == 0) OwnerCarSettings()
     if (tab == 0 && pkg != null) {
         val entry = catalog?.firstOrNull { it.id == pkg.id }
         SettingsCard("${pkg.make} ${pkg.name} ${entry?.years ?: pkg.year}") {

@@ -236,9 +236,7 @@ internal fun OwnerCarSettings() {
         }
     }
     SettingsCard(stringResource(R.string.owner_car_title), stringResource(R.string.owner_car_help)) {
-        owner.image?.let { img ->
-            Image(img.bitmap.asImageBitmap(), null, Modifier.fillMaxWidth().height(160.dp), contentScale = ContentScale.Fit)
-        }
+        // La foto se ve arriba, en la tarjeta de Mi carro.
         FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Button(stringResource(R.string.owner_car_pick), { pick.launch("image/*") }, primary = true)
             if (owner.image != null) Button(stringResource(R.string.owner_car_remove), { scope.launch { owner.clearFront() } })

@@ -61,4 +61,5 @@
     <string name="tires_full_help">Tu carro desde arriba con la presión y la temperatura de cada llanta, a pantalla completa.</string>
     <string name="tires_full_open">Ver las llantas</string>
     <string name="car_tires_callout">Llantas</string>
+    <string name="road_gps_tap">Toca para activar el GPS</string>
 </resources>

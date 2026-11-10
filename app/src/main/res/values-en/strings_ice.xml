@@ -55,4 +55,5 @@
     <string name="tires_full_help">Your car from above with the pressure and temperature of each tire, full screen.</string>
     <string name="tires_full_open">Show the tires</string>
     <string name="car_tires_callout">Tires</string>
+    <string name="road_gps_tap">Tap to turn on GPS</string>
 </resources>

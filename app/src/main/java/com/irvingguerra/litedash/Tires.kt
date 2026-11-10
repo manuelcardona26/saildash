@@ -453,7 +453,7 @@ private const val TIRES_START_SCALE = 0.96f
  * tarjeta muestra su gráfica de 24 h al lado; tocar fuera cierra.
  */
 @Composable
-fun TiresFull(d: Dependencies, progress: () -> Float, onClose: () -> Unit, onSettings: () -> Unit, onReady: () -> Unit) {
+fun TiresFull(d: Dependencies, progress: () -> Float, onClose: () -> Unit, onSettings: () -> Unit, onReady: () -> Unit, dock: (@Composable (Modifier) -> Unit)? = null) {
     var chart by remember { mutableStateOf<Wheel?>(null) }
     val ice = LocalIce.current
     // SailDash 1.1: el diseño C (catalogo/llantas): el espacio de fondo, el encabezado con la fuente y el panel de vidrio.
@@ -497,6 +497,8 @@ fun TiresFull(d: Dependencies, progress: () -> Float, onClose: () -> Unit, onSet
                 )
             }
             if (w != null) Box(Modifier.at(638, 80, 370, 432).then(panel)) { TireHistoryChart(d, w, { chart = null }, Modifier.fillMaxSize().padding(18.dp)) }
+            // El dock de siempre abajo (como en el mockup), con Inicio encendido.
+            dock?.invoke(Modifier.align(Alignment.BottomStart))
         }
     }
 }

@@ -85,7 +85,7 @@ import kotlin.math.roundToInt
  * elegirla. Mientras se ve, las llantas se leen aunque nada más las muestre.
  */
 @Composable
-fun TiresSettings(d: Dependencies) {
+fun TiresSettings(d: Dependencies, onFull: (() -> Unit)? = null) {
     val repo = d.tpms
     DisposableEffect(repo) {
         val hold = repo.keepAwake()
@@ -97,6 +97,13 @@ fun TiresSettings(d: Dependencies) {
     when (tabs(listOf(R.string.tires, R.string.tires_pressure, R.string.home, R.string.tires_diagnostics), TIRES_TABS)) {
         // La fuente y el auto en una sola pestaña: antes el auto salía dos veces (Fuente y Llantas).
         0 -> {
+            // SailDash: las llantas a pantalla completa (TiresFull) a un toque.
+            if (onFull != null) SettingsCard(stringResource(R.string.tires_full_title), stringResource(R.string.tires_full_help)) {
+                com.irvingguerra.litedash.core.ui.ice.IceButton(
+                    stringResource(R.string.tires_full_open), onFull,
+                    kind = com.irvingguerra.litedash.core.ui.ice.IceButtonKind.PRIMARY, icon = com.irvingguerra.litedash.core.ui.ice.IceIcons.tire,
+                )
+            }
             SourceCard(repo)
             // Por OBD cada llanta ya viene en su lugar (lo sabe el auto): no hay nada que acomodar.
             val arrange = repo.source != TpmsSource.OBD

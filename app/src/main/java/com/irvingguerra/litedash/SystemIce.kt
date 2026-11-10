@@ -83,7 +83,7 @@ fun SystemScreen(d: Dependencies, start: Int = 0) {
         SheetHeader(stringResource(R.string.system)) {
             IceSegmented(
                 listOf(0 to stringResource(R.string.sys_tab_diag), 1 to stringResource(R.string.sys_tab_updates), 2 to stringResource(R.string.sys_tab_about)),
-                tab, { SystemTabs["system"] = it },
+                tab, { SystemTabs["system"] = it }, padding = 13.dp,
             )
         }
         when (tab) {

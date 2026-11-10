@@ -25,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -111,13 +112,17 @@ internal fun SettingsPanel(
         }
         // Taller, las subpáginas de Tu carro, Sistema y Mandos: medidas sobre el lienzo (IceSettings.kt).
         if (!iceSection(d, section, onTires)) {
-            SettingsHeader(stringResource(section.title), trailing = if (section == SettingsSection.SOUND) ({ EqHeaderTrailing() }) else null)
+            SettingsHeader(stringResource(section.title), trailing = if (section == SettingsSection.SOUND) ({ EqHeaderTrailing() }) else null, fillTrailing = section == SettingsSection.SOUND)
             // Las tarjetas: desde 84 dp de la hoja (100 del lienzo), 24 dp a la izquierda y 22 a la derecha.
+            // Otra sección u otra pestaña empieza arriba (no donde quedó la anterior).
+            val scroll = remember(section) { androidx.compose.foundation.ScrollState(0) }
+            val tabsNow = TabMemory.values.toList()
+            LaunchedEffect(tabsNow) { scroll.scrollTo(0) }
             Column(
                 Modifier
                     .offset(260.dp, 100.dp)
                     .size(740.dp, 412.dp)
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(scroll)
                     .padding(start = 24.dp, end = 22.dp, bottom = 22.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
@@ -125,16 +130,7 @@ internal fun SettingsPanel(
                     SettingsSection.APPEARANCE -> Appearance(d, revision, onEdit, onTemplates, onTires = { section = SettingsSection.TIRES })
                     SettingsSection.CAR -> CarSettings(d)
                     SettingsSection.APPS -> AppsSettings(d)
-                    SettingsSection.TIRES -> {
-                        // Con fuente elegida, las llantas a pantalla completa (TiresFull) a un toque.
-                        if (d.tpms.source != null) SettingsCard(stringResource(R.string.tires_full_title), stringResource(R.string.tires_full_help)) {
-                            com.irvingguerra.litedash.core.ui.ice.IceButton(
-                                stringResource(R.string.tires_full_open), onTires,
-                                kind = com.irvingguerra.litedash.core.ui.ice.IceButtonKind.PRIMARY, icon = IceIcons.tire,
-                            )
-                        }
-                        TiresSettings(d)
-                    }
+                    SettingsSection.TIRES -> TiresSettings(d, onTires)
                     SettingsSection.SOUND -> EqSettingsSection()
                     SettingsSection.MODULES -> Modules(d, revision, open = { section = it })
                     // Taller, Mandos y Sistema van por iceSection.
@@ -169,8 +165,11 @@ private fun SettingsMenu(d: Dependencies, section: SettingsSection, onPick: (Set
     ) {
         // .menu h1: 300 28, margen 4 0 16 12.
         IceText(stringResource(R.string.settings), IceText2.h1, ice.title, modifier = Modifier.padding(start = 12.dp, top = 4.dp, bottom = 16.dp))
-        for (s in SettingsSection.entries) if (s.shown(d, section)) {
-            MenuEntry(s.icon(), stringResource(s.title), s == section) { onPick(s) }
+        val shown = SettingsSection.entries.filter { it.shown(d, section) }
+        // Con Llantas (nueve secciones) cada una baja a 42 dp: así Sistema no queda cortado abajo.
+        val itemHeight = if (shown.size > 8) 42.dp else 46.dp
+        for (s in shown) {
+            MenuEntry(s.icon(), stringResource(s.title), s == section, itemHeight) { onPick(s) }
             Spacer(Modifier.height(2.dp))
         }
     }
@@ -178,13 +177,13 @@ private fun SettingsMenu(d: Dependencies, section: SettingsSection, onPick: (Set
 
 /** `.mi`: 46 dp, ícono de 22 y el texto; la elegida en hielo con su punto a la derecha. */
 @Composable
-private fun MenuEntry(icon: ImageVector, text: String, selected: Boolean, onClick: () -> Unit) {
+private fun MenuEntry(icon: ImageVector, text: String, selected: Boolean, height: androidx.compose.ui.unit.Dp, onClick: () -> Unit) {
     val ice = LocalIce.current
     val shape = RoundedCornerShape(15.dp)
     Row(
         Modifier
             .fillMaxWidth()
-            .height(46.dp)
+            .height(height)
             .then(if (selected) Modifier.iceSelected(15.dp, Color(170, 215, 255).copy(alpha = 0.36f), 0.95f) else Modifier)
             .clip(shape)
             .clickable(onClick = onClick)
@@ -218,6 +217,8 @@ internal fun SettingsHeader(
     crumb: String? = null,
     onBack: (() -> Unit)? = null,
     trailing: (@Composable androidx.compose.foundation.layout.RowScope.() -> Unit)? = null,
+    /** [trailing] reparte el ancho él mismo (con weight), como la línea de estado del ecualizador. */
+    fillTrailing: Boolean = false,
 ) {
     val ice = LocalIce.current
     Row(Modifier.offset(284.dp, 36.dp).size(694.dp, 48.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -225,9 +226,13 @@ internal fun SettingsHeader(
             com.irvingguerra.litedash.core.ui.ice.IceIconButton(SetIcons.back, onBack, tint = ice.ink, iconSize = 22.dp)
             Spacer(Modifier.width(14.dp))
         }
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(7.dp)) {
+        Column(if (fillTrailing) Modifier else Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(7.dp)) {
             IceText((crumb ?: stringResource(R.string.settings)).uppercase(currentLocale()), IceText2.cap, ice.ink3, maxLines = 1)
             IceText(title, IceText2.h2, ice.title, maxLines = 1)
+        }
+        if (trailing != null && fillTrailing) {
+            trailing()
+            return@Row
         }
         if (trailing != null) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp), content = trailing)

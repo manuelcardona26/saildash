@@ -142,7 +142,8 @@ fun HomeShell(
                 nav = nav,
                 modifier = Modifier.align(Alignment.BottomStart),
             )
-            Column(Modifier.align(Alignment.TopCenter).padding(top = 72.dp).width(640.dp), content = notices)
+            // Los avisos, arriba a la izquierda (sobre la marca y la velocidad): no tapan el clima ni la música.
+            Column(Modifier.align(Alignment.TopStart).offset(16.dp, 10.dp).width(576.dp), content = notices)
         }
     }
 }

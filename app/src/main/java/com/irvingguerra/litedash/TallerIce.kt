@@ -576,7 +576,7 @@ private fun NoObdPanel(d: Dependencies) {
             }
             // Con el módulo prendido, la conexión de siempre (buscar el adaptador, Bluetooth, Wi-Fi o USB).
             if (d.obdModule) Box(Modifier.padding(top = 14.dp).fillMaxWidth().weight(1f).verticalScroll(rememberScrollState())) {
-                Connection(d)
+                Connection(d, card = false)
             }
         }
     }

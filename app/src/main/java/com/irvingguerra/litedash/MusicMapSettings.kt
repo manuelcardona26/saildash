@@ -186,7 +186,8 @@ fun MapSettings(d: Dependencies) {
     val apps = rememberApps(d.apps).orEmpty()
     val mapApps = remember(apps) { NAVIGATION_PACKAGES.mapNotNull { pkg -> apps.firstOrNull { it.pkg == pkg } } }
     val selected = mapApp(d, apps)
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    // Sin apps de mapas no se deja la fila vacía (la tarjeta quedaría con un hueco arriba).
+    if (mapApps.isNotEmpty()) FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         for (app in mapApps) Button(app.name, { d.prefs.mapApp = app.key }, primary = app == selected)
     }
     Label(

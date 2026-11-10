@@ -191,7 +191,7 @@ fun EngineAlertBanner(d: Dependencies, state: EngineAlertState) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun Connection(d: Dependencies) {
+internal fun Connection(d: Dependencies, card: Boolean = true) {
     val c = LocalColors.current
     val obd = d.obd
     var permitted by remember { mutableStateOf(obd.hasPermission()) }
@@ -208,14 +208,28 @@ internal fun Connection(d: Dependencies) {
     // (Con el módulo apagado no: conectar a mano lo vuelve a prender.)
     LaunchedEffect(Unit) { if (obd.state == ObdState.OFF && d.obdModule) obd.connect() }
     LaunchedEffect(obd.state) { if (obd.state == ObdState.CONNECTING || obd.state == ObdState.ON) d.prefs.obdModule = true }
-    SettingsCard(stringResource(R.string.obd_adapter), stringResource(R.string.obd_adapter_help)) {
+    // En el Taller (diseño C) va suelta dentro de su panel: el estado con su punto, los botones y la ayuda abajo.
+    val frame: @Composable (@Composable androidx.compose.foundation.layout.ColumnScope.() -> Unit) -> Unit = if (card) { body ->
+        SettingsCard(stringResource(R.string.obd_adapter), stringResource(R.string.obd_adapter_help), content = body)
+    } else { body ->
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            body()
+            com.irvingguerra.litedash.core.ui.ice.IceText(stringResource(R.string.obd_adapter_help), com.irvingguerra.litedash.core.ui.ice.IceText2.sub, com.irvingguerra.litedash.core.ui.ice.LocalIce.current.ink3, maxLines = 8)
+        }
+    }
+    frame {
         val status = when (obd.state) {
             ObdState.OFF -> stringResource(R.string.obd_off)
             ObdState.CONNECTING -> stringResource(R.string.obd_connecting, obd.target?.name ?: "")
             ObdState.ON -> stringResource(R.string.obd_on, obd.target?.name ?: "") + (obd.adapter?.let { " · $it" } ?: "")
             ObdState.ERROR -> stringResource(R.string.obd_error, obd.error ?: "")
         }
-        Label(status, Typography.body, if (obd.state == ObdState.ERROR) c.danger else if (obd.state == ObdState.ON) Good else c.textMuted)
+        val tone = if (obd.state == ObdState.ERROR) c.danger else if (obd.state == ObdState.ON) Good else c.textMuted
+        if (card) Label(status, Typography.body, tone)
+        else Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            com.irvingguerra.litedash.core.ui.ice.IceDot(if (obd.state == ObdState.ON) Good else if (obd.state == ObdState.ERROR) c.danger else Kc.warn)
+            Label(status, Typography.body, if (obd.state == ObdState.OFF) c.text else tone, maxLines = 2)
+        }
         when {
             obd.state == ObdState.ON || obd.state == ObdState.CONNECTING -> Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Button(stringResource(R.string.obd_disconnect), { obd.disconnect() })

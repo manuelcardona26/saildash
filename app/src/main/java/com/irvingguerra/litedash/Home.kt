@@ -755,6 +755,7 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
                 onClose = { tiresOpen = false },
                 onSettings = { tiresOpen = false; panel = Panel.TiresSettings },
                 onReady = { tiresReady = true },
+                dock = { m -> HomeDock(d, apps, onPanel = { tiresOpen = false; panel = it }, onExpand = { tiresOpen = false; expanded = it }, onHome = { tiresOpen = false }, modifier = m) },
             )
         }
 
@@ -990,7 +991,7 @@ private fun HomePrompt(prefs: Preferences, revision: Int) {
     val (request, returns) = rememberRequestHome()
     val isHome = remember(revision, returns) { isHomeApp(context) }
     if (isHome) return
-    Notice(stringResource(R.string.not_home_notice)) {
+    Notice(stringResource(R.string.not_home_notice), com.irvingguerra.litedash.core.ui.ice.IceIcons.home) {
         Button(stringResource(R.string.make_home), request, primary = true)
         Button(stringResource(R.string.dont_ask), { prefs.dontAskHome = true })
     }

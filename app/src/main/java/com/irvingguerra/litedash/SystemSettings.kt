@@ -1,6 +1,7 @@
 // Ajustes → Sistema y Módulos: actualizaciones, Android, tu pantalla, módulos y permisos.
 package com.irvingguerra.litedash
 
+import com.irvingguerra.litedash.core.ui.ice.iceCard
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -335,40 +336,34 @@ private fun ModuleRow(
     soon: Boolean = false,
     onOpen: (() -> Unit)? = null,
 ) {
-    val c = LocalColors.current
-    val shape = RoundedCornerShape(Radius.card)
-    val dim = if (on) 1f else 0.45f
+    // Diseño C: la fila de vidrio (`.card`) con su pozo, el nombre, el interruptor y, prendido, la flecha.
+    val ice = com.irvingguerra.litedash.core.ui.ice.LocalIce.current
     Row(
-        Modifier.fillMaxWidth().height(76.dp).clip(shape).background(c.surface).border(1.dp, c.line, shape),
+        Modifier.fillMaxWidth().height(76.dp).iceCard(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
             Modifier
                 .weight(1f)
                 .fillMaxHeight()
+                .clip(RoundedCornerShape(18.dp))
                 .then(if (onChange != null) Modifier.clickable { onChange(!on) } else Modifier)
-                .padding(start = 20.dp, end = 16.dp),
+                .padding(start = 16.dp, end = 18.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Icon(icon, if (on) c.accent else c.textMuted.copy(alpha = dim), 28.dp)
+            com.irvingguerra.litedash.core.ui.ice.IceWell(icon, if (on) ice.ice else ice.ink3)
             Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Label(title, Typography.subtitle, if (on) c.text else c.textMuted.copy(alpha = dim), maxLines = 1, modifier = Modifier.weight(1f, fill = false))
-                if (soon) Label(
-                    stringResource(R.string.module_soon),
-                    Typography.small.copy(fontWeight = FontWeight.SemiBold),
-                    c.textMuted,
-                    maxLines = 1,
-                    modifier = Modifier.clip(RoundedCornerShape(50)).background(c.surfaceHigh).padding(horizontal = 10.dp, vertical = 4.dp),
-                )
+                com.irvingguerra.litedash.core.ui.ice.IceText(title, com.irvingguerra.litedash.core.ui.ice.IceText2.rowTitle, if (on) ice.title else ice.ink2, maxLines = 1, modifier = Modifier.weight(1f, fill = false))
+                if (soon) Tag(stringResource(R.string.module_soon), ice.ink2, dot = false)
             }
-            Switch(on, Modifier.graphicsLayer { alpha = if (soon) 0.45f else 1f })
+            com.irvingguerra.litedash.core.ui.ice.IceToggle(on, Modifier.graphicsLayer { alpha = if (soon) 0.45f else 1f })
         }
         // La flecha va aparte (con su línea): entrar no prende ni apaga nada.
-        Box(Modifier.width(76.dp).fillMaxHeight(), contentAlignment = Alignment.Center) {
-            if (on && onOpen != null) {
-                Box(Modifier.align(Alignment.CenterStart).width(1.dp).fillMaxHeight(0.5f).background(c.line))
-                IconButton(Icons.chevron, onOpen, size = 48.dp, background = c.surfaceHigh, color = c.text)
+        if (on && onOpen != null) {
+            Box(Modifier.width(1.dp).fillMaxHeight(0.5f).background(ice.line2))
+            Box(Modifier.width(76.dp).fillMaxHeight(), contentAlignment = Alignment.Center) {
+                com.irvingguerra.litedash.core.ui.ice.IceIconButton(SetIcons.chevronRight, onOpen, tint = ice.ink)
             }
         }
     }

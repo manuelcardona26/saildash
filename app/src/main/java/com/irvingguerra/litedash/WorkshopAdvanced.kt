@@ -1,5 +1,6 @@
 package com.irvingguerra.litedash
 
+import androidx.compose.foundation.layout.padding
 import android.os.SystemClock
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -272,12 +273,18 @@ private fun TripRow(t: TripSummary, dates: DateFormat, units: UnitChoice, locale
         t.maxCoolant?.let { add(sensorText(Signal.COOLANT, it, units, locale)) }
         t.kmPerLiter?.let { add(sensorText(Signal.CONSUMPTION, it, units, locale)) }
     }
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Label(dates.format(Date(t.start)), Typography.body, maxLines = 1, modifier = Modifier.weight(1f))
-            Label("$km · $time", Typography.subtitle, c.accent, maxLines = 1)
+    // Diseño C: la fila de la lista (`.row`): el pozo con la ruta, la fecha y los datos, y km · tiempo a la derecha.
+    val ice = com.irvingguerra.litedash.core.ui.ice.LocalIce.current
+    Column(Modifier.fillMaxWidth()) {
+        Box(Modifier.fillMaxWidth().height(1.dp).background(ice.line2))
+        Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+            com.irvingguerra.litedash.core.ui.ice.IceWell(com.irvingguerra.litedash.core.ui.ice.IceIcons.route, size = 40.dp, iconSize = 20.dp)
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                com.irvingguerra.litedash.core.ui.ice.IceText(dates.format(Date(t.start)), com.irvingguerra.litedash.core.ui.ice.IceText2.rowTitle, ice.title, maxLines = 1)
+                com.irvingguerra.litedash.core.ui.ice.IceText(extras.joinToString(" · "), com.irvingguerra.litedash.core.ui.ice.IceText2.sub, ice.ink2, maxLines = 2)
+            }
+            com.irvingguerra.litedash.core.ui.ice.IceText("$km · $time", com.irvingguerra.litedash.core.ui.ice.IceText2.h3, ice.ice, maxLines = 1)
         }
-        Label(extras.joinToString(" · "), Typography.small, c.textMuted, maxLines = 2)
     }
 }
 
