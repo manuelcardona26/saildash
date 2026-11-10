@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SailDash: split screen on Android 7 to 12 (SplitLegacy and its accessibility service) -->
+    <string name="split_service_label">SailDash: split screen</string>
+    <string name="split_service_description">SailDash uses this service only to put two apps side by side (split screen) when you tap Split or open your map or music. It doesn\'t read the screen, doesn\'t see what you type and doesn\'t save anything.</string>
+    <string name="split_legacy_help">Map on the left and music on the right, each in its own half. A Split button appears in the side bar.</string>
+    <string name="split_legacy_needs">This head unit runs Android %1$s: two apps side by side needs Android 7 or newer.</string>
+    <string name="split_legacy_unsupported">Your head unit comes with two apps side by side turned off. Sometimes you can turn it on in Developer options with “Force activities to be resizable” (and restarting the head unit).</string>
+    <string name="split_legacy_auto">Also when you tap a map or your music</string>
+    <string name="split_legacy_auto_help">When you open them from SailDash, their partner opens in the other half (in landscape). Turn this off to split only with the button.</string>
+    <!-- The accessibility service -->
+    <string name="split_service_title">Accessibility service</string>
+    <string name="split_service_on">On: SailDash can split the screen.</string>
+    <string name="split_service_off">Off: turn on “SailDash: split screen” in Accessibility.</string>
+    <string name="split_service_waiting">It\'s on, but Android hasn\'t connected it yet. If it stays like this, turn it off and on again.</string>
+    <string name="split_service_open">Open Accessibility</string>
+    <string name="split_service_why">On Android 7 an app can only split the screen through an accessibility service. SailDash uses it just for that: it doesn\'t read the screen or what you type, and it turns itself off if you turn split screen off.</string>
+    <!-- The app for each half -->
+    <string name="split_pair_left">Left half</string>
+    <string name="split_pair_right">Right half</string>
+    <string name="split_pair_none">None of the known apps is installed: find another one with “Other app…”.</string>
+    <string name="split_test">Try it</string>
+    <string name="split_drag_tip">Drag the middle bar to resize; push it to an edge to keep just one app.</string>
+    <string name="split_force_tip">An app won\'t split? In Developer options turn on “Force activities to be resizable” and restart the head unit.</string>
+    <!-- Side bar button and what is missing to split (Split and Try it) -->
+    <string name="split_rail">Split</string>
+    <string name="split_problem_service_title">Turn on the service</string>
+    <string name="split_problem_service">To put two apps side by side, turn on “SailDash: split screen” in Android\'s Accessibility settings. SailDash uses it only to split: it doesn\'t read the screen.</string>
+    <string name="split_problem_apps_title">Choose the apps</string>
+    <string name="split_problem_apps">Choose the app for each half in Settings → Apps → Split screen.</string>
+    <string name="split_close">Close</string>
+    <!-- Short notices while another app is in front -->
+    <string name="split_problem_open">Couldn\'t open %1$s.</string>
+    <string name="split_failed">Couldn\'t split the screen with %1$s. If that app won\'t allow it, see the tip in Settings → Apps → Split screen.</string>
+    <string name="split_hint_service">To open in split screen, turn on “SailDash: split screen” in Accessibility.</string>
+</resources>

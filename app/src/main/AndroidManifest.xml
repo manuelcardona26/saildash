@@ -85,6 +85,25 @@
             android:theme="@android:style/Theme.Material.NoActionBar" />
 
         <!--
+            SailDash: pantalla dividida de Android 7 a 12 (SplitLegacy). Android 7 solo deja dividir
+            desde un servicio de accesibilidad; este solo da esa orden: no pide eventos ni lee la
+            pantalla (xml/split_accessibility). Prendido solo en Android 7 a 12 (values-v24, values-v32).
+        -->
+        <service
+            android:name=".SplitAccessibilityService"
+            android:enabled="@bool/split_service_enabled"
+            android:exported="false"
+            android:label="@string/split_service_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/split_accessibility" />
+        </service>
+
+        <!--
             Receptor de llantas o cable OBD conectado: Android ofrece "usar siempre LiteDash" y el
             permiso queda dado (no se pide en cada encendido). Sin pantalla y en su propia tarea:
             no toca el inicio ni lo trae al frente. Apagada de fábrica: LiteDashApp la prende solo

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SailDash: pantalla dividida de Android 7 a 12 (SplitLegacy y su servicio de accesibilidad) -->
+    <string name="split_service_label">SailDash: pantalla dividida</string>
+    <string name="split_service_description">SailDash usa este servicio solo para poner dos apps lado a lado (pantalla dividida) cuando tocas Dividir o abres el mapa o la música. No lee la pantalla, no ve lo que escribes y no guarda nada.</string>
+    <string name="split_legacy_help">El mapa a la izquierda y la música a la derecha, cada uno en su mitad. En la barra lateral sale el botón Dividir.</string>
+    <string name="split_legacy_needs">Esta pantalla tiene Android %1$s: poner dos apps lado a lado necesita Android 7 o más nuevo.</string>
+    <string name="split_legacy_unsupported">Tu pantalla trae apagada la opción de poner dos apps lado a lado. A veces se prende en Opciones de desarrollador con «Forzar actividades para que cambien de tamaño» (y reiniciando la pantalla).</string>
+    <string name="split_legacy_auto">También al tocar un mapa o tu música</string>
+    <string name="split_legacy_auto_help">Al abrirlos desde SailDash, su pareja se abre en la otra mitad (con la pantalla acostada). Apágalo si prefieres dividir solo con el botón.</string>
+    <!-- El servicio de accesibilidad -->
+    <string name="split_service_title">Servicio de accesibilidad</string>
+    <string name="split_service_on">Activo: SailDash ya puede dividir la pantalla.</string>
+    <string name="split_service_off">Apagado: prende «SailDash: pantalla dividida» en Accesibilidad.</string>
+    <string name="split_service_waiting">Está prendido, pero Android todavía no lo conecta. Si sigue así, apágalo y vuélvelo a prender.</string>
+    <string name="split_service_open">Ir a Accesibilidad</string>
+    <string name="split_service_why">En Android 7 una app solo puede dividir la pantalla con un servicio de accesibilidad. SailDash lo usa únicamente para eso: no lee la pantalla ni lo que escribes, y se apaga solo si apagas la pantalla dividida.</string>
+    <!-- La app de cada mitad -->
+    <string name="split_pair_left">Mitad izquierda</string>
+    <string name="split_pair_right">Mitad derecha</string>
+    <string name="split_pair_none">No hay instalada ninguna de las conocidas: busca otra con «Otra app…».</string>
+    <string name="split_test">Probar</string>
+    <string name="split_drag_tip">Arrastra la barra del medio para cambiar el tamaño; llévala hasta un borde para dejar una sola app.</string>
+    <string name="split_force_tip">¿Una app no se deja dividir? En Opciones de desarrollador prende «Forzar actividades para que cambien de tamaño» y reinicia la pantalla.</string>
+    <!-- Botón de la barra lateral y lo que falta para dividir (Dividir y Probar) -->
+    <string name="split_rail">Dividir</string>
+    <string name="split_problem_service_title">Falta prender el servicio</string>
+    <string name="split_problem_service">Para poner dos apps lado a lado, prende «SailDash: pantalla dividida» en Accesibilidad de Android. SailDash lo usa solo para dividir: no lee la pantalla.</string>
+    <string name="split_problem_apps_title">Faltan las apps</string>
+    <string name="split_problem_apps">Elige qué app va en cada mitad en Ajustes → Apps → Pantalla dividida.</string>
+    <string name="split_close">Cerrar</string>
+    <!-- Avisos cortos mientras otra app está al frente -->
+    <string name="split_problem_open">No se pudo abrir %1$s.</string>
+    <string name="split_failed">No se pudo dividir la pantalla con %1$s. Si esa app no se deja, mira el consejo en Ajustes → Apps → Pantalla dividida.</string>
+    <string name="split_hint_service">Para abrir dividido, prende «SailDash: pantalla dividida» en Accesibilidad.</string>
+</resources>

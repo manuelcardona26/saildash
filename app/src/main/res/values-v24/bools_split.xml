@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 7 a 12: la pantalla dividida se pide con el servicio de accesibilidad. -->
+    <bool name="split_service_enabled">true</bool>
+</resources>

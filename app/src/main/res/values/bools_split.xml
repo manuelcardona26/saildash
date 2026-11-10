@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SailDash: el servicio de la pantalla dividida solo existe de Android 7 a 12 (values-v24 y values-v32). -->
+    <bool name="split_service_enabled">false</bool>
+</resources>
