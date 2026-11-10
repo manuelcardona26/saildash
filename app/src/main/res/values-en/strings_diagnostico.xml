@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash: Settings → System → Diagnostics (Diagnostics*.kt). -->
+<resources>
+    <string name="diagnostico_tab">Diagnostics</string>
+    <string name="diagnostico_title">Head unit diagnostics</string>
+    <string name="diagnostico_intro">Find out how your head unit handles the radio, the equalizer, reverse gear, the lights and the ignition, so a future SailDash version can control them. It only looks: it changes nothing and sends nothing to the internet.</string>
+    <string name="diagnostico_checking">Checking your head unit…</string>
+    <string name="diagnostico_checking_apps">Checking factory apps (%1$d of %2$d)…</string>
+    <string name="diagnostico_check_failed">Couldn\'t check: %1$s</string>
+    <string name="diagnostico_recheck">Check again</string>
+    <string name="diagnostico_summary">The essentials</string>
+    <string name="diagnostico_details_show">Show technical details</string>
+    <string name="diagnostico_details_hide">Hide technical details</string>
+
+    <!-- Summary -->
+    <string name="diagnostico_android">Your head unit runs Android %1$s (API %2$d).</string>
+    <string name="diagnostico_android_fake">The head unit says \"Android %1$s\", but inside it\'s Android %2$s.</string>
+    <string name="diagnostico_split_yes">Split screen: yes, it comes turned on.</string>
+    <string name="diagnostico_split_forced">Split screen: forced on from Developer options.</string>
+    <string name="diagnostico_split_no">Split screen: the maker turned it off. You can try Developer options → \"Force activities to be resizable\" and restart the head unit.</string>
+    <string name="diagnostico_split_old">Split screen: no, it arrived with Android 7.</string>
+    <string name="diagnostico_eq_yes">Android equalizer: works, with %1$d bands. It applies to app audio (Spotify, AutoKit, NewPipe); the factory radio and Bluetooth go through the MCU.</string>
+    <string name="diagnostico_eq_busy">Another app already has the Android equalizer on (maybe the Sound app).</string>
+    <string name="diagnostico_eq_no">Android equalizer: not responding. Your head unit\'s equalizer must live in the MCU (Sound app).</string>
+    <string name="diagnostico_apps_found">%1$d factory apps; %2$d are key (radio, sound, car, reverse, Bluetooth or MCU).</string>
+
+    <!-- Details -->
+    <string name="diagnostico_sec_device">Device and Android</string>
+    <string name="diagnostico_sec_props">System properties</string>
+    <string name="diagnostico_props_empty">Empty: %1$s</string>
+    <string name="diagnostico_sec_memory">Memory and display</string>
+    <string name="diagnostico_sec_split">Split screen</string>
+    <string name="diagnostico_sec_audio">Equalizer and sound effects</string>
+    <string name="diagnostico_sec_settings">Head unit settings</string>
+    <string name="diagnostico_settings_count">%1$d settings in total (all go to the file). These look like radio, lights, reverse, ignition or MCU:</string>
+    <string name="diagnostico_settings_none">None with those names.</string>
+    <string name="diagnostico_sec_apps">Factory apps</string>
+    <string name="diagnostico_apps_help">Highlighted ones are key: they\'re studied in depth and their APK is copied to the USB stick. Tap one to see its details.</string>
+    <string name="diagnostico_apps_none">No factory apps found.</string>
+    <string name="diagnostico_actions_title">Broadcasts declared by the key apps (also heard while recording)</string>
+
+    <!-- Words for the technical lines -->
+    <string name="diagnostico_yes">yes</string>
+    <string name="diagnostico_no">no</string>
+    <string name="diagnostico_missing">missing</string>
+    <string name="diagnostico_empty">(empty)</string>
+    <string name="diagnostico_hidden">(hidden)</string>
+    <string name="diagnostico_not_there">(not there)</string>
+    <string name="diagnostico_deleted">(deleted)</string>
+    <string name="diagnostico_sticky">(last saved one)</string>
+    <string name="diagnostico_unreadable">(unreadable extras)</string>
+    <string name="diagnostico_more">and %1$d more</string>
+    <string name="diagnostico_word_system">system</string>
+    <string name="diagnostico_word_updated">updated</string>
+    <string name="diagnostico_word_disabled">disabled</string>
+    <string name="diagnostico_word_version">version</string>
+    <string name="diagnostico_word_opens">opens</string>
+    <string name="diagnostico_word_activities">exported activities</string>
+    <string name="diagnostico_word_services">exported services</string>
+    <string name="diagnostico_word_receivers">exported receivers</string>
+    <string name="diagnostico_word_providers">exported providers</string>
+    <string name="diagnostico_word_permission">permission</string>
+    <string name="diagnostico_word_code_inside">code inside the APK</string>
+    <string name="diagnostico_word_code_apart">code outside the APK (odex)</string>
+
+    <!-- Record events -->
+    <string name="diagnostico_rec_title">Record events</string>
+    <string name="diagnostico_rec_steps">Tap Record and then: shift into reverse, turn the lights on and off, change station on the factory radio, move the equalizer in the Sound app, turn the volume up and down.</string>
+    <string name="diagnostico_rec_help">While recording, it listens to the system settings and the head unit\'s broadcasts. It stops by itself after 3 minutes and you can leave this screen meanwhile.</string>
+    <string name="diagnostico_rec_start">Record</string>
+    <string name="diagnostico_rec_stop">Stop</string>
+    <string name="diagnostico_rec_running">Recording… %1$s left</string>
+    <string name="diagnostico_rec_count">Events: %1$d</string>
+    <string name="diagnostico_rec_empty">No events yet.</string>
+    <string name="diagnostico_rec_shown">Showing the %1$d newest here; all of them go to the file.</string>
+    <string name="diagnostico_rec_started">Started: %1$d settings watched and %2$d broadcasts heard.</string>
+    <string name="diagnostico_rec_finished">Recording finished.</string>
+    <string name="diagnostico_rec_timeout">Finished: it stopped by itself after 3 minutes.</string>
+    <string name="diagnostico_kind_setting">setting</string>
+    <string name="diagnostico_kind_broadcast">broadcast</string>
+    <string name="diagnostico_kind_volume">volume</string>
+    <string name="diagnostico_kind_info">recording</string>
+    <string name="diagnostico_events_title">Recorded events</string>
+
+    <!-- Save to USB -->
+    <string name="diagnostico_export_title">Save to USB</string>
+    <string name="diagnostico_export_help">Saves the report, the recorded events and the key apps\' APKs into a \"SailDash-diagnostico\" folder on every storage it finds: the USB stick and internal storage. If it\'s recording, it stops first.</string>
+    <string name="diagnostico_export_button">Save to USB</string>
+    <string name="diagnostico_export_working">Saving…</string>
+    <string name="diagnostico_export_wait">Wait for the check to finish.</string>
+    <string name="diagnostico_export_writing">Writing the report to %1$s…</string>
+    <string name="diagnostico_export_copying">Copying %1$s (%2$d of %3$d)…</string>
+    <string name="diagnostico_export_framework">Copying the Android parts needed to read the apps…</string>
+    <string name="diagnostico_place_usb">USB or external storage</string>
+    <string name="diagnostico_place_internal">Internal storage</string>
+    <string name="diagnostico_export_ok">%1$s: %2$d files, %3$s</string>
+    <string name="diagnostico_export_failed">%1$s: couldn\'t save (%2$s)</string>
+    <string name="diagnostico_export_no_usb">No USB stick found: it was saved to internal storage only. Plug in a USB stick and save again.</string>
+    <string name="diagnostico_export_nowhere">there\'s no storage to save to</string>
+    <string name="diagnostico_export_done">Done. Copy the \"SailDash-diagnostico\" folder from the USB stick to your PC: it\'s inside Android › data › %1$s › files.</string>
+    <string name="diagnostico_copy_title">Copied files</string>
+    <string name="diagnostico_copy_unreadable">%1$s: couldn\'t be read</string>
+    <string name="diagnostico_copy_big">%1$s: too big (%2$s), not copied</string>
+    <string name="diagnostico_copy_full">%1$s: no room left, not copied</string>
+    <string name="diagnostico_copy_failed">%1$s: failed (%2$s)</string>
+    <string name="diagnostico_file_title">Head unit diagnostics · %1$s</string>
+</resources>

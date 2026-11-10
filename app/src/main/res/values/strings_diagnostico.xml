@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash: Ajustes → Sistema → Diagnóstico (Diagnostics*.kt). -->
+<resources>
+    <string name="diagnostico_tab">Diagnóstico</string>
+    <string name="diagnostico_title">Diagnóstico de tu pantalla</string>
+    <string name="diagnostico_intro">Descubre cómo tu pantalla maneja la radio, el ecualizador, la reversa, las luces y el encendido, para que una próxima versión de SailDash los pueda controlar. Solo mira: no cambia nada ni manda nada a internet.</string>
+    <string name="diagnostico_checking">Revisando tu pantalla…</string>
+    <string name="diagnostico_checking_apps">Revisando las apps de fábrica (%1$d de %2$d)…</string>
+    <string name="diagnostico_check_failed">No se pudo revisar: %1$s</string>
+    <string name="diagnostico_recheck">Volver a revisar</string>
+    <string name="diagnostico_summary">Lo más importante</string>
+    <string name="diagnostico_details_show">Ver el detalle técnico</string>
+    <string name="diagnostico_details_hide">Ocultar el detalle técnico</string>
+
+    <!-- Resumen -->
+    <string name="diagnostico_android">Tu pantalla tiene Android %1$s (API %2$d).</string>
+    <string name="diagnostico_android_fake">La pantalla dice «Android %1$s», pero por dentro es Android %2$s.</string>
+    <string name="diagnostico_split_yes">Pantalla dividida: sí, viene prendida.</string>
+    <string name="diagnostico_split_forced">Pantalla dividida: prendida a la fuerza desde Opciones de desarrollador.</string>
+    <string name="diagnostico_split_no">Pantalla dividida: el fabricante la apagó. Se puede probar con Opciones de desarrollador → «Forzar actividades redimensionables» y reiniciar la pantalla.</string>
+    <string name="diagnostico_split_old">Pantalla dividida: no, llegó con Android 7.</string>
+    <string name="diagnostico_eq_yes">Ecualizador de Android: funciona, con %1$d bandas. Sirve para el sonido de las apps (Spotify, AutoKit, NewPipe); la radio y el Bluetooth de fábrica van por la MCU.</string>
+    <string name="diagnostico_eq_busy">Otra app ya tiene prendido el ecualizador de Android (puede ser la app Sonido).</string>
+    <string name="diagnostico_eq_no">Ecualizador de Android: no responde. El de tu pantalla debe estar en la MCU (app Sonido).</string>
+    <string name="diagnostico_apps_found">%1$d apps de fábrica; %2$d son clave (radio, sonido, carro, reversa, Bluetooth o MCU).</string>
+
+    <!-- Detalle -->
+    <string name="diagnostico_sec_device">Equipo y Android</string>
+    <string name="diagnostico_sec_props">Propiedades del sistema</string>
+    <string name="diagnostico_props_empty">Sin valor: %1$s</string>
+    <string name="diagnostico_sec_memory">Memoria y pantalla</string>
+    <string name="diagnostico_sec_split">Pantalla dividida</string>
+    <string name="diagnostico_sec_audio">Ecualizador y efectos de sonido</string>
+    <string name="diagnostico_sec_settings">Ajustes de la pantalla</string>
+    <string name="diagnostico_settings_count">%1$d ajustes en total (todos van al archivo). Estos suenan a radio, luces, reversa, encendido o MCU:</string>
+    <string name="diagnostico_settings_none">Ninguno con esos nombres.</string>
+    <string name="diagnostico_sec_apps">Apps de fábrica</string>
+    <string name="diagnostico_apps_help">Las resaltadas son clave: se estudian a fondo y su APK se copia a la USB. Toca una para ver su detalle.</string>
+    <string name="diagnostico_apps_none">No se encontraron apps de fábrica.</string>
+    <string name="diagnostico_actions_title">Avisos que declaran las apps clave (también se escuchan al grabar)</string>
+
+    <!-- Palabras de los renglones técnicos -->
+    <string name="diagnostico_yes">sí</string>
+    <string name="diagnostico_no">no</string>
+    <string name="diagnostico_missing">no existe</string>
+    <string name="diagnostico_empty">(vacío)</string>
+    <string name="diagnostico_hidden">(oculto)</string>
+    <string name="diagnostico_not_there">(no estaba)</string>
+    <string name="diagnostico_deleted">(se borró)</string>
+    <string name="diagnostico_sticky">(el último guardado)</string>
+    <string name="diagnostico_unreadable">(extras ilegibles)</string>
+    <string name="diagnostico_more">y %1$d más</string>
+    <string name="diagnostico_word_system">de sistema</string>
+    <string name="diagnostico_word_updated">actualizada</string>
+    <string name="diagnostico_word_disabled">apagada</string>
+    <string name="diagnostico_word_version">versión</string>
+    <string name="diagnostico_word_opens">abre</string>
+    <string name="diagnostico_word_activities">actividades exportadas</string>
+    <string name="diagnostico_word_services">servicios exportados</string>
+    <string name="diagnostico_word_receivers">receptores exportados</string>
+    <string name="diagnostico_word_providers">proveedores exportados</string>
+    <string name="diagnostico_word_permission">permiso</string>
+    <string name="diagnostico_word_code_inside">código dentro del APK</string>
+    <string name="diagnostico_word_code_apart">código aparte (odex)</string>
+
+    <!-- Grabar eventos -->
+    <string name="diagnostico_rec_title">Grabar eventos</string>
+    <string name="diagnostico_rec_steps">Toca Grabar y luego: pon la reversa, prende y apaga las luces, cambia de emisora en la radio de fábrica, mueve el ecualizador de la app Sonido, sube y baja el volumen.</string>
+    <string name="diagnostico_rec_help">Mientras graba, escucha los ajustes del sistema y los avisos de la pantalla. Se detiene sola a los 3 minutos y puedes salir de aquí mientras tanto.</string>
+    <string name="diagnostico_rec_start">Grabar</string>
+    <string name="diagnostico_rec_stop">Detener</string>
+    <string name="diagnostico_rec_running">Grabando… quedan %1$s</string>
+    <string name="diagnostico_rec_count">Eventos: %1$d</string>
+    <string name="diagnostico_rec_empty">Todavía no hay eventos.</string>
+    <string name="diagnostico_rec_shown">Aquí se ven los %1$d más nuevos; todos van al archivo.</string>
+    <string name="diagnostico_rec_started">Empieza: %1$d ajustes vigilados y %2$d avisos escuchados.</string>
+    <string name="diagnostico_rec_finished">Fin de la grabación.</string>
+    <string name="diagnostico_rec_timeout">Fin: se detuvo sola a los 3 minutos.</string>
+    <string name="diagnostico_kind_setting">ajuste</string>
+    <string name="diagnostico_kind_broadcast">aviso</string>
+    <string name="diagnostico_kind_volume">volumen</string>
+    <string name="diagnostico_kind_info">grabación</string>
+    <string name="diagnostico_events_title">Eventos grabados</string>
+
+    <!-- Guardar en la USB -->
+    <string name="diagnostico_export_title">Guardar en la USB</string>
+    <string name="diagnostico_export_help">Guarda el reporte, los eventos grabados y los APK de las apps clave en una carpeta «SailDash-diagnostico» en cada memoria que encuentre: la USB y la interna. Si está grabando, primero se detiene.</string>
+    <string name="diagnostico_export_button">Guardar en la USB</string>
+    <string name="diagnostico_export_working">Guardando…</string>
+    <string name="diagnostico_export_wait">Espera a que termine la revisión.</string>
+    <string name="diagnostico_export_writing">Escribiendo el reporte en %1$s…</string>
+    <string name="diagnostico_export_copying">Copiando %1$s (%2$d de %3$d)…</string>
+    <string name="diagnostico_export_framework">Copiando las partes de Android que hacen falta para leer las apps…</string>
+    <string name="diagnostico_place_usb">USB o memoria externa</string>
+    <string name="diagnostico_place_internal">Memoria interna</string>
+    <string name="diagnostico_export_ok">%1$s: %2$d archivos, %3$s</string>
+    <string name="diagnostico_export_failed">%1$s: no se pudo guardar (%2$s)</string>
+    <string name="diagnostico_export_no_usb">No encontré una USB: quedó solo en la memoria interna. Conecta una USB y vuelve a guardar.</string>
+    <string name="diagnostico_export_nowhere">no hay ninguna memoria donde guardar</string>
+    <string name="diagnostico_export_done">Listo. Pasa la carpeta «SailDash-diagnostico» de la USB al PC: está dentro de Android › data › %1$s › files.</string>
+    <string name="diagnostico_copy_title">Archivos copiados</string>
+    <string name="diagnostico_copy_unreadable">%1$s: no se pudo leer</string>
+    <string name="diagnostico_copy_big">%1$s: muy grande (%2$s), no se copió</string>
+    <string name="diagnostico_copy_full">%1$s: ya no cabe, no se copió</string>
+    <string name="diagnostico_copy_failed">%1$s: falló (%2$s)</string>
+    <string name="diagnostico_file_title">Diagnóstico de tu pantalla · %1$s</string>
+</resources>
