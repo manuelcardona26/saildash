@@ -66,6 +66,8 @@ fun HomeShell(
     expanded: Expanded?,
     onExpand: (Expanded?) -> Unit,
     onPanel: (Panel) -> Unit,
+    /** Las llantas a pantalla completa (TiresFull, en Home). */
+    onTires: () -> Unit,
     notices: @Composable ColumnScope.() -> Unit,
 ) {
     val ice = LocalIce.current
@@ -98,6 +100,7 @@ fun HomeShell(
             onPanel = onPanel,
             onMusic = { onExpand(Expanded.MUSIC) },
             onSpeed = { openSpeedOnly(d) { onPanel(Panel.SpeedOnly) } },
+            onTires = onTires,
         )
     }
     Box(Modifier.fillMaxSize().background(ice.bg)) {

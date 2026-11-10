@@ -56,4 +56,9 @@
     <string name="owner_car_remove">Quitar la foto</string>
     <string name="owner_car_restore">Reponer la original</string>
     <string name="owner_car_error">No se pudo leer esa imagen</string>
+    <!-- Ajustes → Llantas y la página Carro: las llantas a pantalla completa. -->
+    <string name="tires_full_title">Las llantas en grande</string>
+    <string name="tires_full_help">Tu carro desde arriba con la presión y la temperatura de cada llanta, a pantalla completa.</string>
+    <string name="tires_full_open">Ver las llantas</string>
+    <string name="car_tires_callout">Llantas</string>
 </resources>

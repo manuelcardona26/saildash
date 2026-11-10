@@ -112,6 +112,7 @@ class TripRepository(private val context: Context, private val bus: VehicleBus) 
         users = (users - 1).coerceAtLeast(0)
         if (users == 0) {
             runCatching { manager.removeUpdates(listener) }
+            Garage.get(context).flush()
             speedKmh = null
             bus.publish(Signal.SPEED, null, Source.GPS)
         }
@@ -142,9 +143,16 @@ class TripRepository(private val context: Context, private val bus: VehicleBus) 
         if (l.hasBearing() && (speedKmh ?: 0f) > 3f) bearing = l.bearing
         val previous = last
         // Solo puntos buenos y en movimiento: parado, el GPS "camina" solo unos metros.
+        // SailDash: el Taller sin OBD (viaje, total y odómetro) suma lo mismo, solo con el GPS ya prendido.
+        val garage = Garage.get(context)
+        garage.onFix(System.currentTimeMillis())
         if (l.accuracy <= 30f && (speedKmh ?: 0f) > 3f) {
             if (startedAt == 0L) startedAt = System.currentTimeMillis()
-            if (previous != null) meters += previous.distanceTo(l)
+            if (previous != null) {
+                val step = previous.distanceTo(l)
+                meters += step
+                garage.onSegment(step.toDouble(), (l.elapsedRealtimeNanos - previous.elapsedRealtimeNanos) / 1_000_000L, System.currentTimeMillis())
+            }
             last = l
         }
     }

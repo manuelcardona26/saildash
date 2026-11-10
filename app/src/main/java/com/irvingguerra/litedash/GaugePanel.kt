@@ -233,8 +233,8 @@ fun CustomizeGaugePanel(d: Dependencies, tileId: String, close: () -> Unit, onPi
                     }
                 }
                 FlowRow(Modifier.padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    if (!speedometer) IceButton(stringResource(R.string.gauge_change_signal), onPickSignal)
-                    IceButton(stringResource(R.string.gauge_apply_all), primary = true, onClick = {
+                    if (!speedometer) com.irvingguerra.litedash.core.ui.ice.IceButton(stringResource(R.string.gauge_change_signal), onPickSignal, kind = com.irvingguerra.litedash.core.ui.ice.IceButtonKind.PLAIN, height = 48.dp)
+                    com.irvingguerra.litedash.core.ui.ice.IceButton(stringResource(R.string.gauge_apply_all), kind = com.irvingguerra.litedash.core.ui.ice.IceButtonKind.BLUE, height = 48.dp, onClick = {
                         // Mismo estilo en todos; cada uno conserva su dato y, los velocímetros, hasta dónde llegan
                         // (la carretera, además, cómo va su velocidad). Una sola escritura del acomodo para todos.
                         d.dashboard.changeData(
@@ -384,45 +384,7 @@ internal fun IceSwitchRow(text: String, on: Boolean, onChange: (Boolean) -> Unit
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IceText(text, iceStyle(15f), ice.ink, modifier = Modifier.weight(1f))
-        IceSwitch(on)
+        com.irvingguerra.litedash.core.ui.ice.IceToggle(on)
     }
 }
 
-@Composable
-private fun IceSwitch(on: Boolean, width: Dp = 54.dp, height: Dp = 32.dp) {
-    val ice = LocalIce.current
-    val shape = RoundedCornerShape(height / 2)
-    Box(
-        Modifier
-            .size(width, height)
-            .clip(shape)
-            .background(if (on) Brush.horizontalGradient(listOf(Color(0xFF4AA6F0), Color(0xFF8FD0FF))) else SolidColor(Color(190, 225, 255).copy(alpha = 0.14f)))
-            .border(1.dp, if (on) Color(200, 236, 255).copy(alpha = 0.7f) else ice.line, shape)
-            .drawBehind {
-                val k = 24.dp.toPx() / 2
-                val x = if (on) 25.dp.toPx() + k else 3.dp.toPx() + k
-                drawCircle(if (on) Color.White else Color(220, 235, 252).copy(alpha = 0.7f), k, Offset(x, size.height / 2))
-            },
-    )
-}
-
-/** Botón del diseño C (`.btn`, 48 de alto); [primary] en vidrio azul. */
-@Composable
-internal fun IceButton(text: String, onClick: () -> Unit, primary: Boolean = false) {
-    val ice = LocalIce.current
-    val shape = RoundedCornerShape(24.dp)
-    Box(
-        Modifier
-            .height(48.dp)
-            .then(
-                if (primary) Modifier.glass(
-                    listOf(0f to Color(120, 190, 255).copy(alpha = 0.34f), 1f to Color(90, 150, 235).copy(alpha = 0.14f)),
-                    Color(170, 215, 255).copy(alpha = 0.40f), Color(235, 246, 255).copy(alpha = 0.2f), 24.dp, angle = 135f,
-                ) else Modifier.background(Color(170, 210, 255).copy(alpha = 0.07f), shape).border(1.dp, ice.line, shape),
-            )
-            .clip(shape)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 20.dp),
-        contentAlignment = Alignment.Center,
-    ) { IceText(text, iceStyle(15f, FontWeight.Medium), if (primary) Color.White else Color(0xFFEAF4FF)) }
-}

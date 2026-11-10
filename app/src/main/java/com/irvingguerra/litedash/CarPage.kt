@@ -75,6 +75,8 @@ class PageActions(
     val onPanel: (Panel) -> Unit,
     val onMusic: () -> Unit,
     val onSpeed: () -> Unit,
+    /** Las llantas a pantalla completa (con Llantas activo). */
+    val onTires: () -> Unit = {},
 )
 
 /** La página Carro. [visible] = se ve ahora (sin nada encima): solo entonces se escucha el GPS. */
@@ -267,6 +269,12 @@ private fun Callouts(d: Dependencies, actions: PageActions) {
         Icon(IceIcons.bluetooth, ice.ice, 20.dp)
         Spacer(Modifier.width(8.dp))
         CalloutValue(if (links.bluetooth) links.bluetoothName ?: stringResource(R.string.bt_tile_connected) else stringResource(R.string.bt_disconnected))
+    }
+    // Con Llantas activo: las llantas a pantalla completa, abajo a la izquierda del carro.
+    if (d.hasTpmsSource) Callout(stringResource(R.string.car_tires_callout), Modifier.offset(150.dp, 318.dp), onClick = actions.onTires) {
+        Icon(IceIcons.tire, ice.ice, 20.dp)
+        Spacer(Modifier.width(8.dp))
+        CalloutValue(stringResource(R.string.tires_see))
     }
     val engine = rememberEngine(d)
     val units = d.prefs.units

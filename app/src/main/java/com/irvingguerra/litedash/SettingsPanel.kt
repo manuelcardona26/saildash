@@ -99,45 +99,52 @@ internal fun SettingsPanel(
     start: SettingsSection = SettingsSection.CAR,
     /** Las llantas a pantalla completa (desde la tarjeta de Salud). */
     onTires: () -> Unit = {},
+    /** SailDash: el dock del diseño C abre paneles del inicio (Apps). */
+    onPanel: (Panel) -> Unit = {},
 ) {
     var section by rememberSaveable { mutableStateOf(start) }
     LaunchedEffect(start) { section = start }
     IceScreen(d, apps, Dock.SETTINGS, nav) {
-        // .sheet: left 24, right 24, top 16, bottom 88.
+        // .sheet: left 24, right 24, top 16, bottom 88; el menú de secciones adentro, a la izquierda.
         Box(Modifier.offset(24.dp, 16.dp).size(976.dp, 496.dp).iceSheet()) {
             SettingsMenu(d, section) { section = it }
-            Box(Modifier.offset(236.dp, 0.dp).size(740.dp, 496.dp)) {
-                SettingsHeader(stringResource(section.title), if (section == SettingsSection.SOUND) ({ EqHeaderTrailing() }) else null)
-                // Las tarjetas: desde 84 dp, 24 dp a la izquierda y 22 a la derecha.
-                Column(
-                    Modifier
-                        .offset(0.dp, 84.dp)
-                        .size(740.dp, 412.dp)
-                        .verticalScroll(rememberScrollState())
-                        .padding(start = 24.dp, end = 22.dp, bottom = 22.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    when (section) {
-                        SettingsSection.APPEARANCE -> Appearance(d, revision, onEdit, onTemplates, onTires = { section = SettingsSection.TIRES })
-                        SettingsSection.CAR -> CarSettings(d)
-                        SettingsSection.APPS -> AppsSettings(d)
-                        SettingsSection.WHEEL -> {
-                            SettingsCard(help = stringResource(R.string.wheel_help)) { WheelSettings(d.wheel, d.prefs) }
-                            SettingsCard(stringResource(R.string.wheel_assigned)) { WheelAssigned(d.prefs) }
+        }
+        // Taller, las subpáginas de Tu carro, Sistema y Mandos: medidas sobre el lienzo (IceSettings.kt).
+        if (!iceSection(d, section, onTires)) {
+            SettingsHeader(stringResource(section.title), trailing = if (section == SettingsSection.SOUND) ({ EqHeaderTrailing() }) else null)
+            // Las tarjetas: desde 84 dp de la hoja (100 del lienzo), 24 dp a la izquierda y 22 a la derecha.
+            Column(
+                Modifier
+                    .offset(260.dp, 100.dp)
+                    .size(740.dp, 412.dp)
+                    .verticalScroll(rememberScrollState())
+                    .padding(start = 24.dp, end = 22.dp, bottom = 22.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                when (section) {
+                    SettingsSection.APPEARANCE -> Appearance(d, revision, onEdit, onTemplates, onTires = { section = SettingsSection.TIRES })
+                    SettingsSection.CAR -> CarSettings(d)
+                    SettingsSection.APPS -> AppsSettings(d)
+                    SettingsSection.TIRES -> {
+                        // Con fuente elegida, las llantas a pantalla completa (TiresFull) a un toque.
+                        if (d.tpms.source != null) SettingsCard(stringResource(R.string.tires_full_title), stringResource(R.string.tires_full_help)) {
+                            com.irvingguerra.litedash.core.ui.ice.IceButton(
+                                stringResource(R.string.tires_full_open), onTires,
+                                kind = com.irvingguerra.litedash.core.ui.ice.IceButtonKind.PRIMARY, icon = IceIcons.tire,
+                            )
                         }
-                        // Con el OBD apagado el escáner ni se crea: se dice cómo prenderlo.
-                        SettingsSection.WORKSHOP -> if (d.obdModule) Workshop(d, onTires) else SettingsCard(
-                            stringResource(R.string.workshop), stringResource(R.string.settings_workshop_off),
-                        ) { com.irvingguerra.litedash.core.ui.Button(stringResource(R.string.modules), { section = SettingsSection.MODULES }) }
-                        SettingsSection.TIRES -> TiresSettings(d)
-                        SettingsSection.SOUND -> EqSettingsSection()
-                        SettingsSection.MODULES -> Modules(d, revision, open = { section = it })
-                        SettingsSection.SYSTEM -> SystemSettings(d)
+                        TiresSettings(d)
                     }
+                    SettingsSection.SOUND -> EqSettingsSection()
+                    SettingsSection.MODULES -> Modules(d, revision, open = { section = it })
+                    // Taller, Mandos y Sistema van por iceSection.
+                    else -> Unit
                 }
             }
         }
     }
+    // La vista de reversa (Tu carro → Reversa) va encima de todo, dock incluido.
+    ReverseViewHost()
 }
 
 /** `.menu`: el título "Ajustes" y las secciones; la elegida en hielo con su punto brillante. */
@@ -200,17 +207,30 @@ private fun MenuEntry(icon: ImageVector, text: String, selected: Boolean, onClic
     }
 }
 
-/** `.mh`: "AJUSTES" chico, el nombre de la sección y "Se guarda solo" a la derecha. */
+/**
+ * `.mh`, el encabezado de toda la hoja de Ajustes (sobre el lienzo: 24 dp dentro de la parte
+ * derecha, 20 de arriba): "AJUSTES" chico (o [crumb]), el nombre de la sección y, a la derecha,
+ * "Se guarda solo" o [trailing]. Con [onBack], el botón de volver a la izquierda (subpáginas).
+ */
 @Composable
-private fun SettingsHeader(title: String, trailing: (@Composable androidx.compose.foundation.layout.RowScope.() -> Unit)?) {
+internal fun SettingsHeader(
+    title: String,
+    crumb: String? = null,
+    onBack: (() -> Unit)? = null,
+    trailing: (@Composable androidx.compose.foundation.layout.RowScope.() -> Unit)? = null,
+) {
     val ice = LocalIce.current
-    Row(Modifier.offset(24.dp, 20.dp).size(694.dp, 48.dp), verticalAlignment = Alignment.CenterVertically) {
-        Column(if (trailing == null) Modifier.weight(1f) else Modifier, verticalArrangement = Arrangement.spacedBy(7.dp)) {
-            IceText(stringResource(R.string.settings).uppercase(), IceText2.cap, ice.ink3)
-            IceText(title, IceText2.h2, ice.title)
+    Row(Modifier.offset(284.dp, 36.dp).size(694.dp, 48.dp), verticalAlignment = Alignment.CenterVertically) {
+        if (onBack != null) {
+            com.irvingguerra.litedash.core.ui.ice.IceIconButton(SetIcons.back, onBack, tint = ice.ink, iconSize = 22.dp)
+            Spacer(Modifier.width(14.dp))
+        }
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(7.dp)) {
+            IceText((crumb ?: stringResource(R.string.settings)).uppercase(currentLocale()), IceText2.cap, ice.ink3, maxLines = 1)
+            IceText(title, IceText2.h2, ice.title, maxLines = 1)
         }
         if (trailing != null) {
-            trailing()
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp), content = trailing)
             return@Row
         }
         Icon(IceIcons.check, if (ice.dark) Color(0xFF8FF0CF) else ice.mint, 16.dp)
@@ -235,13 +255,20 @@ internal fun tabs(titles: List<Int>, key: String): Int {
 internal const val SYSTEM_TABS = "system"
 
 /** Ajustes → Sistema abre en Actualizaciones (desde el aviso de versión nueva). */
-internal fun openUpdates() = selectTab(SYSTEM_TABS, SystemTab.UPDATES.ordinal)
+internal fun openUpdates() {
+    selectTab(SYSTEM_TABS, SystemTab.UPDATES.ordinal)
+    // SailDash 1.1: Sistema en el diseño C.
+    openUpdatesC()
+}
 
 /**
  * La pestaña elegida en cada sección (al cambiar de sección, o cerrar y abrir Ajustes, sigue ahí).
  * Solo en memoria: no se guarda, así que sus claves pueden cambiar sin migrar nada.
  */
 private val TabMemory = mutableStateMapOf<String, Int>()
+
+/** La pestaña elegida de la sección [key] (0 si nunca se eligió). */
+internal fun currentTab(key: String) = TabMemory[key] ?: 0
 
 /** Cambia a otra pestaña de la sección [key] desde su contenido (p. ej. de Salud a Códigos). */
 internal fun selectTab(key: String, index: Int) {

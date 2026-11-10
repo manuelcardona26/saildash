@@ -167,7 +167,7 @@ private fun Permissions(d: Dependencies, revision: Int) {
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun AndroidSettings() {
+internal fun AndroidSettings() {
     val c = LocalColors.current
     val context = LocalContext.current
     val shortcuts = remember {
@@ -201,7 +201,7 @@ private fun openAppSettings(context: Context) {
 }
 
 /** Notas de una versión (sección del CHANGELOG) en renglones: títulos ("### Agregado") y viñetas sin formato. */
-private fun releaseNotes(notes: String = BuildConfig.RELEASE_NOTES): List<String> {
+internal fun releaseNotes(notes: String = BuildConfig.RELEASE_NOTES): List<String> {
     val items = mutableListOf<String>()
     for (raw in notes.lines()) {
         val line = raw.trim()
@@ -216,7 +216,7 @@ private fun releaseNotes(notes: String = BuildConfig.RELEASE_NOTES): List<String
 }
 
 /** Lo básico de la pantalla: equipo, Android, resolución y memoria (sin etiquetas: se entienden solos). */
-private fun screenLines(context: Context): List<String> {
+internal fun screenLines(context: Context): List<String> {
     val m = context.resources.displayMetrics
     return listOf(
         "${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE}) · ${Build.HARDWARE}",

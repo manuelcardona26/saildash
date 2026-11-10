@@ -86,8 +86,11 @@ object IceText2 {
     val rowTitle = s(Outfit, FontWeight.Normal, 16f, line = 1.1f)
 }
 
-/** Las tres clases de `.btn`: principal (blanco hielo), secundario (borde hielo) y discreto. */
-enum class IceButtonKind { PRIMARY, SECONDARY, GHOST }
+/**
+ * Las clases de `.btn` de los mockups: principal (blanco hielo), secundario (borde hielo), discreto,
+ * de vidrio liso (`.btn` sin clase), azul hielo (`.btn.pri` del Taller) y peligro (coral).
+ */
+enum class IceButtonKind { PRIMARY, SECONDARY, GHOST, PLAIN, BLUE, DANGER }
 
 /**
  * `.btn`: 44 dp de alto, redondo, Outfit 500 15. [icon] va antes del texto ([iconAfter] = después,
@@ -105,6 +108,7 @@ fun IceButton(
     padding: Dp = 20.dp,
     enabled: Boolean = true,
     textColor: Color? = null,
+    fontSize: Float = 15f,
 ) {
     val ice = LocalIce.current
     val shape = RoundedCornerShape(height / 2)
@@ -112,6 +116,9 @@ fun IceButton(
         IceButtonKind.PRIMARY -> Color(0xFF0A1322)
         IceButtonKind.SECONDARY -> ice.ice
         IceButtonKind.GHOST -> ice.ink2
+        IceButtonKind.PLAIN -> if (ice.dark) Color(0xFFEAF4FF) else ice.ink
+        IceButtonKind.BLUE -> if (ice.dark) Color.White else ice.ice2
+        IceButtonKind.DANGER -> if (ice.dark) Color(0xFFFFD3CF) else Color(0xFFC0392B)
     }
     val surface = when (kind) {
         IceButtonKind.PRIMARY -> Modifier
@@ -127,6 +134,17 @@ fun IceButton(
             .clip(shape)
             .background(if (ice.dark) Color(170, 210, 255).copy(alpha = 0.03f) else Color.White.copy(alpha = 0.4f))
             .border(1.dp, ice.line2, shape)
+        IceButtonKind.PLAIN -> Modifier
+            .clip(shape)
+            .background(if (ice.dark) Color(170, 210, 255).copy(alpha = 0.07f) else Color.White.copy(alpha = 0.55f))
+            .border(1.dp, ice.line, shape)
+        IceButtonKind.BLUE -> Modifier
+            .clip(shape)
+            .then(Modifier.iceSelected(height / 2, Color(170, 215, 255).copy(alpha = 0.40f)))
+        IceButtonKind.DANGER -> Modifier
+            .clip(shape)
+            .background(Brush.linearGradient(listOf(Color(255, 110, 100).copy(alpha = 0.20f), Color(255, 110, 100).copy(alpha = 0.06f))))
+            .border(1.dp, Color(255, 125, 115).copy(alpha = 0.42f), shape)
     }
     Row(
         modifier
@@ -139,7 +157,7 @@ fun IceButton(
     ) {
         val color = if (enabled) fg else fg.copy(alpha = fg.alpha * 0.45f)
         if (icon != null && !iconAfter) Icon(icon, color, 20.dp)
-        IceText(text, IceText2.button, color, maxLines = 1)
+        IceText(text, if (fontSize == 15f) IceText2.button else IceText2.button.copy(fontSize = fontSize.sp), color, maxLines = 1)
         if (icon != null && iconAfter) Icon(icon, color, 20.dp)
     }
 }

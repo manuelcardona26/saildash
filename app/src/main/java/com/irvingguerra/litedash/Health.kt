@@ -47,7 +47,7 @@ import com.irvingguerra.litedash.feature.obd.healthOf
 import com.irvingguerra.litedash.feature.obd.issues
 
 /** Las partes que siempre se listan; ruedas y carrocería solo cuando algo las señala. */
-private val MAIN_ZONES = listOf(Zone.ENGINE, Zone.INTAKE, Zone.COOLING, Zone.BATTERY, Zone.TRANSMISSION, Zone.EXHAUST)
+internal val MAIN_ZONES = listOf(Zone.ENGINE, Zone.INTAKE, Zone.COOLING, Zone.BATTERY, Zone.TRANSMISSION, Zone.EXHAUST)
 
 /**
  * La pantalla Salud del Taller: tu auto desde arriba con un punto sobre cada parte que pide
@@ -113,7 +113,7 @@ private object SameLevels : SnapshotMutationPolicy<List<SystemHealth>> {
  * dibujar cuando cambia el estado de alguna parte, no con cada lectura.
  */
 @Composable
-private fun rememberHealth(d: Dependencies, report: EngineReport?, connected: Boolean): List<SystemHealth> {
+internal fun rememberHealth(d: Dependencies, report: EngineReport?, connected: Boolean): List<SystemHealth> {
     if (connected) DisposableEffect(d.bus) {
         HEALTH_SIGNALS.forEach(d.bus::want)
         onDispose { HEALTH_SIGNALS.forEach(d.bus::unwant) }

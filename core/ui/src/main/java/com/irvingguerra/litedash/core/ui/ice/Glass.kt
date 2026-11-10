@@ -148,14 +148,17 @@ fun IceIconButton(
     size: Dp = IceDims.iconButton,
     iconSize: Dp = 24.dp,
     tint: Color = LocalIce.current.ink2,
+    /** Otro fondo u otro borde (sobre la imagen de la cámara, por ejemplo). */
+    fill: Color? = null,
+    border: Color? = null,
 ) {
     val ice = LocalIce.current
     Box(
         modifier
             .size(size)
             .clip(CircleShape)
-            .background(if (ice.dark) Color(170, 210, 255).copy(alpha = 0.06f) else Color.White.copy(alpha = 0.6f))
-            .border(1.dp, ice.line2, CircleShape)
+            .background(fill ?: if (ice.dark) Color(170, 210, 255).copy(alpha = 0.06f) else Color.White.copy(alpha = 0.6f))
+            .border(1.dp, border ?: ice.line2, CircleShape)
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) { Icon(icon, tint, iconSize) }

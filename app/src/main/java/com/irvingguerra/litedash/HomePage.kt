@@ -405,7 +405,7 @@ private fun WeatherCard(d: Dependencies, modifier: Modifier, onSettings: () -> U
 }
 
 /** El ícono del clima en el trazo de la tarjeta (1.5). */
-private fun iceWeatherIcon(sky: Sky, day: Boolean) = when (sky) {
+internal fun iceWeatherIcon(sky: Sky, day: Boolean) = when (sky) {
     Sky.CLEAR -> if (day) IceIcons.sun else IceIcons.moon
     Sky.PARTLY -> if (day) IceIcons.partly else IceIcons.moon
     Sky.CLOUDY -> IceIcons.cloud
@@ -515,7 +515,8 @@ private fun TelemetryPill(d: Dependencies, modifier: Modifier, onObd: () -> Unit
     val ice = LocalIce.current
     val obdOn = rememberObd(d)?.state == ObdState.ON
     val locale = currentLocale()
-    GlassCard(modifier, radius = 23.dp) {
+    // Toda la píldora abre el Taller (con OBD: su salud; sin él: viaje, odómetro y cómo conectarlo).
+    GlassCard(modifier.clip(RoundedCornerShape(23.dp)).clickable(onClick = onObd), radius = 23.dp) {
         Row(Modifier.fillMaxSize().padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
             if (obdOn) {
                 val units = d.prefs.units
@@ -538,7 +539,7 @@ private fun TelemetryPill(d: Dependencies, modifier: Modifier, onObd: () -> Unit
                 TeleItem(IceIcons.gauge, avg, if (miles) "mph" else stringResource(R.string.tele_avg))
                 VDivider(18.dp)
                 Row(
-                    Modifier.clip(RoundedCornerShape(12.dp)).clickable(onClick = onObd).padding(horizontal = 4.dp, vertical = 4.dp),
+                    Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(IceIcons.plug, ice.ice, 20.dp)

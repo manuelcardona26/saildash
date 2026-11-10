@@ -294,7 +294,7 @@ private fun SpeedOnlyOptions(settings: SpeedOnlySettings, miles: Boolean, unit: 
                 )
                 IceText(stringResource(R.string.velocidad_auto_help), iceStyle(13f, display = false, lineHeight = 1.4f), ice.ink2, maxLines = 3, modifier = Modifier.padding(top = 8.dp))
             }
-            Box(Modifier.align(Alignment.End).padding(top = 16.dp)) { IceButton(stringResource(R.string.done), close, primary = true) }
+            Box(Modifier.align(Alignment.End).padding(top = 16.dp)) { com.irvingguerra.litedash.core.ui.ice.IceButton(stringResource(R.string.done), close, kind = com.irvingguerra.litedash.core.ui.ice.IceButtonKind.BLUE, height = 48.dp) }
         }
     }
 }
