@@ -3,6 +3,11 @@
 SailDash es una versión personal de [LiteDash](https://github.com/IrvingGuerra/litedash) (GPL-3.0)
 para un Chevrolet Sail con pantalla Android T3L. Lo de LiteDash está en `CHANGELOG-LITEDASH.md`.
 
+## [1.1.2] - 2026-11-10
+
+### Cambiado
+- La foto del Sail viene incluida en todas las versiones, también en la que se descarga de GitHub.
+
 ## [1.1.1] - 2026-11-10
 
 ### Cambiado
