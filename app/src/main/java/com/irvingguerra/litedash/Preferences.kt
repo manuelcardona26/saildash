@@ -48,6 +48,8 @@ internal object PrefKeys {
     const val DRIVER_NAME = "driver_name"
     const val HOME_ADDRESS = "home_address"
     const val WORK_ADDRESS = "work_address"
+    const val FAVORITE_ADDRESS = "favorite_address"
+    const val PLACE_NAME = "place_name"
     const val PARKED_MODE = "parked_mode"
     const val PARKED_VIEW = "parked_view"
     const val WHEEL_KEYS = "wheel_keys"
@@ -304,6 +306,12 @@ class Preferences(context: Context) {
     /** Dirección de Trabajo para el atajo del widget Mapa; null = sin guardar. */
     var workAddress by string(PrefKeys.WORK_ADDRESS)
 
+    /** SailDash: el destino Favorito del inicio (diseño C); null = sin guardar. */
+    var favoriteAddress by string(PrefKeys.FAVORITE_ADDRESS)
+
+    /** SailDash: el último nombre del lugar (barrio o comuna) que se vio en el inicio, para mostrarlo sin esperar. */
+    var placeName by string(PrefKeys.PLACE_NAME)
+
     /** Reloj grande tras unos minutos sin tocar el inicio. */
     var parkedMode by bool(PrefKeys.PARKED_MODE, true)
 
@@ -343,8 +351,11 @@ class Preferences(context: Context) {
     /** Guardar un resumen de cada viaje con el OBD conectado (apagado de fábrica). */
     var tripLog by bool(PrefKeys.TRIP_LOG, false)
 
-    /** Ocultar la barra de Android de arriba (se asoma deslizando desde arriba); apagado de fábrica. */
-    var hideStatusBar by bool(PrefKeys.HIDE_STATUS_BAR, false)
+    /**
+     * Ocultar la barra de Android de arriba (se asoma deslizando desde arriba). SailDash 1.1: prendido de
+     * fábrica, el diseño C usa la pantalla completa de 1024 × 600.
+     */
+    var hideStatusBar by bool(PrefKeys.HIDE_STATUS_BAR, true)
 
     /** Contar esta pantalla en las estadísticas anónimas (ver [Stats]); prendido de fábrica. */
     var stats by bool(PrefKeys.STATS, true)

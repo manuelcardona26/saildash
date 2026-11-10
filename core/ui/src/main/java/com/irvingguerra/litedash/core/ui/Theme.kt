@@ -45,6 +45,10 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.irvingguerra.litedash.core.ui.ice.IceDark
+import com.irvingguerra.litedash.core.ui.ice.IceLight
+import com.irvingguerra.litedash.core.ui.ice.LocalIce
+import com.irvingguerra.litedash.core.ui.ice.Outfit
 
 // Colores de la marca (los mismos de brand/logo).
 object Brand {
@@ -54,11 +58,11 @@ object Brand {
 }
 
 /** Colores que se repiten entre los temas: tinta (fondo oscuro), tinta y papel del claro, y su ámbar. */
-// SailDash: tinta de espacio profundo (un negro con un toque de azul).
-private val Ink = Color(0xFF05080F)
-private val LightInk = Color(0xFF16181C)
-private val LightPaper = Color(0xFFE9ECF0)
-private val LightAmber = Color(0xFFE59500)
+// SailDash 1.1 (diseño C "Hielo y órbita"): la tinta y el papel salen de ice/Ice.kt (common.css).
+private val Ink = IceDark.bg
+private val LightInk = IceLight.ink
+private val LightPaper = IceLight.bg
+private val LightAmber = Color(0xFFB7790A)
 
 @Immutable
 data class Colors(
@@ -103,30 +107,32 @@ private fun contrast(a: Color, b: Color): Float {
 
 // Estilo limpio (Irving, 2026-11-01: "más estilo Apple o DuduAuto"): tarjetas lisas sin
 // borde sobre un fondo apenas distinto, texto secundario gris y el color de realce solo en lo importante.
+// Diseño C: el vidrio de common.css visto sobre el fondo (--glass, --glass-strong y --line ya mezclados
+// con --bg: los paneles de siempre usan colores lisos), texto --ink / --ink-2 y el acento hielo.
 val DarkColors = Colors(
     dark = true,
     background = Ink,
-    surface = Color(0xFF0E141E),
-    surfaceHigh = Color(0xFF18212F),
-    line = Color(0xFF1F2A3A),
-    text = Brand.LightWhite,
-    textMuted = Color(0xFF8594A8),
-    accent = Brand.Amber,
+    surface = Color(0xFF111A26),
+    surfaceHigh = Color(0xFF1A2534),
+    line = Color(0xFF223040),
+    text = IceDark.ink,
+    textMuted = Color(0xFF98A8BB),
+    accent = IceDark.ice,
     danger = Color(0xFFFF6B5E),
     warning = Brand.Amber,
-    primary = Brand.LightWhite,
-    onPrimary = Ink,
+    primary = IceDark.ink,
+    onPrimary = Color(0xFF0A1322),
 )
 
 val LightColors = Colors(
     dark = false,
     background = LightPaper,
-    surface = Color.White,
-    surfaceHigh = Color(0xFFF0F2F5),
-    line = Color(0xFFE3E6EA),
+    surface = Color(0xFFF7FAFE),
+    surfaceHigh = Color(0xFFEDF2F8),
+    line = Color(0xFFD6E0EC),
     text = LightInk,
-    textMuted = Color(0xFF7D8590),
-    accent = LightAmber,
+    textMuted = Color(0xFF5E6E82),
+    accent = IceLight.ice2,
     danger = Color(0xFFD93A2B),
     warning = LightAmber,
     primary = LightInk,
@@ -161,15 +167,17 @@ fun LiteDashTheme(dark: Boolean = true, scale: Float = 1f, accent: Color? = null
     val colors = remember(dark, accent) { (if (dark) DarkColors else LightColors).withAccent(accent) }
     CompositionLocalProvider(
         LocalColors provides colors,
+        LocalIce provides if (dark) IceDark else IceLight,
         LocalDensity provides Density(d.density * scale, d.fontScale),
         content = content,
     )
 }
 
 object Typography {
-    val clock = TextStyle(fontSize = 56.sp, fontWeight = FontWeight.Medium, letterSpacing = (-1).sp)
-    val title = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
-    val subtitle = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium)
+    // Diseño C: los títulos y la hora en Outfit; el texto corrido sigue en Roboto.
+    val clock = TextStyle(fontFamily = Outfit, fontSize = 56.sp, fontWeight = FontWeight.Light, letterSpacing = (-1).sp)
+    val title = TextStyle(fontFamily = Outfit, fontSize = 22.sp, fontWeight = FontWeight.Medium)
+    val subtitle = TextStyle(fontFamily = Outfit, fontSize = 18.sp, fontWeight = FontWeight.Medium)
     val body = TextStyle(fontSize = 16.sp)
     val small = TextStyle(fontSize = 13.sp)
     val label = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 1.sp)

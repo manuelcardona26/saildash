@@ -90,6 +90,8 @@ internal fun CarSettings(d: Dependencies) {
         ColorPicker(prefs.carColor, prefs::previewCarColor) { prefs.carColor = it }
         if (pkg != null) FinishPicker(prefs, cars, pkg, catalog?.firstOrNull { it.id == pkg.id })
     }
+    // SailDash: la foto de tu carro para el Inicio (OwnerCar.kt).
+    if (tab == 0) OwnerCarSettings()
     if (tab == 0 && pkg != null) {
         val entry = catalog?.firstOrNull { it.id == pkg.id }
         SettingsCard("${pkg.make} ${pkg.name} ${entry?.years ?: pkg.year}") {

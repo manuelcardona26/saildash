@@ -14,3 +14,7 @@ measurements/
 mediciones/
 CLAUDE.md
 .claude/
+
+# SailDash: el carro del dueño (render de otra persona): nunca al repo público.
+app/src/main/assets/private/
+.diseno-privado/

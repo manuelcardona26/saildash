@@ -436,7 +436,12 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
         }
     }
     // Botón de inicio estando ya aquí: de vuelta al tablero tal como lo acomodaste.
-    LaunchedEffect(homePressed) { if (d.prefs.welcomeSeen) backToDashboard() }
+    // SailDash: la página del inicio nuevo (Inicio, Carro, Carretera, Mapa); se queda al abrir y cerrar paneles.
+    var homePage by rememberSaveable { mutableIntStateOf(0) }
+    LaunchedEffect(homePressed) {
+        if (d.prefs.welcomeSeen) backToDashboard()
+        if (homePressed > 0) homePage = 0
+    }
     // Clima al volver al inicio y cada media hora con el inicio a la vista (si está activado); nunca en segundo plano.
     WeatherRefresh(d.weather, revision)
     // Versión nueva de la app (a lo más cada 12 h, al volver al inicio) y modelo 3D nuevo del auto (cada hora).
@@ -523,11 +528,33 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
                 }
             },
     ) {
+        // SailDash 1.1: el inicio del diseño C (páginas y dock, HomeShell.kt). La cuadrícula de LiteDash
+        // queda solo para "Acomodar el inicio" (desde Ajustes) mientras se rehace en el estilo nuevo.
+        if (panel == null && !editing) CompositionLocalProvider(LocalHomeCovered provides (tiresShown || parked)) {
+            HomeShell(
+                d, apps, revision,
+                page = homePage,
+                onPage = { homePage = it },
+                covered = tiresShown || parked || carShown,
+                expanded = expanded,
+                onExpand = { expandedFromId = null; expanded = it },
+                onPanel = { panel = it },
+            ) {
+                if (d.prefs.welcomeSeen) {
+                    if (!d.prefs.dontAskHome && !isShortScreen()) HomePrompt(d.prefs, revision)
+                    EngineAlertBanner(d, engineAlert)
+                    TiresAlertBanner(d, actions.onTires)
+                    UpdateBanner(d.updater, onOpen = { openUpdates(); panel = Panel.Updates })
+                    val newModel = d.cars.outdated?.takeIf { it.id == car?.id }
+                    if (car != null && newModel != null) CarUpdateNotice(d.cars, car, newModel)
+                }
+            }
+        }
         // Tu imagen de fondo (Inicio y apariencia → Inicio → Fondo de pantalla), detrás de todo.
-        if (panel == null) HomeWallpaper(d.prefs)
+        if (panel == null && editing) HomeWallpaper(d.prefs)
         // Los paneles tapan todo el inicio: mientras hay uno abierto no se dibuja ni se
         // pinta nada debajo (el auto del tablero no se tiñe dos veces al cambiar el color).
-        if (panel == null) BoxWithConstraints(Modifier.fillMaxSize().safeDrawingPadding()) {
+        if (panel == null && editing) BoxWithConstraints(Modifier.fillMaxSize().safeDrawingPadding()) {
           // Pantalla acostada: barra lateral a la izquierda (como DuduAuto), con la hora y tus
           // apps; el tablero se queda con toda la altura. Parada: el dock abajo, como siempre.
           val rail = when (d.prefs.barPosition) {
@@ -995,14 +1022,14 @@ private fun Tile.fillsHalf(grid: Grid?) = grid != null && width * height * 2 >= 
 
 /** La música en grande: lo que suena con el método elegido y la biblioteca de Archivos. */
 @Composable
-private fun MusicBig(d: Dependencies, close: (() -> Unit)?, modifier: Modifier = Modifier) = MusicExpanded(
+internal fun MusicBig(d: Dependencies, close: (() -> Unit)?, modifier: Modifier = Modifier) = MusicExpanded(
     d.music, close = close, modifier,
     browser = { picked -> PlayerBrowser(PlayerSource.USB, picked, Modifier.fillMaxSize()) },
 )
 
 /** La radio en grande: FM o internet y, si está prendida, las estaciones por internet. */
 @Composable
-private fun RadioBig(d: Dependencies, close: (() -> Unit)?, modifier: Modifier = Modifier, onSettings: () -> Unit) = RadioExpanded(
+internal fun RadioBig(d: Dependencies, close: (() -> Unit)?, modifier: Modifier = Modifier, onSettings: () -> Unit) = RadioExpanded(
     d.music, close = close, onSettings = onSettings, modifier,
     browser = if (d.music.radioInternet) { picked -> PlayerBrowser(PlayerSource.RADIO, picked, Modifier.fillMaxSize()) } else null,
 )

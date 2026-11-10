@@ -41,6 +41,8 @@ internal fun AppsSettings(d: Dependencies) {
                 TextInput(d.prefs.homeAddress ?: "", { d.prefs.homeAddress = it.take(160).ifBlank { null } }, stringResource(R.string.place_hint), Modifier.fillMaxWidth())
                 Label(stringResource(R.string.place_work), Typography.label, c.textMuted)
                 TextInput(d.prefs.workAddress ?: "", { d.prefs.workAddress = it.take(160).ifBlank { null } }, stringResource(R.string.place_hint), Modifier.fillMaxWidth())
+                Label(stringResource(R.string.place_favorite), Typography.label, c.textMuted)
+                TextInput(d.prefs.favoriteAddress ?: "", { d.prefs.favoriteAddress = it.take(160).ifBlank { null } }, stringResource(R.string.place_hint), Modifier.fillMaxWidth())
             }
         }
         3 -> SettingsCard(stringResource(R.string.tab_favorites), stringResource(R.string.favorites_help)) { Favorites(d) }

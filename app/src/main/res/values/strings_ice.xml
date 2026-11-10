@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash 1.1 · diseño C "Hielo y órbita": el inicio nuevo (páginas, dock e Inicio). -->
+<resources>
+    <!-- Páginas -->
+    <string name="page_home">Inicio</string>
+    <string name="page_car">Carro</string>
+    <string name="page_road">Carretera</string>
+    <string name="page_map">Mapa</string>
+    <string name="page_previous">Página anterior</string>
+    <string name="page_next">Página siguiente</string>
+
+    <!-- Dock -->
+    <string name="dock_home">Inicio</string>
+    <string name="dock_apps">Apps</string>
+    <string name="dock_phone">Teléfono</string>
+    <string name="dock_carplay">CarPlay</string>
+    <string name="dock_whatsapp">WhatsApp</string>
+    <string name="dock_radio">Radio FM</string>
+    <string name="dock_spotify">Spotify</string>
+    <string name="dock_settings">Ajustes</string>
+    <string name="dock_missing">%1$s no está instalada en la pantalla</string>
+    <string name="am_marker">a. m.</string>
+    <string name="pm_marker">p. m.</string>
+
+    <!-- Inicio -->
+    <string name="speed_unit_kmh">km/h</string>
+    <string name="speed_unit_mph">mph</string>
+    <string name="contrast_toggle">Cambiar entre día y noche</string>
+    <string name="place_favorite">Favorito</string>
+    <string name="place_search">Buscar</string>
+    <string name="place_tap_to_set">Toca para configurar</string>
+    <string name="weather_drizzle">Llovizna</string>
+    <string name="weather_off">Clima apagado</string>
+    <string name="weather_waiting">Buscando el clima…</string>
+    <string name="weather_max_min">↑ %1$d°&#160;&#160;↓ %2$d°</string>
+    <string name="pico_pill_today">Hoy: pico y placa</string>
+    <string name="pico_pill_now">Ahora: pico y placa</string>
+    <string name="pico_pill_tomorrow">Mañana: pico y placa</string>
+    <string name="wifi_title">Wi-Fi</string>
+    <string name="wifi_connected">Conectado</string>
+    <string name="wifi_disconnected">Sin conexión</string>
+    <string name="bt_title">Bluetooth</string>
+    <string name="bt_tile_connected">Conectado</string>
+    <string name="bt_disconnected">Sin conectar</string>
+    <string name="tele_trip_km">km</string>
+    <string name="tele_avg">km/h prom.</string>
+    <string name="tele_connect_obd">Conecta OBD</string>
+    <string name="music_idle">Nada sonando</string>
+    <string name="music_idle_hint">Toca para abrir la música</string>
+    <string name="my_car_fallback">Mi carro</string>
+
+    <!-- Ajustes → Tu carro: la foto del Inicio -->
+    <string name="owner_car_title">Foto de tu carro</string>
+    <string name="owner_car_help">La que se ve grande en el Inicio: un PNG de frente con el fondo transparente. Sin foto, va el carro 3D o el dibujo.</string>
+    <string name="owner_car_pick">Elegir foto de tu carro</string>
+    <string name="owner_car_remove">Quitar la foto</string>
+    <string name="owner_car_restore">Reponer la original</string>
+    <string name="owner_car_error">No se pudo leer esa imagen</string>
+</resources>

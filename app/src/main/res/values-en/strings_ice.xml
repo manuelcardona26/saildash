@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="page_home">Home</string>
+    <string name="page_car">Car</string>
+    <string name="page_road">Road</string>
+    <string name="page_map">Map</string>
+    <string name="page_previous">Previous page</string>
+    <string name="page_next">Next page</string>
+
+    <string name="dock_home">Home</string>
+    <string name="dock_apps">Apps</string>
+    <string name="dock_phone">Phone</string>
+    <string name="dock_carplay">CarPlay</string>
+    <string name="dock_whatsapp">WhatsApp</string>
+    <string name="dock_radio">FM Radio</string>
+    <string name="dock_spotify">Spotify</string>
+    <string name="dock_settings">Settings</string>
+    <string name="dock_missing">%1$s isn\'t installed on this screen</string>
+    <string name="am_marker">AM</string>
+    <string name="pm_marker">PM</string>
+
+    <string name="speed_unit_kmh">km/h</string>
+    <string name="speed_unit_mph">mph</string>
+    <string name="contrast_toggle">Switch between day and night</string>
+    <string name="place_favorite">Favorite</string>
+    <string name="place_search">Search</string>
+    <string name="place_tap_to_set">Tap to set up</string>
+    <string name="weather_drizzle">Drizzle</string>
+    <string name="weather_off">Weather off</string>
+    <string name="weather_waiting">Getting the weather…</string>
+    <string name="weather_max_min">↑ %1$d°&#160;&#160;↓ %2$d°</string>
+    <string name="pico_pill_today">Today: driving restriction</string>
+    <string name="pico_pill_now">Now: driving restriction</string>
+    <string name="pico_pill_tomorrow">Tomorrow: driving restriction</string>
+    <string name="wifi_title">Wi-Fi</string>
+    <string name="wifi_connected">Connected</string>
+    <string name="wifi_disconnected">Not connected</string>
+    <string name="bt_title">Bluetooth</string>
+    <string name="bt_tile_connected">Connected</string>
+    <string name="bt_disconnected">Not connected</string>
+    <string name="tele_trip_km">km</string>
+    <string name="tele_avg">km/h avg</string>
+    <string name="tele_connect_obd">Connect OBD</string>
+    <string name="music_idle">Nothing playing</string>
+    <string name="music_idle_hint">Tap to open your music</string>
+    <string name="my_car_fallback">My car</string>
+
+    <string name="owner_car_title">Photo of your car</string>
+    <string name="owner_car_help">The one shown large on Home: a front PNG with a transparent background. Without a photo, the 3D car or the drawing is used.</string>
+    <string name="owner_car_pick">Choose a photo of your car</string>
+    <string name="owner_car_remove">Remove the photo</string>
+    <string name="owner_car_restore">Restore the original</string>
+    <string name="owner_car_error">Could not read that image</string>
+</resources>
