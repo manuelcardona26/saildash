@@ -50,18 +50,6 @@ enum class HomePage(val title: Int, val background: Int) {
     MAPA(R.string.page_map, R.drawable.bg_espacio),
 }
 
-/** Los botones del dock (sus llaves). */
-private object Dock {
-    const val HOME = "home"
-    const val APPS = "apps"
-    const val PHONE = "phone"
-    const val CARPLAY = "carplay"
-    const val WHATSAPP = "whatsapp"
-    const val RADIO = "radio"
-    const val SPOTIFY = "spotify"
-    const val SETTINGS = "settings"
-}
-
 /**
  * El inicio nuevo. [covered] = algo tapa el inicio (estacionado, llantas): lo que gasta descansa.
  * [page] es la página que se ve (la guarda el inicio). [expanded] es la música o la radio en grande (encima de las páginas, con el dock visible).
@@ -101,6 +89,7 @@ fun HomeShell(
             onPanel = onPanel,
             onMusic = { onExpand(Expanded.MUSIC) },
             onCar = { goTo(HomePage.CARRO.ordinal) },
+            onBluetooth = { onExpand(Expanded.BLUETOOTH) },
         )
     }
     // Carro, Carretera y Mapa: los paneles, la música en grande y el modo galaxia (Solo velocidad).
@@ -123,103 +112,36 @@ fun HomeShell(
                     HomePage.MAPA -> MapaPage(d, apps, visible, pageActions)
                 }
             }
-            // La música o la radio en grande, sobre las páginas (el dock sigue abajo).
-            if (expanded != null) Box(
-                Modifier.size(IceDims.FRAME_W.dp, (IceDims.FRAME_H.dp - IceDims.dock)).background(ice.bg).padding(16.dp),
-            ) {
-                val close = { onExpand(null) }
-                when (expanded) {
-                    Expanded.RADIO -> RadioBig(d, close) { onPanel(Panel.MusicSettings) }
-                    else -> MusicBig(d, close)
+            // La música o la radio en grande, sobre las páginas (el dock sigue abajo); la tarjeta de
+            // Bluetooth, encima del inicio oscurecido.
+            val close = { onExpand(null) }
+            when (expanded) {
+                null -> {
+                    PageArrows(onPrevious = { goTo(pager.currentPage - 1) }, onNext = { goTo(pager.currentPage + 1) })
+                    // .pager: a 80 dp del fondo (encima del dock), centrados.
+                    PageDots(pages.size, pager.currentPage, Modifier.align(Alignment.TopCenter).offset(y = 514.dp))
                 }
-            } else {
-                PageArrows(onPrevious = { goTo(pager.currentPage - 1) }, onNext = { goTo(pager.currentPage + 1) })
-                // .pager: a 80 dp del fondo (encima del dock), centrados.
-                PageDots(pages.size, pager.currentPage, Modifier.align(Alignment.TopCenter).offset(y = 514.dp))
+                Expanded.BLUETOOTH -> BluetoothCard(d, close)
+                Expanded.MUSIC -> MusicPanel(d, close, onSound = { onPanel(Panel.Sound) })
+                Expanded.RADIO -> if (d.music.radioInternet) Box(
+                    Modifier.size(IceDims.FRAME_W.dp, (IceDims.FRAME_H.dp - IceDims.dock)).background(ice.bg).padding(16.dp),
+                ) { RadioBig(d, close) { onPanel(Panel.MusicSettings) } } else RadioScreen(d, close, onSound = { onPanel(Panel.Sound) })
+                else -> Box(
+                    Modifier.size(IceDims.FRAME_W.dp, (IceDims.FRAME_H.dp - IceDims.dock)).background(ice.bg).padding(16.dp),
+                ) { MusicBig(d, close) }
             }
-            val (time, marker, date) = dockTime()
-            IceDock(
-                entries = dockEntries(),
-                active = Dock.HOME,
-                onClick = { key -> onDock(context, d, apps, key, onPanel, onExpand) { goTo(0) } },
+            val nav = remember(onPanel, onExpand) {
+                ShellNav(onPanel = onPanel, onExpand = onExpand, onHome = { onExpand(null); goTo(0) })
+            }
+            ShellDock(
+                d, apps,
+                active = if (expanded == Expanded.RADIO && !d.music.radioInternet) Dock.RADIO else Dock.HOME,
+                nav = nav,
                 modifier = Modifier.align(Alignment.BottomStart),
-                clock = { DockClock(time, marker, date) },
             )
             Column(Modifier.align(Alignment.TopCenter).padding(top = 72.dp).width(640.dp), content = notices)
         }
     }
-}
-
-@Composable
-private fun dockEntries(): List<DockEntry> {
-    val home = stringResource(R.string.dock_home)
-    val apps = stringResource(R.string.dock_apps)
-    val phone = stringResource(R.string.dock_phone)
-    val carplay = stringResource(R.string.dock_carplay)
-    val whatsapp = stringResource(R.string.dock_whatsapp)
-    val radio = stringResource(R.string.dock_radio)
-    val spotify = stringResource(R.string.dock_spotify)
-    val settings = stringResource(R.string.dock_settings)
-    return remember(home, apps, phone, carplay, whatsapp, radio, spotify, settings) {
-        listOf(
-            DockEntry(Dock.HOME, IceIcons.home, home),
-            DockEntry(Dock.APPS, IceIcons.apps, apps),
-            DockEntry(Dock.PHONE, IceIcons.phone, phone, separatorBefore = true),
-            DockEntry(Dock.CARPLAY, IceIcons.carPlay, carplay),
-            DockEntry(Dock.WHATSAPP, IceIcons.whatsApp, whatsapp),
-            DockEntry(Dock.RADIO, IceIcons.radio, radio, separatorBefore = true),
-            DockEntry(Dock.SPOTIFY, IceIcons.spotify, spotify),
-            DockEntry(Dock.SETTINGS, IceIcons.settings, settings, separatorBefore = true),
-        )
-    }
-}
-
-/** Lo que hace cada botón del dock. */
-private fun onDock(
-    context: Context,
-    d: Dependencies,
-    apps: List<App>,
-    key: String,
-    onPanel: (Panel) -> Unit,
-    onExpand: (Expanded?) -> Unit,
-    onHome: () -> Unit,
-) {
-    fun open(app: App?, name: String): Boolean {
-        if (app != null) d.apps.open(context, app) else missing(context, name)
-        return app != null
-    }
-    when (key) {
-        Dock.HOME -> {
-            onExpand(null)
-            onHome()
-        }
-        Dock.APPS -> onPanel(Panel.Drawer)
-        // La app de Bluetooth de la pantalla (llamadas del celular); si no hay, el marcador de Android.
-        Dock.PHONE -> d.music.bluetoothApp()?.let { pkg -> d.apps.firstOf(apps, pkg) }?.let { d.apps.open(context, it) } ?: openDialer(context)
-        // AutoKit / ZLink / la que la pantalla traiga (la misma detección de la pieza de proyección).
-        Dock.CARPLAY -> projectionApp(apps)?.let { d.apps.open(context, it) } ?: run {
-            missing(context, context.getString(R.string.dock_carplay))
-            onPanel(Panel.Drawer)
-        }
-        Dock.WHATSAPP -> open(d.apps.firstOf(apps, "com.whatsapp", "com.whatsapp.w4b"), context.getString(R.string.dock_whatsapp))
-        // La radio enlazada en Ajustes → Apps → Radio (la de la pantalla), o la de internet de SailDash.
-        Dock.RADIO -> when {
-            d.music.radioInternet -> onExpand(Expanded.RADIO)
-            d.music.sourceApps[com.irvingguerra.litedash.feature.music.SourceKind.RADIO] != null -> d.music.openRadioApp()
-            else -> onPanel(Panel.MusicSettings)
-        }
-        // Spotify; si no está, la app de música elegida o la primera conocida; si no, la música en grande.
-        Dock.SPOTIFY -> (
-            d.apps.firstOf(apps, "com.spotify.music")
-                ?: d.music.preferred?.let { d.apps.firstOf(apps, it) }
-                ?: d.apps.firstOf(apps, *MUSIC_PACKAGES)
-            )?.let { d.apps.open(context, it) } ?: onExpand(Expanded.MUSIC)
-        Dock.SETTINGS -> onPanel(Panel.Settings)
-    }
-}
-
-private fun missing(context: Context, name: String) {
-    Toast.makeText(context, context.getString(R.string.dock_missing, name), Toast.LENGTH_SHORT).show()
 }
 
 /**

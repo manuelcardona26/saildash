@@ -556,6 +556,12 @@ class MusicRepository(private val context: Context) {
     private fun factoryFor(lens: Lens): FactoryRadio? = factory?.takeIf { lens === radio && it.open }
 
     /**
+     * SailDash (Radio FM): hay perfil del sintonizador de fábrica conectado (TopWay o NWD): la radio
+     * dice su frecuencia de verdad y buscar va directo al sintonizador. False = solo la app de la radio.
+     */
+    val radioTunerConnected: Boolean get() = factoryFor(radio) != null
+
+    /**
      * Las sesiones activas y, de las apps enlazadas (Bluetooth, FM), la de su aviso de música si
      * Android no la cuenta como activa (algunas pantallas solo la dejan ver por ahí).
      */

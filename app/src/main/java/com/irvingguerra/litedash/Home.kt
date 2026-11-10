@@ -103,7 +103,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeoutOrNull
 
 /** El widget en grande (a media pantalla). */
-enum class Expanded { MUSIC, RADIO, MAP }
+enum class Expanded { MUSIC, RADIO, MAP, BLUETOOTH }
 
 /** Qué panel está abierto encima del inicio (uno a la vez). */
 sealed interface Panel {
@@ -133,6 +133,8 @@ sealed interface Panel {
     data object TiresSettings : Panel
     /** SailDash: solo la velocidad, en grande y a pantalla completa (SpeedOnly.kt). */
     data object SpeedOnly : Panel
+    /** SailDash: Ajustes abiertos en Sonido (desde la música o la radio en grande). */
+    data object Sound : Panel
 }
 
 class Dependencies(
@@ -442,6 +444,14 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
         if (d.prefs.welcomeSeen) backToDashboard()
         if (homePressed > 0) homePage = 0
     }
+    // SailDash 1.1: a dónde lleva el dock desde los paneles del diseño C (Ajustes, Aplicaciones).
+    val nav = remember {
+        ShellNav(
+            onPanel = { panel = it },
+            onExpand = { panel = null; expandedFromId = null; expanded = it },
+            onHome = { backToDashboard(); homePage = 0 },
+        )
+    }
     // Clima al volver al inicio y cada media hora con el inicio a la vista (si está activado); nunca en segundo plano.
     WeatherRefresh(d.weather, revision)
     // Versión nueva de la app (a lo más cada 12 h, al volver al inicio) y modelo 3D nuevo del auto (cada hora).
@@ -644,6 +654,7 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
                                     val app = mapApp(d, apps)
                                     MapExpanded(d, from?.data ?: "", app, onPlace = { navigateTo(context, app, it) }, onNavigate = { actions.onNavigate(app) }, close = close, Modifier.padding(6.dp))
                                 }
+                                Expanded.BLUETOOTH -> MusicBig(d, close, Modifier.padding(6.dp))
                             }
                         } else Dashboard(
                                 grid = grid,
@@ -679,11 +690,10 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
 
         when (val p = panel) {
             null -> Unit
-            Panel.Drawer -> DrawerPanel(d, apps, close = { panel = null })
-            Panel.Settings, Panel.Updates, Panel.Workshop, Panel.MusicSettings, Panel.TiresSettings -> SettingsPanel(
-                d,
+            Panel.Drawer -> AppsPanel(d, apps, nav, close = { panel = null })
+            Panel.Settings, Panel.Updates, Panel.Workshop, Panel.MusicSettings, Panel.TiresSettings, Panel.Sound -> SettingsPanel(
+                d, apps, nav,
                 revision = revision,
-                close = { panel = null },
                 // Acomodar cierra lo que esté en grande (si no, el tablero ni se ve).
                 onEdit = { panel = null; expanded = null; editing = true },
                 onTemplates = { panel = Panel.Templates },
@@ -692,6 +702,7 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
                     Panel.Workshop -> SettingsSection.WORKSHOP
                     Panel.MusicSettings -> SettingsSection.APPS
                     Panel.TiresSettings -> SettingsSection.TIRES
+                    Panel.Sound -> SettingsSection.SOUND
                     else -> SettingsSection.CAR
                 },
                 onTires = { panel = null; openTires() },
@@ -741,7 +752,7 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
         if (intro) LogoIntro(d.prefs) { intro = false }
 
         if (!d.prefs.welcomeSeen) {
-            Welcome(d.prefs, d.dashboard, revision, onFinish = { d.prefs.welcomeSeen = true })
+            Welcome(d, revision, onFinish = { d.prefs.welcomeSeen = true })
         }
     }
 }

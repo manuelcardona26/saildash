@@ -49,6 +49,13 @@ import com.irvingguerra.litedash.core.ui.ice.IceDark
 import com.irvingguerra.litedash.core.ui.ice.IceLight
 import com.irvingguerra.litedash.core.ui.ice.LocalIce
 import com.irvingguerra.litedash.core.ui.ice.Outfit
+import com.irvingguerra.litedash.core.ui.ice.IceButton
+import com.irvingguerra.litedash.core.ui.ice.IceButtonKind
+import com.irvingguerra.litedash.core.ui.ice.IceIcons
+import com.irvingguerra.litedash.core.ui.ice.IceSegmented
+import com.irvingguerra.litedash.core.ui.ice.IceText2
+import com.irvingguerra.litedash.core.ui.ice.IceToggle
+import com.irvingguerra.litedash.core.ui.ice.iceCard
 
 // Colores de la marca (los mismos de brand/logo).
 object Brand {
@@ -150,7 +157,7 @@ val TilePadding = 10.dp
 
 object Radius {
     /** Tarjetas del tablero y de Ajustes. */
-    val card = 14.dp
+    val card = 18.dp
     /** Cosas dentro de una tarjeta: portadas, botones, campos, filas. */
     val inner = 10.dp
     /** Detalles chicos (barras, indicadores). */
@@ -177,8 +184,9 @@ object Typography {
     // Diseño C: los títulos y la hora en Outfit; el texto corrido sigue en Roboto.
     val clock = TextStyle(fontFamily = Outfit, fontSize = 56.sp, fontWeight = FontWeight.Light, letterSpacing = (-1).sp)
     val title = TextStyle(fontFamily = Outfit, fontSize = 22.sp, fontWeight = FontWeight.Medium)
-    val subtitle = TextStyle(fontFamily = Outfit, fontSize = 18.sp, fontWeight = FontWeight.Medium)
-    val body = TextStyle(fontSize = 16.sp)
+    // `.h3` y `.lbl` del catálogo.
+    val subtitle = TextStyle(fontFamily = Outfit, fontSize = 17.sp, fontWeight = FontWeight.Medium, letterSpacing = 0.17.sp)
+    val body = TextStyle(fontSize = 15.sp)
     val small = TextStyle(fontSize = 13.sp)
     val label = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 1.sp)
 }
@@ -206,9 +214,9 @@ fun Card(
     onClick: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit,
 ) {
-    val c = LocalColors.current
+    // Diseño C: la tarjeta es de vidrio (`.card` del catálogo: 18 dp, borde fino y reflejo arriba).
     val shape = RoundedCornerShape(Radius.card)
-    var m = modifier.clip(shape).background(if (LocalPlainCard.current) Color.Transparent else c.surface)
+    var m = if (LocalPlainCard.current) modifier.clip(shape) else modifier.iceCard().clip(shape)
     if (onClick != null) m = m.clickable(onClick = onClick)
     Box(m, content = content)
 }
@@ -232,16 +240,8 @@ fun IconButton(
 /** Botón de texto con esquinas [Radius.inner]. */
 @Composable
 fun Button(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, primary: Boolean = false) {
-    val c = LocalColors.current
-    val shape = RoundedCornerShape(Radius.inner)
-    Box(
-        modifier
-            .clip(shape)
-            .background(if (primary) c.primary else c.surfaceHigh)
-            .clickable(onClick = onClick)
-            .padding(horizontal = 22.dp, vertical = 14.dp),
-        contentAlignment = Alignment.Center,
-    ) { Label(text, Typography.body.copy(fontWeight = FontWeight.SemiBold), if (primary) c.onPrimary else c.text, 1) }
+    // Diseño C: `.btn.pri` (blanco hielo con brillo) o `.btn.sec` (borde hielo).
+    IceButton(text, onClick, modifier, if (primary) IceButtonKind.PRIMARY else IceButtonKind.SECONDARY)
 }
 
 /**
@@ -251,28 +251,8 @@ fun Button(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, pri
  */
 @Composable
 fun <T> Segmented(options: List<Pair<T, String>>, selected: T, onSelect: (T) -> Unit, modifier: Modifier = Modifier, check: Boolean = false) {
-    val c = LocalColors.current
-    Row(
-        modifier.clip(RoundedCornerShape(Radius.inner)).background(c.surfaceHigh).padding(4.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-    ) {
-        for ((value, text) in options) {
-            val on = value == selected
-            Box(
-                Modifier
-                    .clip(RoundedCornerShape(Radius.inner - 2.dp))
-                    .background(if (on) c.surface else Color.Transparent)
-                    .clickable { onSelect(value) }
-                    .padding(horizontal = 18.dp, vertical = 11.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    if (check && on) Icon(Icons.done, c.primary, 18.dp)
-                    Label(text, Typography.body.copy(fontWeight = if (on) FontWeight.SemiBold else FontWeight.Normal), if (on) c.text else c.textMuted, 1)
-                }
-            }
-        }
-    }
+    // Diseño C: `.seg` (cápsula oscura, la elegida en hielo).
+    IceSegmented(options, selected, onSelect, modifier, check = check)
 }
 
 /** Un renglón con su interruptor: el texto (y una ayuda opcional) a la izquierda. */
@@ -284,8 +264,8 @@ fun SwitchRow(title: String, checked: Boolean, onChange: (Boolean) -> Unit, help
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f).padding(end = 16.dp)) {
-            Label(title, Typography.body)
-            if (help != null) Label(help, Typography.small, c.textMuted)
+            Label(title, IceText2.lbl, c.text)
+            if (help != null) Label(help, IceText2.sub, c.textMuted, modifier = Modifier.padding(top = 3.dp))
         }
         Switch(checked)
     }
@@ -294,25 +274,23 @@ fun SwitchRow(title: String, checked: Boolean, onChange: (Boolean) -> Unit, help
 /** El interruptor en sí (el toque lo maneja su renglón). */
 @Composable
 fun Switch(checked: Boolean, modifier: Modifier = Modifier) {
-    val c = LocalColors.current
-    val knob by animateDpAsState(if (checked) 22.dp else 2.dp, label = "interruptor")
-    Box(
-        modifier.size(width = 52.dp, height = 32.dp).clip(CircleShape).background(if (checked) c.accent else c.line),
-    ) {
-        Box(Modifier.padding(start = knob, top = 2.dp).size(28.dp).clip(CircleShape).background(Color.White))
-    }
+    // Diseño C: `.tg` (54 × 32, prendido en degradado hielo).
+    IceToggle(checked, modifier)
 }
 
 /** Campo de texto de una línea con [hint]; [icon] pone la lupa (buscadores). */
 @Composable
 fun TextInput(value: String, onChange: (String) -> Unit, hint: String, modifier: Modifier = Modifier, icon: Boolean = false) {
     val c = LocalColors.current
+    val ice = LocalIce.current
+    // Diseño C: el campo redondo oscuro de `.search`.
+    val shape = RoundedCornerShape(24.dp)
     Row(
-        modifier.height(56.dp).clip(RoundedCornerShape(Radius.card)).background(c.surface).border(1.dp, c.line, RoundedCornerShape(Radius.card)).padding(horizontal = 20.dp),
+        modifier.height(48.dp).clip(shape).background(if (ice.dark) Color(6, 12, 22).copy(alpha = 0.5f) else Color.White.copy(alpha = 0.7f)).border(1.dp, ice.line, shape).padding(horizontal = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (icon) {
-            Icon(Icons.search, c.textMuted, 22.dp)
+            Icon(IceIcons.search, ice.ice, 22.dp)
             Spacer(Modifier.width(12.dp))
         }
         Box(Modifier.weight(1f)) {

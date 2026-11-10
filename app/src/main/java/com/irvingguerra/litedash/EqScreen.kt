@@ -1,20 +1,26 @@
-// SailDash: Ajustes → Sonido (el ecualizador de las apps).
+// SailDash: Ajustes → Sonido (el ecualizador de las apps), en el diseño C (catalogo/ecualizador).
 package com.irvingguerra.litedash
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,11 +33,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
@@ -41,22 +48,38 @@ import androidx.compose.ui.graphics.vector.addPathNodes
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.drawText
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.irvingguerra.litedash.core.ui.Button
+import com.irvingguerra.litedash.core.ui.Icon
 import com.irvingguerra.litedash.core.ui.Label
 import com.irvingguerra.litedash.core.ui.LocalColors
 import com.irvingguerra.litedash.core.ui.Segmented
 import com.irvingguerra.litedash.core.ui.SwitchRow
 import com.irvingguerra.litedash.core.ui.TextInput
 import com.irvingguerra.litedash.core.ui.Typography
+import com.irvingguerra.litedash.core.ui.ice.IceButton
+import com.irvingguerra.litedash.core.ui.ice.IceIcons
+import com.irvingguerra.litedash.core.ui.ice.IcePill
+import com.irvingguerra.litedash.core.ui.ice.IceSlider
+import com.irvingguerra.litedash.core.ui.ice.IceText
+import com.irvingguerra.litedash.core.ui.ice.IceText2
+import com.irvingguerra.litedash.core.ui.ice.IceToggle
+import com.irvingguerra.litedash.core.ui.ice.IceType
+import com.irvingguerra.litedash.core.ui.ice.LocalIce
+import com.irvingguerra.litedash.core.ui.ice.Outfit
+import com.irvingguerra.litedash.core.ui.ice.RobotoText
+import com.irvingguerra.litedash.core.ui.ice.iceCard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Locale
 import kotlin.math.abs
-import kotlin.math.ceil
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
@@ -72,66 +95,152 @@ internal val EqSoundIcon: ImageVector = ImageVector.Builder(defaultWidth = 24.dp
     .build()
 
 /**
- * Ajustes → Sonido. Arriba, prenderlo y cómo va; luego el estilo con la curva que se arrastra, los
- * ajustes rápidos, "Mis ajustes", qué suena con él (con el atajo al de fábrica para la radio y el
- * Bluetooth) y lo avanzado.
+ * Ajustes → Sonido, como el mockup: arriba cómo va y el interruptor; la tarjeta con los estilos (y el
+ * grupo Urbano) y la curva que se arrastra; Bajo protegido y las dos barras; y el atajo al de fábrica
+ * para la radio y el Bluetooth. Debajo, "Mis ajustes" y lo avanzado.
  */
 @Composable
 internal fun EqSettingsSection() {
     val context = LocalContext.current
-    val c = LocalColors.current
+    val ice = LocalIce.current
     val eq = remember { EqEngine.get(context) }
     // Las bandas de la pantalla (una vez; quedan guardadas para la próxima).
     LaunchedEffect(Unit) { eq.probe() }
     val s = eq.settings
     val device = eq.device
 
-    SettingsCard {
-        SwitchRow(stringResource(R.string.ecualizador_enable), s.enabled, { eq.update(s.copy(enabled = it)) }, stringResource(R.string.ecualizador_enable_help))
-        EqStatusLine()
-    }
-    if (s.enabled && device != null) {
-        SettingsCard(stringResource(R.string.ecualizador_style), stringResource(R.string.ecualizador_curve_help)) {
-            EqPresetChips(s, eq.slots) { eq.update(it) }
-            EqEditor(s, device, { eq.preview(it) }, { eq.update(it) })
-            EqCurveFooter(s, device) { eq.update(it) }
+    if (device != null) {
+        val active = s.enabled
+        // .cv: los estilos y la curva.
+        Column(Modifier.fillMaxWidth().iceCard().padding(horizontal = 16.dp, vertical = 14.dp)) {
+            EqPresetChips(s, eq.slots) { eq.update(it.copy(enabled = true)) }
+            Spacer(Modifier.height(10.dp))
+            EqEditor(s, device, { eq.preview(it) }, { eq.update(it) }, dim = !active)
         }
-        SettingsCard(stringResource(R.string.ecualizador_quick)) {
-            SwitchRow(stringResource(R.string.ecualizador_protect), s.protect, { eq.update(s.copy(protect = it)) }, stringResource(R.string.ecualizador_protect_help))
-            EqSlider(stringResource(R.string.ecualizador_bass), s.bass, { eq.preview(s.withBass(it)) }, { eq.update(s.withBass(it)) })
-            EqSlider(stringResource(R.string.ecualizador_voice), s.voice, { eq.preview(s.withVoice(it)) }, { eq.update(s.withVoice(it)) })
-            Label(stringResource(R.string.ecualizador_voice_help), Typography.small, c.textMuted)
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            // .q: Bajo protegido y las dos barras.
+            Column(Modifier.width(396.dp).height(164.dp).iceCard().padding(horizontal = 20.dp, vertical = 6.dp)) {
+                QuickRow(divider = true) {
+                    Column(Modifier.weight(1f)) {
+                        IceText(stringResource(R.string.ecualizador_protect), IceText2.rowTitle, ice.ink)
+                        IceText(stringResource(R.string.p2_eq_protect_sub), IceType.small, ice.ink3, modifier = Modifier.padding(top = 3.dp))
+                    }
+                    IceToggle(s.protect, onChange = { eq.update(s.copy(protect = it)) })
+                }
+                QuickRow(divider = true) {
+                    IceText(stringResource(R.string.ecualizador_bass), IceText2.rowTitle, ice.ink, modifier = Modifier.width(150.dp))
+                    IceSlider(s.bass, { eq.update(s.withBass(it)) }, Modifier.weight(1f), onPreview = { eq.preview(s.withBass(it)) })
+                    IceText((s.bass * 100).roundToInt().toString(), IceText2.rowTitle.copy(fontSize = 15.sp, textAlign = androidx.compose.ui.text.style.TextAlign.End), ice.ice, modifier = Modifier.width(40.dp))
+                }
+                QuickRow(divider = false) {
+                    IceText(stringResource(R.string.ecualizador_voice), IceText2.rowTitle, ice.ink, modifier = Modifier.width(150.dp))
+                    IceSlider(s.voice, { eq.update(s.withVoice(it)) }, Modifier.weight(1f), onPreview = { eq.preview(s.withVoice(it)) })
+                    IceText((s.voice * 100).roundToInt().toString(), IceText2.rowTitle.copy(fontSize = 15.sp, textAlign = androidx.compose.ui.text.style.TextAlign.End), ice.ice, modifier = Modifier.width(40.dp))
+                }
+            }
+            // .fx: la radio FM y el Bluetooth van por el de fábrica.
+            FactoryCard(Modifier.width(288.dp).height(164.dp))
         }
         SettingsCard(stringResource(R.string.ecualizador_slots_title), stringResource(R.string.ecualizador_slots_help)) { EqSaveSlots(eq) }
-    } else if (s.enabled && eq.unsupported == null) {
-        SettingsCard { Label(stringResource(R.string.ecualizador_loading), Typography.body, c.textMuted) }
+        SettingsCard(stringResource(R.string.ecualizador_advanced)) { EqAdvanced(s, device, eq) }
+    } else if (eq.unsupported == null) {
+        SettingsCard { Label(stringResource(R.string.ecualizador_loading), Typography.body, LocalColors.current.textMuted) }
+        FactoryCard(Modifier.fillMaxWidth().height(164.dp))
+    } else {
+        FactoryCard(Modifier.fillMaxWidth().height(164.dp))
     }
-    SettingsCard(stringResource(R.string.ecualizador_explain_title)) { EqFactory() }
-    if (s.enabled && device != null) SettingsCard(stringResource(R.string.ecualizador_advanced)) { EqAdvanced(s, device, eq) }
 }
 
-/** Cómo va: en todo el sonido, en qué apps, apagado o por qué no se puede. */
+/**
+ * Lo de la derecha del título en Ajustes → Sonido (`.mh`): "Ecualizador de las apps · Activo en todo
+ * el sonido" y el interruptor.
+ */
 @Composable
-private fun EqStatusLine() {
-    val c = LocalColors.current
+internal fun androidx.compose.foundation.layout.RowScope.EqHeaderTrailing() {
+    val context = LocalContext.current
+    val ice = LocalIce.current
+    val eq = remember { EqEngine.get(context) }
+    val s = eq.settings
+    EqStatusLine(Modifier.weight(1f).padding(start = 14.dp, top = 22.dp))
+    IceText(stringResource(R.string.p2_eq_switch), IceText2.lbl, ice.ink)
+    Spacer(Modifier.width(14.dp))
+    IceToggle(s.enabled, onChange = { eq.update(s.copy(enabled = it)) })
+}
+
+/** `.qr`: renglón de 54 dp con la raya de abajo. */
+@Composable
+private fun QuickRow(divider: Boolean, content: @Composable androidx.compose.foundation.layout.RowScope.() -> Unit) {
+    val line = LocalIce.current.line2
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .height(54.dp)
+            .then(if (divider) Modifier.drawBehindLine(line) else Modifier),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(14.dp),
+        content = content,
+    )
+}
+
+private fun Modifier.drawBehindLine(color: Color) = this.then(
+    Modifier.drawBehind { drawRect(color, Offset(0f, size.height - 1.dp.toPx()), androidx.compose.ui.geometry.Size(size.width, 1.dp.toPx())) },
+)
+
+/** `.fx`: por qué la radio y el Bluetooth no pasan por aquí, y el botón al ecualizador de fábrica. */
+@Composable
+private fun FactoryCard(modifier: Modifier) {
+    val context = LocalContext.current
+    val ice = LocalIce.current
+    val lookup by produceState(EqEngine.factory) {
+        if (value == null) value = withContext(Dispatchers.IO) { EqEngine.findFactory(context.applicationContext) }
+    }
+    val app = lookup?.app
+    Box(modifier.iceCard().padding(horizontal = 18.dp, vertical = 16.dp)) {
+        Column {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(IceIcons.radio, Color(0xFFFFC56B), 22.dp)
+                Spacer(Modifier.width(10.dp))
+                IceText(stringResource(R.string.p2_eq_fx_title), IceText2.h3.copy(fontSize = 16.sp), ice.title)
+            }
+            IceText(stringResource(R.string.p2_eq_fx_text), IceText2.para, ice.ink2, maxLines = 3, modifier = Modifier.padding(top = 9.dp))
+        }
+        IceButton(
+            if (lookup == null) stringResource(R.string.ecualizador_factory_searching) else if (app == null) stringResource(R.string.p2_eq_fx_none) else stringResource(R.string.p2_eq_fx_open),
+            { app?.let { runCatching { context.startActivity(it.intent) } } },
+            Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
+            icon = IceIcons.openExternal,
+            height = 46.dp,
+            padding = 12.dp,
+            enabled = app != null,
+        )
+    }
+}
+
+/** Cómo va: "Ecualizador de las apps · Activo en todo el sonido" (lo bueno en menta; lo malo en rojo). */
+@Composable
+private fun EqStatusLine(modifier: Modifier) {
+    val ice = LocalIce.current
     val st = EqEngine.status
     val unsupported = EqEngine.unsupported
     val (text, color) = when {
-        // Apagado pero ya se sabe que la pantalla no lo deja: se dice de una vez.
         st.state == EqState.OFF && unsupported != null ->
-            stringResource(R.string.ecualizador_status_unsupported, stringResource(eqReasonText(unsupported))) to c.danger
-        st.state == EqState.OFF -> stringResource(R.string.ecualizador_status_off) to c.textMuted
-        st.state == EqState.STARTING -> stringResource(R.string.ecualizador_status_starting) to c.textMuted
-        st.state == EqState.GLOBAL -> stringResource(R.string.ecualizador_status_global) to c.accent
-        st.state == EqState.APPS && st.apps.isEmpty() -> stringResource(R.string.ecualizador_status_apps_waiting) to c.accent
-        st.state == EqState.APPS -> stringResource(R.string.ecualizador_status_apps, st.apps.joinToString(", ")) to c.accent
-        else -> stringResource(R.string.ecualizador_status_unsupported, stringResource(eqReasonText(st.reason))) to c.danger
+            stringResource(R.string.ecualizador_status_unsupported, stringResource(eqReasonText(unsupported))) to ice.danger
+        st.state == EqState.OFF -> stringResource(R.string.p2_eq_off) to ice.ink3
+        st.state == EqState.STARTING -> stringResource(R.string.ecualizador_status_starting) to ice.ink2
+        st.state == EqState.GLOBAL -> stringResource(R.string.p2_eq_global) to Color(0xFF8FF0CF)
+        st.state == EqState.APPS && st.apps.isEmpty() -> stringResource(R.string.ecualizador_status_apps_waiting) to Color(0xFF8FF0CF)
+        st.state == EqState.APPS -> stringResource(R.string.ecualizador_status_apps, st.apps.joinToString(", ")) to Color(0xFF8FF0CF)
+        else -> stringResource(R.string.ecualizador_status_unsupported, stringResource(eqReasonText(st.reason))) to ice.danger
     }
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        Box(Modifier.size(12.dp).clip(CircleShape).background(color))
-        Label(text, Typography.body, modifier = Modifier.weight(1f))
-    }
-    if (st.state == EqState.APPS && st.reason != null) Label(stringResource(R.string.ecualizador_status_fallback), Typography.small, c.textMuted)
+    val lead = stringResource(R.string.p2_eq_lead)
+    IceText(
+        buildAnnotatedString {
+            append(lead)
+            append(" · ")
+            withStyle(SpanStyle(color = color)) { append(text.trimEnd('.')) }
+        },
+        IceText2.sub, ice.ink2, maxLines = 1, modifier = modifier.padding(end = 12.dp),
+    )
 }
 
 private fun eqReasonText(reason: EqReason?) = when (reason) {
@@ -142,13 +251,16 @@ private fun eqReasonText(reason: EqReason?) = when (reason) {
     EqReason.FAILED, null -> R.string.ecualizador_reason_failed
 }
 
-private fun eqPresetName(id: String) = when (id) {
-    EqPresets.TECHNO -> R.string.ecualizador_preset_techno
+internal fun eqPresetName(id: String) = when (id) {
+    EqPresets.TECHNO -> R.string.p2_eq_techno
     EqPresets.DEEP_BASS -> R.string.ecualizador_preset_deep_bass
     EqPresets.VOICE -> R.string.ecualizador_preset_voice
     EqPresets.ROCK -> R.string.ecualizador_preset_rock
-    EqPresets.PODCAST -> R.string.ecualizador_preset_podcast
+    EqPresets.PODCAST -> R.string.p2_eq_podcast
     EqPresets.NIGHT -> R.string.ecualizador_preset_night
+    EqPresets.REGGAETON -> R.string.p2_eq_reggaeton
+    EqPresets.URBAN_TECHNO -> R.string.p2_eq_techno
+    EqPresets.ELECTRONICA -> R.string.p2_eq_electronica
     else -> R.string.ecualizador_preset_flat
 }
 
@@ -164,50 +276,64 @@ private fun eqCurrentName(s: EqSettings): String {
     return if (slot != null) eqSlotName(slot, EqEngine.slots.getOrNull(slot)) else stringResource(eqPresetName(s.preset))
 }
 
-/** Los estilos y los "Mis ajustes" guardados: un toque y listo. */
+/** Para la tarjeta de sonido de la música: "Sonido: Techno" y "Bajo protegido · voz clara". */
 @Composable
-private fun EqPresetChips(s: EqSettings, slots: List<EqSlot?>, onPick: (EqSettings) -> Unit) {
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        for (p in EqPresets.all) Button(stringResource(eqPresetName(p.id)), { onPick(s.withPreset(p)) }, primary = s.preset == p.id && !s.edited)
-        slots.forEachIndexed { i, slot ->
-            if (slot != null) Button(eqSlotName(i, slot), { onPick(s.withSlot(i, slot)) }, primary = s.preset == eqSlotId(i) && !s.edited)
-        }
+internal fun eqSummary(): Pair<String, String> {
+    val context = LocalContext.current
+    val eq = remember { EqEngine.get(context) }
+    val s = eq.settings
+    val name = if (s.enabled) eqCurrentName(s) else stringResource(R.string.p2_eq_off_short)
+    val parts = buildList {
+        if (s.enabled && s.protect) add(stringResource(R.string.p2_eq_protect_short))
+        if (s.enabled && s.voice > 0.05f) add(stringResource(R.string.p2_eq_voice_short))
+        if (s.enabled && s.bass > 0.05f) add(stringResource(R.string.p2_eq_bass_short))
+        if (!s.enabled) add(stringResource(R.string.p2_eq_tap_to_turn_on))
     }
+    return stringResource(R.string.p2_eq_sound_title, name) to parts.joinToString(" · ")
 }
-
-/** Debajo de la curva: el aviso de Bajo protegido, Restablecer y de dónde salió si se editó. */
-@Composable
-private fun EqCurveFooter(s: EqSettings, device: EqDevice, onChange: (EqSettings) -> Unit) {
-    val c = LocalColors.current
-    val capped = s.protect && device.bands.hz.any { s.curve.at(it) > EqMath.capAt(it) + 0.05f }
-    if (capped) Label(stringResource(R.string.ecualizador_capped), Typography.small, c.warning)
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-        Button(stringResource(R.string.ecualizador_reset), { onChange(s.reset()) })
-        if (s.edited) Label(stringResource(R.string.ecualizador_edited, eqCurrentName(s)), Typography.small, c.textMuted, modifier = Modifier.weight(1f))
-    }
-}
-
-/** Alto de la curva (sin las etiquetas de arriba y abajo). */
-private val EditorHeight = 240.dp
-/** A la izquierda van los dB de la rejilla. */
-private val EditorGutter = 44.dp
-private val EditorPadY = 16.dp
 
 /**
- * La curva: un punto por cada banda que trae la pantalla (sus frecuencias reales), que se arrastra
- * hacia arriba o hacia abajo desde cualquier parte de su columna (blanco grande para el dedo). Un
- * toque solo no cambia nada. Mientras se arrastra se oye ([onPreview]) y al soltar se guarda
- * ([onChange]). Lo de color es lo que de verdad suena (con bajos, voz y Bajo protegido).
+ * `.chips`: los estilos de siempre y "Mis ajustes" en una fila (se desliza), y el grupo Urbano
+ * aparte debajo. El elegido, en hielo.
  */
 @Composable
-private fun EqEditor(s: EqSettings, device: EqDevice, onPreview: (EqSettings) -> Unit, onChange: (EqSettings) -> Unit) {
-    val c = LocalColors.current
+private fun EqPresetChips(s: EqSettings, slots: List<EqSlot?>, onPick: (EqSettings) -> Unit) {
+    val ice = LocalIce.current
+    val chip = IceText2.pill.copy(fontSize = 14.sp)
+    Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+        for (p in EqPresets.normal) IcePill(stringResource(eqPresetName(p.id)), s.preset == p.id && !s.edited, { onPick(s.withPreset(p)) }, padding = 14.dp, textStyle = chip)
+        // "Mis ajustes": el último guardado (o el primero que haya); sin ninguno, nada que elegir todavía.
+        val saved = slots.withIndex().filter { it.value != null }
+        val mine = s.slot != null && !s.edited
+        IcePill(stringResource(R.string.p2_eq_mine), mine, {
+            val pick = saved.firstOrNull { it.index == s.slot } ?: saved.firstOrNull()
+            if (pick != null) onPick(s.withSlot(pick.index, pick.value!!))
+        }, padding = 14.dp, textStyle = chip)
+    }
+    Spacer(Modifier.height(8.dp))
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+        IceText(stringResource(R.string.p2_eq_urban).uppercase(), IceText2.cap.copy(fontSize = 12.sp), ice.ink3, modifier = Modifier.padding(start = 4.dp, end = 6.dp))
+        for (p in EqPresets.urban) IcePill(stringResource(eqPresetName(p.id)), s.preset == p.id && !s.edited, { onPick(s.withPreset(p)) }, padding = 14.dp, textStyle = chip, height = 40.dp)
+        if (s.edited) IceText(stringResource(R.string.ecualizador_edited, eqCurrentName(s)), IceType.small, ice.ink3, modifier = Modifier.padding(start = 8.dp).clickable { onPick(s.reset().copy(enabled = s.enabled)) })
+    }
+}
+
+/** El rango que se dibuja: ±12 dB como el mockup (o el de la pantalla si es menor). */
+private const val GRAPH_DB = 12f
+
+/**
+ * `svg.graph` (682 × 150 a escala del ancho): rejilla de ±12 dB con sus rótulos, la curva brillante con
+ * relleno, un punto blanco por cada banda real de la pantalla (lo que suena, con su halo) y su valor;
+ * con Bajo protegido, la raya dorada del "tope" y, punteado, a dónde se pidió. Se arrastra cada punto
+ * hacia arriba o abajo desde su columna: mientras, se oye ([onPreview]); al soltar, se guarda ([onChange]).
+ */
+@Composable
+private fun EqEditor(s: EqSettings, device: EqDevice, onPreview: (EqSettings) -> Unit, onChange: (EqSettings) -> Unit, dim: Boolean) {
     val bands = device.bands
     val n = bands.hz.size
     val range = remember(bands) { EqMath.editorRange(bands) }
-    val lo = range.first
-    val hi = range.second
-    // Mientras se arrastra, la curva vive aquí (solo se redibuja la curva, no toda la pantalla).
+    val lo = maxOf(range.first, -GRAPH_DB)
+    val hi = minOf(range.second, GRAPH_DB)
     var dragging by remember { mutableStateOf<EqSettings?>(null) }
     var active by remember { mutableIntStateOf(-1) }
     val shown = dragging ?: s
@@ -217,44 +343,36 @@ private fun EqEditor(s: EqSettings, device: EqDevice, onPreview: (EqSettings) ->
     val preview by rememberUpdatedState(onPreview)
     val change by rememberUpdatedState(onChange)
     val measurer = rememberTextMeasurer()
-    val gridStyle = Typography.small.copy(color = c.textMuted)
-    val gridLabels = remember(lo, hi, gridStyle) {
-        gridSteps(lo, hi).filter { it.roundToInt() % 6 == 0 }.map { it to measurer.measure(EqMath.dbLabel(it), gridStyle) }
+    val gridStyle = TextStyle(fontFamily = RobotoText, fontSize = 13.sp, color = Color(196, 216, 238).copy(alpha = 0.5f))
+    val valueStyle = TextStyle(fontFamily = Outfit, fontSize = 14.sp, color = Color(0xFFEEF6FF))
+    val capStyle = TextStyle(fontFamily = RobotoText, fontSize = 13.sp, color = Color(0xFFFFD88A).copy(alpha = 0.9f))
+    val tope = stringResource(R.string.p2_eq_cap)
+    // x de cada banda: de 92 a 590 sobre 682 (como el mockup), escalado al ancho.
+    fun xOf(i: Int, w: Float): Float {
+        val k = w / 682f
+        return if (n == 1) w / 2 else (92f + i * (498f / (n - 1))) * k
     }
-    val valueStyle = (if (n > 7) Typography.small else Typography.body).copy(fontWeight = FontWeight.SemiBold)
-
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        // Arriba, cuánto sube o baja cada banda.
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.width(EditorGutter)) { Label("dB", Typography.small, c.textMuted, 1) }
-            for (i in 0 until n) Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                Label(EqMath.dbLabel(base[i]), valueStyle, if (i == active) c.accent else c.text, 1)
-            }
-        }
+    Column(Modifier.fillMaxWidth()) {
         Canvas(
             Modifier
                 .fillMaxWidth()
-                .height(EditorHeight)
+                .height(150.dp)
                 .pointerInput(bands, lo, hi) {
                     awaitEachGesture {
                         val down = awaitFirstDown()
                         down.consume()
-                        val gutter = EditorGutter.toPx()
-                        val padY = EditorPadY.toPx()
-                        val column = (size.width - gutter) / n
-                        val band = ((down.position.x - gutter) / column).toInt().coerceIn(0, n - 1)
+                        val band = (0 until n).minByOrNull { abs(xOf(it, size.width.toFloat()) - down.position.x) } ?: 0
                         var moved = false
                         try {
                             while (true) {
                                 val finger = awaitPointerEvent().changes.firstOrNull { it.id == down.id } ?: break
                                 if (!finger.pressed) break
                                 finger.consume()
-                                // Un toque no cambia nada: hay que arrastrar (así no se mueve sin querer).
                                 if (!moved && abs(finger.position.y - down.position.y) < viewConfiguration.touchSlop) continue
                                 moved = true
                                 active = band
-                                val plot = size.height - 2 * padY
-                                val db = EqMath.snap(hi - (finger.position.y - padY) / plot * (hi - lo)).coerceIn(lo, hi)
+                                val k = size.height / 150f
+                                val db = EqMath.snap(hi - (finger.position.y - 12f * k) / (126f * k) * (hi - lo)).coerceIn(lo, hi)
                                 val next = (dragging ?: current).withBand(bands, band, db)
                                 if (next != dragging) {
                                     dragging = next
@@ -262,7 +380,6 @@ private fun EqEditor(s: EqSettings, device: EqDevice, onPreview: (EqSettings) ->
                                 }
                             }
                         } finally {
-                            // Al soltar (o si el gesto se corta) queda lo último que se oyó.
                             dragging?.let { change(it) }
                             dragging = null
                             active = -1
@@ -270,57 +387,82 @@ private fun EqEditor(s: EqSettings, device: EqDevice, onPreview: (EqSettings) ->
                     }
                 },
         ) {
-            val gutter = EditorGutter.toPx()
-            val padY = EditorPadY.toPx()
-            val plot = size.height - 2 * padY
-            val column = (size.width - gutter) / n
-            fun y(db: Float) = padY + (hi - db.coerceIn(lo, hi)) / (hi - lo) * plot
-            fun x(i: Int) = gutter + column * (i + 0.5f)
-            if (active in 0 until n) {
-                drawRoundRect(c.surfaceHigh, Offset(gutter + column * active, 0f), Size(column, size.height), CornerRadius(10.dp.toPx()))
+            val k = size.height / 150f
+            val left = 40f * size.width / 682f
+            fun y(db: Float) = 12f * k + (hi - db.coerceIn(lo, hi)) / (hi - lo) * 126f * k
+            val line = Color(0xFFBFE1FF)
+            // La rejilla: ±12, ±6 (tenues) y el 0 punteado; los rótulos a la izquierda.
+            for (g in listOf(12f, 6f, -6f, -12f)) if (g in lo..hi) drawLine(line.copy(alpha = 0.07f), Offset(left, y(g)), Offset(size.width, y(g)), 1.dp.toPx())
+            drawLine(line.copy(alpha = 0.22f), Offset(left, y(0f)), Offset(size.width, y(0f)), 1.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(3.dp.toPx(), 5.dp.toPx())))
+            for (g in listOf(12f, 6f, 0f, -6f, -12f)) if (g in lo..hi) {
+                val t = measurer.measure(EqMath.dbLabel(g), gridStyle)
+                drawText(t, topLeft = Offset(0f, y(g) - t.size.height / 2f))
             }
-            for (g in gridSteps(lo, hi)) {
-                val zero = g == 0f
-                drawLine(if (zero) c.textMuted else c.line, Offset(gutter, y(g)), Offset(size.width, y(g)), strokeWidth = (if (zero) 1.5f else 1f).dp.toPx())
+            for (i in 0 until n) drawLine(line.copy(alpha = 0.06f), Offset(xOf(i, size.width), 8f * k), Offset(xOf(i, size.width), 142f * k), 1.dp.toPx())
+            // Lo que se ve en cada banda: con Bajo protegido, el tope; si no, la curva.
+            val dots = (0 until n).map { i -> if (s.protect) minOf(base[i], EqMath.capAt(bands.hz[i])) else base[i] }
+            val pts = dots.mapIndexed { i, v -> Offset(xOf(i, size.width), y(v)) }
+            val x0 = 44f * size.width / 682f
+            val x1 = 668f * size.width / 682f
+            val curve = smoothCurve(pts, x0, x1)
+            val alpha = if (dim) 0.4f else 1f
+            // Relleno hasta el 0 (lo que de verdad suena, con bajos y voz).
+            val heardPts = heard.mapIndexed { i, v -> Offset(xOf(i, size.width), y(v)) }
+            val fill = smoothCurve(heardPts, x0, x1).apply {
+                lineTo(x1, y(0f)); lineTo(x0, y(0f)); close()
             }
-            for ((g, text) in gridLabels) drawText(text, topLeft = Offset(gutter - text.size.width - 8.dp.toPx(), y(g) - text.size.height / 2f))
-            // Lo que suena: relleno suave hasta el 0.
-            val fill = smoothCurve(heard.mapIndexed { i, v -> Offset(x(i), y(v)) }, gutter, size.width)
-            fill.lineTo(size.width, y(0f))
-            fill.lineTo(gutter, y(0f))
-            fill.close()
-            drawPath(fill, c.accent.copy(alpha = 0.18f))
-            // La curva que se arrastra y sus puntos.
-            val points = base.mapIndexed { i, v -> Offset(x(i), y(v)) }
-            drawPath(smoothCurve(points, gutter, size.width), c.accent, style = Stroke(3.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
-            points.forEachIndexed { i, p ->
-                if (i == active) {
-                    drawCircle(c.accent, 16.dp.toPx(), p)
-                } else {
-                    drawCircle(c.accent, 12.dp.toPx(), p)
-                    drawCircle(c.surface, 8.dp.toPx(), p)
+            drawPath(fill, Brush.verticalGradient(listOf(Color(0xFF7CC6FF).copy(alpha = 0.38f * alpha), Color(0xFF7CC6FF).copy(alpha = 0.02f)), startY = y(hi), endY = y(0f)))
+            // El tope de Bajo protegido donde la curva lo toca.
+            if (s.protect) for (i in 0 until n) {
+                val cap = EqMath.capAt(bands.hz[i])
+                if (base[i] < cap - 0.05f) continue
+                val xi = xOf(i, size.width)
+                val half = if (n > 1) (xOf(1, size.width) - xOf(0, size.width)) / 2f + 4f * k else 60f * k
+                drawLine(Color(0xFFFFD88A).copy(alpha = 0.7f), Offset(maxOf(x0, xi - half), y(cap)), Offset(xi + half, y(cap)), 1.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(4.dp.toPx(), 4.dp.toPx())))
+                val t = measurer.measure(tope, capStyle)
+                drawText(t, topLeft = Offset(xi + 22f * k, y(cap) - 5.6f * k - t.size.height))
+                if (base[i] > cap + 0.25f) drawCircle(
+                    Color(0xFFFFD88A).copy(alpha = 0.75f), 9.dp.toPx(), Offset(xi, y(base[i])),
+                    style = Stroke(1.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(3.dp.toPx(), 3.dp.toPx()))),
+                )
+            }
+            // La curva brillante (el brillo: la misma más ancha y tenue debajo).
+            val glow = Brush.horizontalGradient(listOf(Color(0xFF7CC6FF), Color(0xFFE3F4FF), Color(0xFF9FD4FF)))
+            drawPath(curve, glow, alpha = 0.22f * alpha, style = Stroke(8.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
+            drawPath(curve, glow, alpha = alpha, style = Stroke(2.6.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
+            pts.forEachIndexed { i, p ->
+                drawCircle(Color(0xFFA9DCFF).copy(alpha = if (i == active) 0.3f else 0.14f), 15.dp.toPx(), p)
+                drawCircle(Color.White.copy(alpha = if (dim) 0.6f else 1f), 10.dp.toPx(), p)
+                val v = dots[i]
+                val capped = s.protect && base[i] >= EqMath.capAt(bands.hz[i]) - 0.05f
+                val t = measurer.measure(EqMath.dbLabel(v).replace('.', ','), valueStyle)
+                val below = v < 0f || capped
+                val ty = if (below) p.y + 32f * k - t.size.height * 0.8f else p.y - 22f * k - t.size.height * 0.8f
+                drawText(t, topLeft = Offset(p.x - t.size.width / 2f, ty))
+            }
+        }
+        // .flab: la frecuencia de cada banda ("60 Hz", "3,6 kHz").
+        Box(Modifier.fillMaxWidth().height(28.dp).padding(top = 8.dp)) {
+            androidx.compose.foundation.layout.BoxWithConstraints(Modifier.fillMaxWidth()) {
+                val w = maxWidth.value
+                for (i in 0 until n) {
+                    val hz = bands.hz[i]
+                    val (num, unit) = if (hz >= 1000f) EqMath.freqLabel(hz).removeSuffix("k").replace('.', ',') to "kHz" else EqMath.freqLabel(hz) to "Hz"
+                    val x = xOf(i, w)
+                    Box(Modifier.offset((x - 45f).dp).width(90.dp), contentAlignment = Alignment.TopCenter) {
+                        IceText(
+                            buildAnnotatedString {
+                                append(num)
+                                append(' ')
+                                withStyle(SpanStyle(color = LocalIce.current.ink3)) { append(unit) }
+                            },
+                            IceType.small, LocalIce.current.ink2,
+                        )
+                    }
                 }
             }
         }
-        // Abajo, la frecuencia de cada banda.
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Box(Modifier.width(EditorGutter)) { Label("Hz", Typography.small, c.textMuted, 1) }
-            for (i in 0 until n) Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                Label(EqMath.freqLabel(bands.hz[i]), Typography.small, c.textMuted, 1)
-            }
-        }
     }
-}
-
-/** Las líneas de la rejilla: cada 3 dB. */
-private fun gridSteps(lo: Float, hi: Float): List<Float> {
-    val out = ArrayList<Float>()
-    var g = ceil(lo / 3f) * 3f
-    while (g <= hi + 0.001f) {
-        out += g
-        g += 3f
-    }
-    return out
 }
 
 /**
@@ -360,66 +502,6 @@ private fun smoothCurve(points: List<Offset>, left: Float, right: Float): Path {
     }
     path.lineTo(right, points[n - 1].y)
     return path
-}
-
-/**
- * Deslizador de 0 a 100 % con área grande para el dedo (un toque también lo pone ahí). Mientras se
- * arrastra llega [onPreview] y al soltar [onChange].
- */
-@Composable
-private fun EqSlider(title: String, value: Float, onPreview: (Float) -> Unit, onChange: (Float) -> Unit) {
-    val c = LocalColors.current
-    val preview by rememberUpdatedState(onPreview)
-    val change by rememberUpdatedState(onChange)
-    var dragged by remember { mutableStateOf<Float?>(null) }
-    val shown = dragged ?: value
-    Column {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Label(title, Typography.body, modifier = Modifier.weight(1f))
-            Label("${(shown * 100).roundToInt()} %", Typography.body.copy(fontWeight = FontWeight.SemiBold), if (shown > 0f) c.accent else c.textMuted, 1)
-        }
-        Canvas(
-            Modifier
-                .fillMaxWidth()
-                .height(52.dp)
-                .pointerInput(Unit) {
-                    awaitEachGesture {
-                        val down = awaitFirstDown()
-                        down.consume()
-                        val knob = 14.dp.toPx()
-                        fun at(x: Float) = (((x - knob) / (size.width - 2 * knob)).coerceIn(0f, 1f) * 100).roundToInt() / 100f
-                        var v = at(down.position.x)
-                        dragged = v
-                        preview(v)
-                        try {
-                            while (true) {
-                                val finger = awaitPointerEvent().changes.firstOrNull { it.id == down.id } ?: break
-                                if (!finger.pressed) break
-                                finger.consume()
-                                val next = at(finger.position.x)
-                                if (next != v) {
-                                    v = next
-                                    dragged = v
-                                    preview(v)
-                                }
-                            }
-                        } finally {
-                            change(v)
-                            dragged = null
-                        }
-                    }
-                },
-        ) {
-            val knob = 14.dp.toPx()
-            val track = 8.dp.toPx()
-            val cy = size.height / 2
-            val x = knob + shown.coerceIn(0f, 1f) * (size.width - 2 * knob)
-            drawRoundRect(c.surfaceHigh, Offset(knob, cy - track / 2), Size(size.width - 2 * knob, track), CornerRadius(track / 2))
-            drawRoundRect(c.accent, Offset(knob, cy - track / 2), Size(x - knob, track), CornerRadius(track / 2))
-            drawCircle(c.accent, knob, Offset(x, cy))
-            drawCircle(Color.White, knob - 4.dp.toPx(), Offset(x, cy))
-        }
-    }
 }
 
 /** "Mis ajustes": elegir el espacio, ponerle nombre y guardar cómo suena ahora. */
