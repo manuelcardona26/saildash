@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recordatorios_extinguisher">Extinguisher recharge</string>
+    <string name="recordatorios_full_coverage">Comprehensive insurance</string>
+    <string name="recordatorios_tire_rotation">Tire rotation</string>
+    <string name="recordatorios_pick_date">%1$s: when is it due?</string>
+    <string name="recordatorios_km_service">Next change at</string>
+    <string name="recordatorios_km_rotation">Next rotation at</string>
+    <string name="recordatorios_ask_km_service">At what mileage is the next change?</string>
+    <string name="recordatorios_ask_km_rotation">At what mileage is the next rotation?</string>
+    <string name="recordatorios_km_optional">optional</string>
+    <string name="recordatorios_at_km">at %1$s km</string>
+    <string name="recordatorios_next">The next one will be on %1$s</string>
+    <string name="recordatorios_save">Save</string>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash: recordatorios con los trámites de Colombia y el km del próximo cambio de aceite (Reminders.kt). -->
+<resources>
+    <string name="recordatorios_extinguisher">Recarga del extintor</string>
+    <string name="recordatorios_full_coverage">Seguro todo riesgo</string>
+    <string name="recordatorios_tire_rotation">Rotación de llantas</string>
+    <string name="recordatorios_pick_date">%1$s: ¿qué día toca?</string>
+    <!-- Van antes del campo del km: "Próximo cambio a los [85000] km". -->
+    <string name="recordatorios_km_service">Próximo cambio a los</string>
+    <string name="recordatorios_km_rotation">Próxima rotación a los</string>
+    <string name="recordatorios_ask_km_service">¿A los cuántos km es el próximo cambio?</string>
+    <string name="recordatorios_ask_km_rotation">¿A los cuántos km es la próxima rotación?</string>
+    <string name="recordatorios_km_optional">opcional</string>
+    <string name="recordatorios_km" translatable="false">km</string>
+    <string name="recordatorios_at_km">a los %1$s km</string>
+    <string name="recordatorios_next">El siguiente queda para el %1$s</string>
+    <string name="recordatorios_save">Guardar</string>
+</resources>
