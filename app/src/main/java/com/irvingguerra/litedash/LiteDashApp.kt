@@ -76,6 +76,8 @@ class LiteDashApp : Application() {
         }
         watchUsbOffer()
         EqEngine.start(this) // SailDash: ecualizador (apagado no hace nada; prendido, lo pone en su propio hilo).
+        // SailDash: la música en reversa (lee sus ajustes fuera del hilo principal; escucha solo si está prendida y aprendida).
+        ReverseWatcher.start(this)
     }
 
     /**

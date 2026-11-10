@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash: music in reverse (Settings → Your car → Reverse). -->
+<resources>
+    <string name="reversa_title">Reverse</string>
+    <string name="reversa_help">The camera is handled by the head unit and always stays on top: SailDash never touches it. This only changes the volume of music from apps (Spotify, CarPlay through AutoKit, NewPipe, USB). On some head units the radio and Bluetooth music go through the sound chip and don\'t follow Android\'s volume: for those, use the factory \"reverse volume\" option if your head unit has it.</string>
+    <string name="reversa_music">Music when you shift into reverse</string>
+    <string name="reversa_none">Leave it</string>
+    <string name="reversa_lower">Lower a bit</string>
+    <string name="reversa_half">Lower to half</string>
+    <string name="reversa_mute">Mute</string>
+    <string name="reversa_restore">Bring the volume back when leaving reverse</string>
+    <string name="reversa_restore_help">It goes back to what it was 2 seconds after you leave reverse. If you change it while reversing, it stays the way you left it.</string>
+    <string name="reversa_test">Test</string>
+    <string name="reversa_testing">Testing…</string>
+    <string name="reversa_test_help">Play some music and tap Test: it sounds like reverse for 3 seconds and comes back.</string>
+    <string name="reversa_fixed">Your head unit has a fixed Android volume, so SailDash can\'t change it. Use the factory \"reverse volume\" option.</string>
+    <string name="reversa_signal">How SailDash knows you\'re in reverse</string>
+    <string name="reversa_not_learned">I don\'t know yet when you shift into reverse. Teach me once with the car on: tap Learn reverse, shift into reverse and leave it there a few seconds.</string>
+    <string name="reversa_learn">Learn reverse</string>
+    <string name="reversa_relearn">Learn again</string>
+    <string name="reversa_forget">Forget</string>
+    <string name="reversa_listening">Noted how everything is without reverse. Now shift into reverse and leave it there a few seconds: the camera will cover the screen, that\'s normal. %1$d s left.</string>
+    <string name="reversa_noticed">Got the change! Keep it in reverse a moment longer… (%1$d s)</string>
+    <string name="reversa_choose">Several settings changed; pick the reverse one (if it doesn\'t work, learn again):</string>
+    <string name="reversa_learned">Done! Now I know when you\'re in reverse · %1$s</string>
+    <string name="reversa_now_on">In reverse now · %1$s</string>
+    <string name="reversa_now_off">Not in reverse now · %1$s</string>
+    <string name="reversa_broadcast">broadcast %1$s</string>
+    <string name="reversa_nothing">Nothing changed: your head unit doesn\'t tell apps when reverse is engaged (or you didn\'t shift in time). Try again; if it stays the same, use the factory \"reverse volume\" option.</string>
+    <string name="reversa_retry">Try again</string>
+</resources>
