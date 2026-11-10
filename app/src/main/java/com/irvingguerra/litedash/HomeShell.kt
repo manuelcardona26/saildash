@@ -150,13 +150,6 @@ fun HomeShell(
  */
 @Composable
 fun HomeDock(d: Dependencies, apps: List<App>, onPanel: (Panel) -> Unit, onExpand: (Expanded?) -> Unit, onHome: () -> Unit, modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    val (time, marker, date) = dockTime()
-    IceDock(
-        entries = dockEntries(),
-        active = Dock.HOME,
-        onClick = { key -> onDock(context, d, apps, key, onPanel, onExpand, onHome) },
-        modifier = modifier,
-        clock = { DockClock(time, marker, date) },
-    )
+    val nav = remember(onPanel, onExpand, onHome) { ShellNav(onPanel = onPanel, onExpand = onExpand, onHome = onHome) }
+    ShellDock(d, apps, active = Dock.HOME, nav = nav, modifier = modifier)
 }
