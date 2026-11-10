@@ -3,6 +3,25 @@
 SailDash es una versión personal de [LiteDash](https://github.com/IrvingGuerra/litedash) (GPL-3.0)
 para un Chevrolet Sail con pantalla Android T3L. Lo de LiteDash está en `CHANGELOG-LITEDASH.md`.
 
+## [1.1.0] - 2026-11-10
+
+### Diseño nuevo: "Hielo y órbita"
+- Inicio como tu foto de referencia: tu Sail con faros y reflejo, velocidad con órbita, clima con su cielo, Wi-Fi y Bluetooth, telemetría, música, destinos y pico y placa.
+- Páginas con flechas: Carro, Carretera (tu carro andando a tu velocidad) y Mapa. Dock abajo con nombres y la hora.
+- Fondos con un agujero negro renderizado con física real. Ajustes, apps y paneles en el mismo estilo.
+- Bienvenida sin teclado: carro, ciudad y placa para pico y placa.
+
+### Agregado
+- Modo galaxia (solo velocidad): la vía hacia Gargantúa con la Vía Láctea, velocidad gigante y alerta de límite.
+- Velocímetro Sport.
+- Radio FM con emisoras guardadas (sintonía directa pendiente del diagnóstico de tu pantalla).
+- Ecualizador para las apps con presets, "Bajo protegido" y grupo Urbano: Reggaetón, Techno y Electrónica.
+- Taller sin OBD: computador de viaje, odómetro por GPS, tanqueadas (km/galón, $/km) y bitácora; aceite por km.
+- Reversa: bajar, silenciar o no tocar la música; vista de reversa con líneas calibrables si la pantalla deja ver la cámara.
+- Pantalla dividida en Android 7 (mapa + música), tarjeta de Bluetooth, apps recomendadas.
+- Diagnóstico de tu pantalla con grabación de eventos y exportación a la USB.
+- Recordatorios a la colombiana: SOAT, técnico-mecánica, impuesto, extintor, licencia.
+
 ## [1.0.0] - 2026-11-09
 
 ### Agregado
