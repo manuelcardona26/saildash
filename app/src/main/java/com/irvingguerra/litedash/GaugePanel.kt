@@ -3,22 +3,26 @@ package com.irvingguerra.litedash
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -28,36 +32,48 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.irvingguerra.litedash.core.ui.Button
-import com.irvingguerra.litedash.core.ui.Label
+import com.irvingguerra.litedash.core.ui.Icon
 import com.irvingguerra.litedash.core.ui.LocalColors
 import com.irvingguerra.litedash.core.ui.LocalPlainCard
-import com.irvingguerra.litedash.core.ui.Segmented
-import com.irvingguerra.litedash.core.ui.SwitchRow
-import com.irvingguerra.litedash.core.ui.Typography
+import com.irvingguerra.litedash.core.ui.ice.IceBackdrop
+import com.irvingguerra.litedash.core.ui.ice.IceFrame
+import com.irvingguerra.litedash.core.ui.ice.IceText
+import com.irvingguerra.litedash.core.ui.ice.LocalIce
+import com.irvingguerra.litedash.core.ui.ice.glass
+import com.irvingguerra.litedash.core.ui.ice.iceGlass
 import com.irvingguerra.litedash.feature.dashboard.TileTypes
 import kotlinx.coroutines.delay
 
 /** Valores de muestra para la vista previa: sube, baja y llega a la zona roja. */
-private val DEMO = listOf(0.18f, 0.52f, 0.86f, 0.34f, 0.97f, 0.62f)
+private val DEMO = listOf(0.36f, 0.52f, 0.86f, 0.34f, 0.97f, 0.62f)
 
 /**
- * Personalizar un velocímetro, un medidor o la velocidad de la carretera ([tileId]): a la
- * izquierda se ve cómo queda (con valores de muestra que se mueven) y a la derecha el estilo,
- * el color, hasta dónde llega, marcas, números y zona roja. En la carretera, primero cómo va
- * la velocidad (velocímetro, solo el número u oculta). Cada cambio se guarda al momento.
+ * Personalizar un velocímetro, un medidor o la velocidad de la carretera ([tileId]), en el estilo C
+ * (catalogo/velocimetros): a la izquierda, grande, cómo queda (con valores de muestra que se mueven) y a
+ * la derecha, en vidrio, el estilo, el aro, el color, hasta dónde llega, marcas, números y zona roja. En
+ * la carretera, primero lo del viaje y cómo va la velocidad. Cada cambio se guarda al momento. [dock] es
+ * el dock del inicio, abajo (como en el mockup).
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun CustomizeGaugePanel(d: Dependencies, tileId: String, close: () -> Unit, onPickSignal: () -> Unit) {
-    val c = LocalColors.current
+fun CustomizeGaugePanel(d: Dependencies, tileId: String, close: () -> Unit, onPickSignal: () -> Unit, dock: (@Composable (Modifier) -> Unit)? = null) {
+    val ice = LocalIce.current
     val tile = d.dashboard.tiles.firstOrNull { it.id == tileId }
     if (tile == null) {
         // Cerrar escribe estado: fuera de la composición.
@@ -93,177 +109,320 @@ fun CustomizeGaugePanel(d: Dependencies, tileId: String, close: () -> Unit, onPi
         }
     }
 
-    PanelScaffold(stringResource(if (road) R.string.road_customize else R.string.gauge_customize), close) {
-        BoxWithConstraints(Modifier.fillMaxWidth().weight(1f)) {
-            val preview = @Composable { m: Modifier ->
-                Box(m) {
-                    // Con o sin tarjeta, como está en tu inicio.
-                    CompositionLocalProvider(LocalPlainCard provides tile.plain) {
-                        if (road) {
-                            // La carretera misma, con la velocidad de muestra.
-                            val demoKmh = demo * look.speedMax(miles = false)
-                            // Con sus llantas si las lleva (las pastillas de muestra no abren nada).
-                            RoadView(
-                                d, d.cars.pkg(d.prefs.carModel), onClick = {}, look = roadLook ?: RoadLook(), demoKmh = demoKmh,
-                                onTires = if (d.hasTpmsSource && showsTires(d, tile)) ({}) else null,
-                            )
-                        } else if (speedometer) {
-                            val max = look.speedMax(units.miles).toFloat()
-                            SpeedGaugeCard(demo * max, units.miles, "GPS", look, d.prefs.carColor, speedFront(d, look))
-                        } else if (spec != null) {
-                            SpecGaugeCard(spec, spec.min + (spec.max - spec.min) * demo, units, look, d.prefs.carColor)
-                        }
+    Box(Modifier.fillMaxSize().background(ice.bg).clickable(enabled = false) {}) {
+        IceFrame(Modifier.safeDrawingPadding()) {
+            IceBackdrop(R.drawable.bg_espacio)
+            // .hd: el título y la píldora de qué se está personalizando.
+            Row(Modifier.offset(28.dp, 20.dp).height(44.dp), verticalAlignment = Alignment.CenterVertically) {
+                IceText(stringResource(if (road) R.string.road_customize else R.string.gauge_customize), iceStyle(28f, FontWeight.Light), ice.title)
+                Spacer(Modifier.width(14.dp))
+                val pill = RoundedCornerShape(17.dp)
+                Box(Modifier.height(34.dp).clip(pill).background(Color(170, 210, 255).copy(alpha = 0.06f)).border(1.dp, ice.line2, pill).padding(horizontal = 14.dp), contentAlignment = Alignment.Center) {
+                    IceText(
+                        stringResource(if (road) R.string.gauge_panel_road else if (speedometer) R.string.gauge_panel_speedometer else R.string.gauge_panel_gauge),
+                        iceStyle(13f, display = false), ice.ink2,
+                    )
+                }
+            }
+            // .x: cerrar (48, arriba a la derecha).
+            Box(
+                Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = (-24).dp, y = 18.dp)
+                    .size(48.dp)
+                    .glass(listOf(0f to Color(170, 210, 255).copy(alpha = 0.14f), 1f to Color(110, 150, 210).copy(alpha = 0.05f)), ice.line, Color.Transparent, 24.dp)
+                    .clip(CircleShape)
+                    .clickable(onClick = close),
+                contentAlignment = Alignment.Center,
+            ) { Icon(PageIcons.close, if (ice.dark) Color(0xFFEAF4FF) else ice.ink, 24.dp) }
+
+            // .gauge: la vista previa grande (24, 76; 440 × 440), sin tarjeta.
+            Box(Modifier.offset(24.dp, 76.dp).size(440.dp, if (dock != null) 440.dp else 500.dp)) {
+                CompositionLocalProvider(LocalPlainCard provides true) {
+                    if (road) {
+                        val demoKmh = demo * look.speedMax(miles = false)
+                        RoadView(
+                            d, d.cars.pkg(d.prefs.carModel), onClick = {}, look = roadLook ?: RoadLook(), demoKmh = demoKmh,
+                            onTires = if (d.hasTpmsSource && showsTires(d, tile)) ({}) else null,
+                        )
+                    } else if (speedometer) {
+                        val max = look.speedMax(units.miles).toFloat()
+                        SpeedGaugeCard(demo * max, units.miles, "GPS", look, d.prefs.carColor, speedFront(d, look))
+                    } else if (spec != null) {
+                        SpecGaugeCard(spec, spec.min + (spec.max - spec.min) * demo, units, look, d.prefs.carColor)
                     }
                 }
             }
-            val options = @Composable { m: Modifier ->
-                Column(m.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                    if (roadLook != null) {
-                        // Lo del viaje (como la pieza Viaje), cada dato con su interruptor.
-                        Label(stringResource(R.string.tile_trip), Typography.label, c.textMuted)
-                        for (item in RoadTrip.entries) {
-                            SwitchRow(stringResource(item.title), item in roadLook.trip, { on ->
-                                setRoad(roadLook.copy(trip = if (on) roadLook.trip + item else roadLook.trip - item))
-                            })
-                        }
-                        // La presión de cada llanta junto a su rueda (solo con Llantas prendido).
-                        if (d.hasTpmsSource) {
-                            Label(stringResource(R.string.tile_tires), Typography.label, c.textMuted)
-                            SwitchRow(stringResource(R.string.tires_show_pressure), showsTires(d, tile), { setRoad(roadLook.copy(tires = it)) })
-                        }
-                        Label(stringResource(R.string.road_speed), Typography.label, c.textMuted)
-                        // Prendida o apagada como lo del viaje; prendida, número o velocímetro.
-                        val shown = roadLook.speed != RoadSpeed.HIDDEN
-                        SwitchRow(stringResource(R.string.road_speed_show), shown, { on ->
-                            setRoad(roadLook.copy(speed = if (on) RoadSpeed.TEXT else RoadSpeed.HIDDEN))
-                        })
-                        if (shown) {
-                            Segmented(
-                                RoadSpeed.entries.mapNotNull { s -> s.title?.let { s to stringResource(it) } },
-                                roadLook.speed,
-                                { setRoad(roadLook.copy(speed = it)) },
-                            )
-                        }
-                        // Solo el número u oculta: no hay velocímetro que personalizar.
-                        if (roadLook.speed != RoadSpeed.GAUGE) return@Column
-                    }
-                    Label(stringResource(R.string.gauge_customize_help), Typography.small, c.textMuted)
-                    Label(stringResource(R.string.gauge_style), Typography.label, c.textMuted)
-                    Segmented(
+
+            // .ctl: los controles en vidrio (left 486, right 24, desde 76 hasta arriba del dock).
+            Column(
+                Modifier
+                    .offset(486.dp, 76.dp)
+                    .width(514.dp)
+                    .heightIn(max = if (dock != null) 420.dp else 508.dp)
+                    .iceGlass()
+                    .clip(RoundedCornerShape(20.dp))
+                    .verticalScroll(rememberScrollState())
+                    .padding(start = 20.dp, end = 20.dp, top = 18.dp, bottom = 20.dp),
+            ) {
+                if (roadLook != null) {
+                    RoadOptions(d, tile, roadLook, ::setRoad)
+                    // Solo el número u oculta: no hay velocímetro que personalizar.
+                    if (roadLook.speed != RoadSpeed.GAUGE) return@Column
+                }
+                IceText(stringResource(R.string.gauge_customize_help), iceStyle(13f, display = false, lineHeight = 1.4f), ice.ink2, maxLines = 3)
+                OptionRow(stringResource(R.string.gauge_style)) {
+                    IceSegmented(
                         GaugeStyle.entries.map { it to stringResource(it.title) },
                         look.style,
                         // La aguja se lee con números: se prenden solos la primera vez.
                         { pickLook(look.copy(style = it, numbers = look.numbers || it == GaugeStyle.NEEDLE)) },
-                        Modifier.horizontalScroll(rememberScrollState()),
+                        compact = true,
                     )
-                    // El aro de la Esfera: liso, neón o cuadros.
-                    if (look.style == GaugeStyle.DIAL) {
-                        Label(stringResource(R.string.gauge_rim), Typography.label, c.textMuted)
-                        Segmented(GaugeRim.entries.map { it to stringResource(it.title) }, look.rim, { pickLook(look.copy(rim = it)) })
-                    }
-                    Label(stringResource(R.string.gauge_color), Typography.label, c.textMuted)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        for (color in GaugeColor.entries) Swatch(color, d.prefs.carColor, color == look.color) { set(look.copy(color = color)) }
-                    }
-                    Label(stringResource(look.color.title), Typography.small, c.textMuted)
-                    if (speedometer) {
-                        Label(stringResource(R.string.gauge_max), Typography.label, c.textMuted)
-                        val unit = stringResource(if (units.miles) R.string.unit_mph else R.string.unit_kmh)
-                        val choices = speedMaxOptions(units.miles)
-                        Segmented(
-                            choices.sorted().map { it to "$it $unit" },
-                            look.speedMax(units.miles),
-                            // Se guarda en km/h (al cambiar a mph se ve su pareja); el de fábrica no se guarda.
-                            { set(look.copy(max = speedMaxToStore(it, units.miles))) },
-                            Modifier.horizontalScroll(rememberScrollState()),
-                        )
-                    }
-                    SwitchRow(stringResource(R.string.gauge_ticks), look.ticks, { set(look.copy(ticks = it)) })
-                    SwitchRow(stringResource(R.string.gauge_numbers), look.numbers, { set(look.copy(numbers = it)) })
-                    SwitchRow(stringResource(R.string.gauge_redline), look.redline, { set(look.copy(redline = it)) })
-                    // Solo el velocímetro (no la carretera, que ya lleva el auto). "Tu auto", si hay uno instalado.
-                    if (tile.type == TileTypes.SPEEDOMETER) {
-                        Label(stringResource(R.string.gauge_front), Typography.label, c.textMuted)
-                        val hasCar = d.cars.pkg(d.prefs.carModel) != null
-                        Segmented(
-                            GaugeFront.entries.filter { it != GaugeFront.CAR || hasCar || look.front == it }.map { it to stringResource(it.title) },
-                            look.front,
-                            { set(look.copy(front = it)) },
-                        )
-                        if (look.front == GaugeFront.IMAGE) {
-                            ImageEditor(
-                                d, tile.id, look.image, stringResource(R.string.gauge_front_image_empty),
-                                placeholder = false,
-                                onRemoved = { set(look.copy(image = "")) },
-                            ) { set(look.copy(image = it)) }
-                        }
-                    }
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        if (!speedometer) Button(stringResource(R.string.gauge_change_signal), onPickSignal)
-                        Button(stringResource(R.string.gauge_apply_all), {
-                            // Mismo estilo en todos; cada uno conserva su dato y, los velocímetros, hasta dónde llegan
-                            // (la carretera, además, cómo va su velocidad). Una sola escritura del acomodo para todos.
-                            d.dashboard.changeData(
-                                d.dashboard.tiles
-                                    .filter { it.type == TileTypes.SPEEDOMETER || it.type == TileTypes.GAUGE || it.type == TileTypes.ROAD }
-                                    .associate {
-                                        // Lo del frente solo va en los velocímetros y cada uno conserva su imagen (nunca dos
-                                        // comparten un PNG). Desde un medidor o la carretera, su frente tampoco cambia.
-                                        val current = GaugeLook.parse(it.data)
-                                        val speedo = it.type == TileTypes.SPEEDOMETER
-                                        val own = look.copy(
-                                            max = current.max,
-                                            front = when {
-                                                !speedo -> GaugeFront.NONE
-                                                tile.type == TileTypes.SPEEDOMETER -> look.front
-                                                else -> current.front
-                                            },
-                                            image = if (speedo) current.image else "",
-                                        )
-                                        it.id to if (it.type == TileTypes.ROAD) RoadLook.parse(it.data).copy(gauge = own).encode() else own.encode(signalOf(it.data))
-                                    },
-                            )
-                            applied = true
-                        })
-                    }
-                    if (applied) Label(stringResource(R.string.gauge_applied), Typography.small, c.accent)
-                    Box(Modifier.height(12.dp))
                 }
+                // El aro de la Esfera: liso, neón o cuadros.
+                if (look.style == GaugeStyle.DIAL) OptionRow(stringResource(R.string.gauge_rim)) {
+                    IceSegmented(GaugeRim.entries.map { it to stringResource(it.title) }, look.rim, { pickLook(look.copy(rim = it)) })
+                }
+                OptionRow(stringResource(R.string.gauge_color)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                        for (color in GaugeColor.entries) IceSwatch(color, d.prefs.carColor, d.prefs.accentColor == null, color == look.color) { set(look.copy(color = color)) }
+                    }
+                    val name = if (look.color == GaugeColor.ACCENT && d.prefs.accentColor == null) stringResource(R.string.gauge_ice) else stringResource(look.color.title)
+                    val selected = stringResource(R.string.gauge_selected, name)
+                    IceText(
+                        buildAnnotatedString {
+                            val i = selected.indexOf(name)
+                            if (i < 0) append(selected) else {
+                                append(selected.substring(0, i))
+                                withStyle(SpanStyle(color = ice.title)) { append(name) }
+                                append(selected.substring(i + name.length))
+                            }
+                        },
+                        iceStyle(13f, display = false), ice.ink2, modifier = Modifier.padding(top = 10.dp),
+                    )
+                }
+                if (speedometer) OptionRow(stringResource(R.string.gauge_max)) {
+                    val unit = stringResource(if (units.miles) R.string.unit_mph else R.string.unit_kmh)
+                    IceSegmented(
+                        speedMaxOptions(units.miles).sorted().map { it to "$it $unit" },
+                        look.speedMax(units.miles),
+                        // Se guarda en km/h (al cambiar a mph se ve su pareja); el de fábrica no se guarda.
+                        { set(look.copy(max = speedMaxToStore(it, units.miles))) },
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+                IceSwitchRow(stringResource(R.string.gauge_ticks), look.ticks) { set(look.copy(ticks = it)) }
+                IceSwitchRow(stringResource(R.string.gauge_numbers), look.numbers) { set(look.copy(numbers = it)) }
+                IceSwitchRow(stringResource(R.string.gauge_redline), look.redline) { set(look.copy(redline = it)) }
+                // Solo el velocímetro (no la carretera, que ya lleva el auto). "Tu auto", si hay uno instalado.
+                if (tile.type == TileTypes.SPEEDOMETER) OptionRow(stringResource(R.string.gauge_front)) {
+                    val hasCar = d.cars.pkg(d.prefs.carModel) != null
+                    IceSegmented(
+                        GaugeFront.entries.filter { it != GaugeFront.CAR || hasCar || look.front == it }.map { it to stringResource(it.title) },
+                        look.front,
+                        { set(look.copy(front = it)) },
+                    )
+                    if (look.front == GaugeFront.IMAGE) {
+                        Spacer(Modifier.height(10.dp))
+                        ImageEditor(
+                            d, tile.id, look.image, stringResource(R.string.gauge_front_image_empty),
+                            placeholder = false,
+                            onRemoved = { set(look.copy(image = "")) },
+                        ) { set(look.copy(image = it)) }
+                    }
+                }
+                FlowRow(Modifier.padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    if (!speedometer) IceButton(stringResource(R.string.gauge_change_signal), onPickSignal)
+                    IceButton(stringResource(R.string.gauge_apply_all), primary = true, onClick = {
+                        // Mismo estilo en todos; cada uno conserva su dato y, los velocímetros, hasta dónde llegan
+                        // (la carretera, además, cómo va su velocidad). Una sola escritura del acomodo para todos.
+                        d.dashboard.changeData(
+                            d.dashboard.tiles
+                                .filter { it.type == TileTypes.SPEEDOMETER || it.type == TileTypes.GAUGE || it.type == TileTypes.ROAD }
+                                .associate {
+                                    // Lo del frente solo va en los velocímetros y cada uno conserva su imagen (nunca dos
+                                    // comparten un PNG). Desde un medidor o la carretera, su frente tampoco cambia.
+                                    val current = GaugeLook.parse(it.data)
+                                    val speedo = it.type == TileTypes.SPEEDOMETER
+                                    val own = look.copy(
+                                        max = current.max,
+                                        front = when {
+                                            !speedo -> GaugeFront.NONE
+                                            tile.type == TileTypes.SPEEDOMETER -> look.front
+                                            else -> current.front
+                                        },
+                                        image = if (speedo) current.image else "",
+                                    )
+                                    it.id to if (it.type == TileTypes.ROAD) RoadLook.parse(it.data).copy(gauge = own).encode() else own.encode(signalOf(it.data))
+                                },
+                        )
+                        applied = true
+                    })
+                }
+                if (applied) IceText(stringResource(R.string.gauge_applied), iceStyle(13f, display = false), ice.ice, modifier = Modifier.padding(top = 10.dp))
             }
-            val previewHeight = maxHeight * 0.4f
-            if (maxWidth > maxHeight) {
-                Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-                    preview(Modifier.weight(1f).fillMaxHeight().padding(bottom = 16.dp))
-                    options(Modifier.weight(1f))
-                }
-            } else {
-                Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                    preview(Modifier.fillMaxWidth().height(previewHeight))
-                    options(Modifier.weight(1f))
-                }
+            dock?.invoke(Modifier.align(Alignment.BottomStart))
+        }
+    }
+}
+
+/** Lo de la carretera: los datos del viaje, las llantas y cómo va la velocidad. */
+@Composable
+private fun ColumnScope.RoadOptions(d: Dependencies, tile: com.irvingguerra.litedash.feature.dashboard.Tile, roadLook: RoadLook, setRoad: (RoadLook) -> Unit) {
+    OptionRow(stringResource(R.string.tile_trip), first = true) {
+        for (item in RoadTrip.entries) {
+            IceSwitchRow(stringResource(item.title), item in roadLook.trip) { on ->
+                setRoad(roadLook.copy(trip = if (on) roadLook.trip + item else roadLook.trip - item))
+            }
+        }
+    }
+    // La presión de cada llanta junto a su rueda (solo con Llantas prendido).
+    if (d.hasTpmsSource) OptionRow(stringResource(R.string.tile_tires)) {
+        IceSwitchRow(stringResource(R.string.tires_show_pressure), showsTires(d, tile)) { setRoad(roadLook.copy(tires = it)) }
+    }
+    OptionRow(stringResource(R.string.road_speed)) {
+        // Prendida o apagada como lo del viaje; prendida, número o velocímetro.
+        val shown = roadLook.speed != RoadSpeed.HIDDEN
+        IceSwitchRow(stringResource(R.string.road_speed_show), shown) { on -> setRoad(roadLook.copy(speed = if (on) RoadSpeed.TEXT else RoadSpeed.HIDDEN)) }
+        if (shown) IceSegmented(RoadSpeed.entries.mapNotNull { s -> s.title?.let { s to stringResource(it) } }, roadLook.speed, { setRoad(roadLook.copy(speed = it)) })
+    }
+    Spacer(Modifier.height(14.dp))
+}
+
+/** Una sección (`.row`): el rótulo en mayúsculas (`.lbl`) y debajo lo suyo. */
+@Composable
+internal fun OptionRow(label: String, first: Boolean = false, content: @Composable ColumnScope.() -> Unit) {
+    val ice = LocalIce.current
+    Column(Modifier.padding(top = if (first) 0.dp else 14.dp)) {
+        IceText(label.uppercase(), iceStyle(13f, FontWeight.Medium, spacing = 0.2f), ice.ink3, modifier = Modifier.padding(bottom = 8.dp))
+        content()
+    }
+}
+
+/**
+ * El segmentado del diseño C (`.seg`): píldora tenue de 46 dp con las opciones repartidas; la elegida en
+ * vidrio azul con su filo. [compact] = letra de 14 y menos aire (para seis opciones).
+ */
+@Composable
+fun <T> IceSegmented(options: List<Pair<T, String>>, selected: T, onSelect: (T) -> Unit, compact: Boolean = false) {
+    val ice = LocalIce.current
+    val outer = RoundedCornerShape(24.dp)
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .height(46.dp)
+            .clip(outer)
+            .background(Color(150, 195, 245).copy(alpha = 0.05f))
+            .border(1.dp, ice.line2, outer)
+            .padding(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+    ) {
+        for ((value, text) in options) {
+            val on = value == selected
+            val shape = RoundedCornerShape(20.dp)
+            Box(
+                Modifier
+                    .weight(1f)
+                    .fillMaxSize()
+                    .then(
+                        if (on) Modifier.glass(
+                            listOf(0f to Color(120, 190, 255).copy(alpha = 0.30f), 1f to Color(90, 150, 235).copy(alpha = 0.12f)),
+                            Color(170, 215, 255).copy(alpha = 0.34f), Color(235, 246, 255).copy(alpha = 0.18f), 20.dp, angle = 135f,
+                        ) else Modifier,
+                    )
+                    .clip(shape)
+                    .clickable { onSelect(value) },
+                contentAlignment = Alignment.Center,
+            ) {
+                IceText(text, iceStyle(if (compact) 13.5f else 14f), if (on) ice.title else (if (ice.dark) Color(222, 236, 252).copy(alpha = 0.72f) else ice.ink2))
             }
         }
     }
 }
 
-/** Un círculo de color para elegir; el dinámico va en degradado y el del auto, de su color. */
+/** Un color para elegir (`.sw i`, 44 dp); el elegido con su anillo claro y su brillo. */
 @Composable
-private fun Swatch(color: GaugeColor, car: Color, selected: Boolean, onClick: () -> Unit) {
+private fun IceSwatch(color: GaugeColor, car: Color, iceAccent: Boolean, selected: Boolean, onClick: () -> Unit) {
     val c = LocalColors.current
     val ramp = c.ramp(color, car)
     val brush = when {
+        color == GaugeColor.ACCENT && iceAccent -> Brush.linearGradient(listOf(Color(0xFFE3F4FF), Color(0xFF6FBFFF)))
         color == GaugeColor.DYNAMIC -> Brush.sweepGradient(ramp + ramp.first())
         ramp.size == 1 -> SolidColor(ramp[0])
         else -> Brush.linearGradient(ramp)
     }
     Box(
         Modifier
-            .size(48.dp)
+            .size(44.dp)
+            .drawWithCache {
+                val r = size.width / 2
+                val ring = Color(0xFFD8F0FF)
+                val glow = Brush.radialGradient(0f to Color(150, 210, 255).copy(alpha = 0.6f), ((r + 5.dp.toPx()) / (r + 14.dp.toPx())) to Color(150, 210, 255).copy(alpha = 0.35f), 1f to Color.Transparent, center = Offset(r, r), radius = r + 14.dp.toPx())
+                onDrawBehind {
+                    if (selected) {
+                        // box-shadow: 0 0 0 3px #04070e, 0 0 0 5px #d8f0ff, 0 0 14px …
+                        drawCircle(glow, r + 14.dp.toPx())
+                        drawCircle(ring, r + 5.dp.toPx())
+                        drawCircle(Color(0xFF04070E), r + 3.dp.toPx())
+                    }
+                }
+            }
             .clip(CircleShape)
-            .border(if (selected) 3.dp else 1.dp, if (selected) c.text else c.line, CircleShape)
-            .clickable(onClick = onClick)
-            .padding(6.dp)
-            .clip(CircleShape)
-            .background(brush),
+            .background(brush)
+            .border(1.dp, Color.White.copy(alpha = 0.14f), CircleShape)
+            .clickable(onClick = onClick),
     )
+}
+
+/** Un interruptor del diseño C (`.sw`, 54 × 32) con su texto a la izquierda; toda la fila se toca. */
+@Composable
+internal fun IceSwitchRow(text: String, on: Boolean, onChange: (Boolean) -> Unit) {
+    val ice = LocalIce.current
+    Row(
+        Modifier.fillMaxWidth().height(48.dp).clip(RoundedCornerShape(12.dp)).clickable { onChange(!on) },
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IceText(text, iceStyle(15f), ice.ink, modifier = Modifier.weight(1f))
+        IceSwitch(on)
+    }
+}
+
+@Composable
+private fun IceSwitch(on: Boolean, width: Dp = 54.dp, height: Dp = 32.dp) {
+    val ice = LocalIce.current
+    val shape = RoundedCornerShape(height / 2)
+    Box(
+        Modifier
+            .size(width, height)
+            .clip(shape)
+            .background(if (on) Brush.horizontalGradient(listOf(Color(0xFF4AA6F0), Color(0xFF8FD0FF))) else SolidColor(Color(190, 225, 255).copy(alpha = 0.14f)))
+            .border(1.dp, if (on) Color(200, 236, 255).copy(alpha = 0.7f) else ice.line, shape)
+            .drawBehind {
+                val k = 24.dp.toPx() / 2
+                val x = if (on) 25.dp.toPx() + k else 3.dp.toPx() + k
+                drawCircle(if (on) Color.White else Color(220, 235, 252).copy(alpha = 0.7f), k, Offset(x, size.height / 2))
+            },
+    )
+}
+
+/** Botón del diseño C (`.btn`, 48 de alto); [primary] en vidrio azul. */
+@Composable
+internal fun IceButton(text: String, onClick: () -> Unit, primary: Boolean = false) {
+    val ice = LocalIce.current
+    val shape = RoundedCornerShape(24.dp)
+    Box(
+        Modifier
+            .height(48.dp)
+            .then(
+                if (primary) Modifier.glass(
+                    listOf(0f to Color(120, 190, 255).copy(alpha = 0.34f), 1f to Color(90, 150, 235).copy(alpha = 0.14f)),
+                    Color(170, 215, 255).copy(alpha = 0.40f), Color(235, 246, 255).copy(alpha = 0.2f), 24.dp, angle = 135f,
+                ) else Modifier.background(Color(170, 210, 255).copy(alpha = 0.07f), shape).border(1.dp, ice.line, shape),
+            )
+            .clip(shape)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 20.dp),
+        contentAlignment = Alignment.Center,
+    ) { IceText(text, iceStyle(15f, FontWeight.Medium), if (primary) Color.White else Color(0xFFEAF4FF)) }
 }

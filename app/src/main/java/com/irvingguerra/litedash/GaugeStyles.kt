@@ -76,6 +76,8 @@ enum class GaugeStyle(val stored: String, val title: Int, val segmented: Boolean
     BAR("bar", R.string.gauge_style_bar, segmented = true),
     /** Arco de rayitas que se encienden en degradado, sin aguja (elegante). */
     GRADIENT("gradient", R.string.gauge_style_gradient, segmented = true),
+    /** SailDash: deportivo, como un tacómetro: arco de segmentos con zona roja, marcas gruesas y el número digital al centro. */
+    SPORT("sport", R.string.gauge_style_sport, segmented = true),
 }
 
 /** El aro de la Esfera: liso (de fábrica), con brillo de neón o de cuadritos que se llenan. */
@@ -106,6 +108,7 @@ private val Cyan = listOf(Color(0xFF35F0FF), Color(0xFF2F8BFF))
 /** Al elegir este estilo o aro con el color de fábrica, se ve mejor con su degradado. */
 fun GaugeLook.suggestedColor(): GaugeColor? = when {
     style == GaugeStyle.GRADIENT -> GaugeColor.PURPLE
+    style == GaugeStyle.SPORT -> GaugeColor.DYNAMIC
     style != GaugeStyle.DIAL -> null
     rim == GaugeRim.NEON -> GaugeColor.CYAN
     rim == GaugeRim.BLOCKS -> GaugeColor.PURPLE
@@ -392,6 +395,7 @@ fun GaugeCard(
                 GaugeStyle.BAR -> BarGauge(number, unit, tag, parts, maxWidth, above)
                 GaugeStyle.GRADIENT -> GradientGauge(number, unit, tag, parts, side = minOf(maxWidth, maxHeight * 1.15f))
                 GaugeStyle.DIAL -> DialGauge(number, unit, tag, parts, side = minOf(maxWidth, maxHeight * 1.15f))
+                GaugeStyle.SPORT -> SportGauge(number, unit, tag, parts, side = minOf(maxWidth, maxHeight * 1.15f))
             }
             if (front != null && frontSpace > 0.dp) front(Modifier.align(Alignment.BottomCenter).width(frontWidth).height(frontSpace))
         }
@@ -618,7 +622,8 @@ private fun DialGauge(number: String, unit: String, tag: String, p: GaugeParts, 
     val stops = if (p.look.rim == GaugeRim.NEON) neonStops(shades) else null
     Canvas(Modifier.fillMaxSize()) {
         // [base] = el grosor del aro liso: de él salen las marcas en los tres aros.
-        val base = (size.minDimension * 0.025f).coerceIn(2.dp.toPx(), 12.dp.toPx())
+        // SailDash · diseño C: el aro liso es fino (6 px en una esfera de 440, como el mockup).
+        val base = (size.minDimension * if (p.look.rim == GaugeRim.SMOOTH) 0.016f else 0.025f).coerceIn(2.dp.toPx(), 12.dp.toPx())
         val neon = (size.minDimension * 0.035f).coerceIn(3.dp.toPx(), 16.dp.toPx())
         val cell = (size.minDimension * 0.06f).coerceIn(5.dp.toPx(), 28.dp.toPx())
         val f = p.fraction()
@@ -639,7 +644,14 @@ private fun DialGauge(number: String, unit: String, tag: String, p: GaugeParts, 
         when (p.look.rim) {
             GaugeRim.SMOOTH -> {
                 track(c, p, d, base)
-                if (f > 0.002f) drawArc(color, START_ANGLE, SWEEP * f, false, d.topLeft, d.box, style = Stroke(base, cap = StrokeCap.Round))
+                if (f > 0.002f) {
+                    // SailDash · diseño C: un halo ancho debajo y el satélite en la punta (la órbita del inicio).
+                    drawArc(color.copy(alpha = 0.18f), START_ANGLE, SWEEP * f, false, d.topLeft, d.box, style = Stroke(base * 2.7f, cap = StrokeCap.Round))
+                    drawArc(color, START_ANGLE, SWEEP * f, false, d.topLeft, d.box, style = Stroke(base, cap = StrokeCap.Round))
+                    val tip = d.at(START_ANGLE + SWEEP * f, d.radius)
+                    drawCircle(Brush.radialGradient(0f to Color.White, 0.35f to lerp(color, Color.White, 0.6f).copy(alpha = 0.9f), 1f to color.copy(alpha = 0f), center = tip, radius = base * 2.7f), base * 2.7f, tip)
+                    drawCircle(Color.White, base * 0.67f, tip)
+                }
             }
             GaugeRim.NEON -> {
                 track(c, p, d, neon)
@@ -774,5 +786,103 @@ private fun CompactGauge(number: String, unit: String, tag: String, p: GaugePart
             val f = p.fraction().coerceIn(0f, 1f)
             if (f > 0.002f) drawRoundRect(c.gauge(p.look.color, p.car, f, p.warning), size = Size(size.width * f, size.height), cornerRadius = r)
         }
+    }
+}
+
+/** Del Sport: más abierto que los demás (270°, como un tacómetro de carreras). */
+private const val SPORT_START = 135f
+private const val SPORT_SWEEP = 270f
+
+/** Segmentos del arco del Sport. */
+private const val SPORT_SEGMENTS = 54
+
+/**
+ * SailDash · el Sport: cara oscura, arco de segmentos tipo tacómetro que se encienden con el valor (la
+ * zona roja siempre se ve, tenue apagada y roja encendida), una línea roja fina por fuera, marcas
+ * gruesas con sus números y el número digital al centro, grueso. Lo que no cambia se arma una vez.
+ */
+@Composable
+private fun SportGauge(number: String, unit: String, tag: String, p: GaugeParts, side: Dp) {
+    val c = LocalColors.current
+    val measurer = rememberTextMeasurer()
+    val numberStyle = TextStyle(
+        fontSize = (side.value * 0.058f).coerceIn(10f, 22f).sp, fontWeight = FontWeight.SemiBold,
+        fontFamily = com.irvingguerra.litedash.core.ui.ice.Outfit, color = c.text.copy(alpha = 0.85f),
+    )
+    val shades = c.shades(p)
+    // La zona roja del Sport siempre está (como un tacómetro), desde donde diga [redFrom].
+    val redFrom = p.redFrom
+    Canvas(Modifier.fillMaxSize()) {
+        val r = minOf(size.width, size.height * 1.15f) / 2 - 2.dp.toPx()
+        val center = Offset(size.width / 2, size.height / 2 + r * 0.06f)
+        fun at(angle: Float, radius: Float): Offset {
+            val a = Math.toRadians(angle.toDouble())
+            return Offset(center.x + radius * cos(a).toFloat(), center.y + radius * sin(a).toFloat())
+        }
+        val f = p.fraction()
+        // La cara: oscura al centro, con un filo claro.
+        drawCircle(Brush.radialGradient(listOf(Color(0xFF101A2A).copy(alpha = 0.9f), Color(0xFF060A12).copy(alpha = 0.6f), Color.Transparent), center, r), r, center)
+        drawCircle(c.text.copy(alpha = 0.07f), r * 0.985f, center, style = Stroke((r * 0.012f).coerceAtLeast(1f)))
+        // El arco de segmentos.
+        val band = r * 0.10f
+        val rb = r * 0.88f
+        val box = Size(rb * 2, rb * 2)
+        val tl = Offset(center.x - rb, center.y - rb)
+        val step = SPORT_SWEEP / SPORT_SEGMENTS
+        val gap = step * 0.28f
+        for (k in 0 until SPORT_SEGMENTS) {
+            val pos = (k + 0.5f) / SPORT_SEGMENTS
+            val lit = pos <= f && f > 0.002f
+            val red = pos >= redFrom
+            val color = when {
+                p.warning && lit -> c.danger
+                lit && red -> c.danger
+                lit -> colorAt(shades, pos)
+                red -> c.danger.copy(alpha = 0.28f)
+                else -> c.text.copy(alpha = 0.08f)
+            }
+            // Los segmentos crecen un poco hacia el final, como las luces de cambio.
+            val w = band * (0.75f + 0.45f * pos)
+            if (lit) drawArc(color.copy(alpha = 0.16f), SPORT_START + k * step, step - gap, false, tl, box, style = Stroke(w * 1.9f))
+            drawArc(color, SPORT_START + k * step + gap / 2, step - gap, false, tl, box, style = Stroke(w))
+        }
+        // La línea roja fina por fuera de la zona roja.
+        val ro = r * 0.985f
+        drawArc(
+            c.danger, SPORT_START + SPORT_SWEEP * redFrom, SPORT_SWEEP * (1 - redFrom), false,
+            Offset(center.x - ro, center.y - ro), Size(ro * 2, ro * 2), style = Stroke(r * 0.022f),
+        )
+        // Marcas gruesas (una por número) y finas entre medio, por dentro del arco.
+        val steps = p.ticks * 2
+        val outer = rb - band * 0.9f
+        val every = if (p.ticks > 10) 2 else 1
+        for (i in 0..steps) {
+            val pos = i.toFloat() / steps
+            val angle = SPORT_START + SPORT_SWEEP * pos
+            val major = i % 2 == 0
+            val red = pos >= redFrom
+            val color = when {
+                red -> c.danger.copy(alpha = if (major) 0.95f else 0.6f)
+                major -> c.text.copy(alpha = 0.92f)
+                else -> c.text.copy(alpha = 0.4f)
+            }
+            if (p.look.ticks || major) drawLine(
+                color, at(angle, outer), at(angle, outer - if (major) r * 0.11f else r * 0.05f),
+                strokeWidth = if (major) r * 0.03f else r * 0.012f, cap = StrokeCap.Butt,
+            )
+            if (major && (i / 2) % every == 0) label(measurer, p.labels(i / 2), at(angle, outer - r * 0.21f), numberStyle.copy(color = if (red) c.danger else numberStyle.color))
+        }
+        // La aguja corta: una muesca blanca brillante sobre el arco donde va el valor.
+        val now = SPORT_START + SPORT_SWEEP * f.coerceIn(0f, 1f)
+        drawLine(Color.White.copy(alpha = 0.25f), at(now, rb + band * 0.9f), at(now, rb - band * 1.3f), strokeWidth = r * 0.05f, cap = StrokeCap.Round)
+        drawLine(Color.White, at(now, rb + band * 0.8f), at(now, rb - band * 1.2f), strokeWidth = r * 0.018f, cap = StrokeCap.Round)
+        // El anillo de adentro, alrededor del número.
+        drawCircle(c.text.copy(alpha = 0.08f), r * 0.44f, center, style = Stroke((r * 0.01f).coerceAtLeast(1f)))
+    }
+    // El número digital, grueso, al centro; la unidad y la etiqueta debajo.
+    Column(Modifier.offset(y = side * 0.03f), horizontalAlignment = Alignment.CenterHorizontally) {
+        Label(number, Typography.clock.copy(fontSize = (side.value * 0.2f).coerceIn(26f, 96f).sp, fontWeight = FontWeight.SemiBold, fontFamily = com.irvingguerra.litedash.core.ui.ice.Outfit), maxLines = 1)
+        Label(unit.uppercase(), Typography.small.copy(fontWeight = FontWeight.Medium), c.textMuted, maxLines = 1)
+        if (tag.isNotEmpty() && p.showTag(side > 220.dp)) Box(Modifier.padding(top = 6.dp)) { Label(tag, Typography.label, p.readoutColor(c), maxLines = 1) }
     }
 }

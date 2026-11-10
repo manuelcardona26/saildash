@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="car_engine_trio">Engine · battery · tank</string>
+    <string name="car_navigate">Navigate</string>
+
+    <string name="road_trip_label">Trip</string>
+    <string name="road_time_label">Time</string>
+    <string name="road_avg_label">Avg.</string>
+    <string name="road_minutes">min</string>
+    <string name="road_engine">Engine</string>
+    <string name="road_charging">Charging</string>
+    <string name="road_battery">Battery</string>
+    <string name="road_tank">Tank</string>
+
+    <string name="map_enable_gps">Turn on GPS to see the map</string>
+    <string name="map_where_to">Where to?</string>
+
+    <string name="galaxy_over">You\'re over %1$d %2$s</string>
+
+    <string name="gauge_style_sport">Sport</string>
+    <string name="gauge_panel_speedometer">Home speedometer</string>
+    <string name="gauge_panel_gauge">Home gauge</string>
+    <string name="gauge_panel_road">Home road</string>
+    <string name="gauge_selected">Selected: <b>%1$s</b></string>
+    <string name="gauge_ice">Interface · ice</string>
+</resources>

@@ -207,6 +207,12 @@ class MinimalPalette(val background: Int, val water: Int, val park: Int, val cas
             background = 0xFF1B1C20.toInt(), water = 0xFF1D2836.toInt(), park = 0xFF1E2620.toInt(), casing = 0xFF16171A.toInt(),
             roads = intArrayOf(0xFF6E5A35.toInt(), 0xFF4A4C53.toInt(), 0xFF3F4148.toInt(), 0xFF34363C.toInt(), 0xFF2C2E33.toInt()),
         )
+
+        /** SailDash 1.1 · el mapa del diseño C (catalogo/mapa): azul noche, calles de hielo tenue, agua y parques oscuros. */
+        val ICE = MinimalPalette(
+            background = 0xFF0A1019.toInt(), water = 0xFF0B2033.toInt(), park = 0xFF0D2421.toInt(), casing = 0xFF0C1420.toInt(),
+            roads = intArrayOf(0xFF3B5577.toInt(), 0xFF34506F.toInt(), 0xFF2A3C55.toInt(), 0xFF1F2D42.toInt(), 0xFF1A2536.toInt()),
+        )
     }
 }
 

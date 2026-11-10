@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash 1.1 · diseño C: las páginas Carro, Carretera y Mapa, el modo galaxia y Personalizar medidor. -->
+<resources>
+    <!-- Carro -->
+    <string name="car_engine_trio">Motor · batería · tanque</string>
+    <string name="car_navigate">Navegar</string>
+
+    <!-- Carretera -->
+    <string name="road_trip_label">Viaje</string>
+    <string name="road_time_label">Tiempo</string>
+    <string name="road_avg_label">Prom.</string>
+    <string name="road_minutes">min</string>
+    <string name="road_engine">Motor</string>
+    <string name="road_charging">Cargando</string>
+    <string name="road_battery">Batería</string>
+    <string name="road_tank">Tanque</string>
+
+    <!-- Mapa -->
+    <string name="map_enable_gps">Activa el GPS para ver el mapa</string>
+    <string name="map_where_to">¿A dónde vamos?</string>
+
+    <!-- Modo galaxia (Solo velocidad) -->
+    <string name="galaxy_over">Vas por encima de %1$d %2$s</string>
+
+    <!-- Velocímetros -->
+    <string name="gauge_style_sport">Sport</string>
+    <string name="gauge_panel_speedometer">Velocímetro del inicio</string>
+    <string name="gauge_panel_gauge">Medidor del inicio</string>
+    <string name="gauge_panel_road">Carretera del inicio</string>
+    <string name="gauge_selected">Seleccionado: <b>%1$s</b></string>
+    <string name="gauge_ice">Interfaz · hielo</string>
+</resources>
