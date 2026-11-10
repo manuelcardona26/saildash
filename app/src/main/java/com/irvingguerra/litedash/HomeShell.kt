@@ -2,7 +2,6 @@ package com.irvingguerra.litedash
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,22 +21,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.irvingguerra.litedash.core.ui.ice.BrandTitle
 import com.irvingguerra.litedash.core.ui.ice.DockClock
 import com.irvingguerra.litedash.core.ui.ice.DockEntry
-import com.irvingguerra.litedash.core.ui.ice.IceBackdrop
 import com.irvingguerra.litedash.core.ui.ice.IceDims
 import com.irvingguerra.litedash.core.ui.ice.IceDock
 import com.irvingguerra.litedash.core.ui.ice.IceFrame
 import com.irvingguerra.litedash.core.ui.ice.IceIcons
-import com.irvingguerra.litedash.core.ui.ice.IceText
-import com.irvingguerra.litedash.core.ui.ice.IceType
 import com.irvingguerra.litedash.core.ui.ice.LocalIce
 import com.irvingguerra.litedash.core.ui.ice.PageArrows
 import com.irvingguerra.litedash.core.ui.ice.PageDots
@@ -111,16 +103,24 @@ fun HomeShell(
             onCar = { goTo(HomePage.CARRO.ordinal) },
         )
     }
+    // Carro, Carretera y Mapa: los paneles, la música en grande y el modo galaxia (Solo velocidad).
+    val pageActions = remember {
+        PageActions(
+            onPanel = onPanel,
+            onMusic = { onExpand(Expanded.MUSIC) },
+            onSpeed = { openSpeedOnly(d) { onPanel(Panel.SpeedOnly) } },
+        )
+    }
     Box(Modifier.fillMaxSize().background(ice.bg)) {
         IceFrame(Modifier.safeDrawingPadding()) {
             HorizontalPager(pager, Modifier.fillMaxSize(), beyondViewportPageCount = 0, key = { it }) { index ->
-                when (val page = pages[index]) {
-                    HomePage.INICIO -> InicioPage(
-                        d, apps, revision,
-                        visible = !covered && expanded == null && pager.settledPage == index && !pager.isScrollInProgress,
-                        actions = inicio,
-                    )
-                    else -> PlaceholderPage(d, page)
+                // Se ve ahora (elegida, quieta y sin nada encima): solo entonces anima y escucha el GPS.
+                val visible = !covered && expanded == null && pager.settledPage == index && !pager.isScrollInProgress
+                when (pages[index]) {
+                    HomePage.INICIO -> InicioPage(d, apps, revision, visible = visible, actions = inicio)
+                    HomePage.CARRO -> CarroPage(d, apps, visible, pageActions)
+                    HomePage.CARRETERA -> CarreteraPage(d, visible, pageActions)
+                    HomePage.MAPA -> MapaPage(d, apps, visible, pageActions)
                 }
             }
             // La música o la radio en grande, sobre las páginas (el dock sigue abajo).
@@ -223,20 +223,18 @@ private fun missing(context: Context, name: String) {
 }
 
 /**
- * Página aún sin llenar (Carro, Carretera, Mapa): su fondo y su título. Otras pantallas del
- * catálogo las reemplazan; el marco (fondo, marca arriba) ya es el del diseño.
+ * El dock del inicio para las pantallas que lo llevan encima de un panel (Personalizar medidor): igual
+ * que el de las páginas; Inicio cierra el panel ([onHome]).
  */
 @Composable
-private fun PlaceholderPage(d: Dependencies, page: HomePage) {
-    val ice = LocalIce.current
-    Box(Modifier.fillMaxSize()) {
-        IceBackdrop(page.background)
-        // Carro: el agujero negro arriba a la izquierda, como en mock-C/carro.html (.bh).
-        if (page == HomePage.CARRO && ice.dark) Image(
-            painterResource(R.drawable.blackhole_small), null,
-            Modifier.offset(58.dp, 74.dp).size(140.dp, 86.dp).alpha(0.62f), contentScale = ContentScale.Fit,
-        )
-        BrandTitle(d.prefs.carName?.takeIf { it.isNotBlank() } ?: "Chevrolet Sail", Modifier.align(Alignment.TopCenter).padding(top = 34.dp))
-        IceText(stringResource(page.title), IceType.pageTitle, ice.ink, maxLines = 1, modifier = Modifier.align(Alignment.Center).offset(y = (-36).dp))
-    }
+fun HomeDock(d: Dependencies, apps: List<App>, onPanel: (Panel) -> Unit, onExpand: (Expanded?) -> Unit, onHome: () -> Unit, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val (time, marker, date) = dockTime()
+    IceDock(
+        entries = dockEntries(),
+        active = Dock.HOME,
+        onClick = { key -> onDock(context, d, apps, key, onPanel, onExpand, onHome) },
+        modifier = modifier,
+        clock = { DockClock(time, marker, date) },
+    )
 }

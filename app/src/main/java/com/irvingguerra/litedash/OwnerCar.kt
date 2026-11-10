@@ -58,6 +58,10 @@ class OwnerCar private constructor(private val context: Context) {
     var image by mutableStateOf<OwnerCarImage?>(null)
         private set
 
+    /** La foto de espaldas (files/car/rear.png) para la Carretera y el modo galaxia; null = no hay. */
+    var rear by mutableStateOf<Bitmap?>(null)
+        private set
+
     /** Ya se buscó la foto (con o sin resultado): hasta entonces el inicio no pinta el respaldo. */
     var loaded by mutableStateOf(false)
         private set
@@ -69,6 +73,7 @@ class OwnerCar private constructor(private val context: Context) {
             seedFromAssets()
             read()
         }
+        rear = withContext(Dispatchers.IO) { readRear() }
         loaded = true
     }
 
@@ -112,6 +117,7 @@ class OwnerCar private constructor(private val context: Context) {
             copyAssets(overwrite = true)
             read()
         }
+        rear = withContext(Dispatchers.IO) { readRear() }
         loaded = true
     }
 
@@ -148,8 +154,15 @@ class OwnerCar private constructor(private val context: Context) {
         return OwnerCarImage(bitmap, lights)
     }
 
+    /** La de espaldas (sin piso), tal cual: es chica (unos 300 px de ancho). */
+    private fun readRear(): Bitmap? {
+        val file = File(dir, REAR).takeIf { it.exists() } ?: return null
+        return runCatching { BitmapFactory.decodeFile(file.path) }.getOrNull()
+    }
+
     companion object {
         private const val DIR = "car"
+        private const val REAR = "rear.png"
         private const val FRONT = "front_floor.png"
         private const val FRONT_JSON = "front.json"
         private const val SEEDED = ".seeded"

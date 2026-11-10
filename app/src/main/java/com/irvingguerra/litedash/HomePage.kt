@@ -78,7 +78,6 @@ import com.irvingguerra.litedash.core.ui.ice.glass
 import com.irvingguerra.litedash.core.ui.ice.iceGlass
 import com.irvingguerra.litedash.core.ui.ice.softGlow
 import com.irvingguerra.litedash.core.vehicle.Signal
-import com.irvingguerra.litedash.core.vehicle.watch
 import com.irvingguerra.litedash.feature.apps.App
 import com.irvingguerra.litedash.feature.car.CarDrawing
 import com.irvingguerra.litedash.feature.car.CarStill
@@ -198,8 +197,8 @@ private fun SpeedBlock(d: Dependencies, visible: Boolean) {
 private fun SpeedNumber(d: Dependencies) {
     val ice = LocalIce.current
     val miles = d.prefs.units.miles
-    val kmh = d.bus.watch(Signal.SPEED)
-    val shown = ((kmh ?: 0f).toMiles(miles)).roundToInt().coerceAtLeast(0)
+    // Derivado del bus: leerlo directo (watch) no volvía a armar el número al llegar la velocidad.
+    val shown = rememberShownSpeed(d, miles).value
     val glow = if (ice.dark) Shadow(Color(150, 210, 255).copy(alpha = 0.25f), Offset.Zero, 28f) else null
     Row {
         IceText(shown.toString(), IceType.speed.copy(shadow = glow), ice.speed, maxLines = 1, modifier = Modifier.alignByBaseline())
@@ -417,7 +416,7 @@ private fun capitalize(text: String, locale: Locale) = text.replaceFirstChar { i
 
 /** La píldora del pico y placa (.pyp) dentro del clima; nada si hoy (o mañana, desde las 5 p. m.) no hay. */
 @Composable
-private fun PicoPill(repo: PicoPlacaRepository, modifier: Modifier, onClick: () -> Unit) {
+internal fun PicoPill(repo: PicoPlacaRepository, modifier: Modifier, height: androidx.compose.ui.unit.Dp = 28.dp, onClick: () -> Unit) {
     var tick by remember { mutableIntStateOf(0) }
     LaunchedEffect(repo) {
         repo.refreshQuietly()
@@ -437,8 +436,8 @@ private fun PicoPill(repo: PicoPlacaRepository, modifier: Modifier, onClick: () 
     )
     val hours = status.hours.joinToString(", ")
     Pill(
-        modifier.clip(RoundedCornerShape(14.dp)).clickable(onClick = onClick),
-        height = 28.dp,
+        modifier.clip(RoundedCornerShape(height / 2)).clickable(onClick = onClick),
+        height = height,
         background = Color(6, 12, 22).copy(alpha = 0.45f),
         border = (if (status.now) ice.danger else Color(255, 214, 120)).copy(alpha = if (status.now) 0.6f else 0.28f),
     ) {
@@ -515,9 +514,9 @@ private fun TelemetryPill(d: Dependencies, modifier: Modifier, onObd: () -> Unit
         Row(Modifier.fillMaxSize().padding(horizontal = 10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceAround) {
             if (obdOn) {
                 val units = d.prefs.units
-                val coolant = d.bus.watch(Signal.COOLANT)
-                val volts = d.bus.watch(Signal.VOLTAGE)
-                val fuel = d.bus.watch(Signal.FUEL)
+                val coolant = rememberSignal(d, Signal.COOLANT).value
+                val volts = rememberSignal(d, Signal.VOLTAGE).value
+                val fuel = rememberSignal(d, Signal.FUEL).value
                 TeleItem(IceIcons.thermometer, coolant?.toFahrenheit(units.fahrenheit)?.roundToInt()?.toString() ?: DASH, if (units.fahrenheit) "°F" else "°C")
                 VDivider(18.dp)
                 TeleItem(IceIcons.battery, volts?.let { String.format(locale, "%.1f", it) } ?: DASH, "V")

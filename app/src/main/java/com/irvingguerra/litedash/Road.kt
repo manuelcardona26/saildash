@@ -322,7 +322,7 @@ private fun DrawScope.drawRoad(paint: RoadPaint, lines: Color, phase: Float, eff
 }
 
 /** Sin modelo del catálogo: un auto de espaldas sencillo, del color del tuyo. */
-private fun DrawScope.drawRear(color: Color) {
+internal fun DrawScope.drawRear(color: Color) {
     val w = size.width
     val h = size.height
     val bodyW = w * 0.34f

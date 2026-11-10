@@ -706,7 +706,11 @@ fun Home(d: Dependencies, revision: Int, homePressed: Int) {
             )
             is Panel.PickApp -> PickAppPanel(d, apps, p.tileId, close = { panel = null })
             is Panel.PickGauge -> PickGaugePanel(d, p.tileId, close = { panel = null })
-            is Panel.CustomizeGauge -> CustomizeGaugePanel(d, p.tileId, close = { panel = null }, onPickSignal = { panel = Panel.PickGauge(p.tileId) })
+            is Panel.CustomizeGauge -> CustomizeGaugePanel(
+                d, p.tileId, close = { panel = null }, onPickSignal = { panel = Panel.PickGauge(p.tileId) },
+                // SailDash 1.1: con el dock del inicio abajo, como en el diseño C.
+                dock = { m -> HomeDock(d, apps, onPanel = { panel = it }, onExpand = { panel = null; expanded = it }, onHome = { panel = null }, modifier = m) },
+            )
             is Panel.CustomizeImage -> CustomizeImagePanel(d, p.tileId, close = { panel = null })
             is Panel.CustomizeMap -> CustomizeMapPanel(d, p.tileId, close = { panel = null })
             is Panel.CustomizeCar -> CustomizeCarPanel(d, p.tileId, close = { panel = null })

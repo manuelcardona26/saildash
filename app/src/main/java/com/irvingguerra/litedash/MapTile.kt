@@ -157,11 +157,15 @@ private fun LiveMap(d: Dependencies, look: MapLook, modifier: Modifier, onTap: (
     }
 }
 
-private fun newTileStore(context: Context, detail: MapDetail, dark: Boolean, density: Float): TileStore {
+private fun newTileStore(context: Context, detail: MapDetail, dark: Boolean, density: Float): TileStore =
+    newTileStore(context, detail, if (dark) MinimalPalette.DARK else MinimalPalette.LIGHT, density)
+
+/** Las teselas de [detail]; el minimalista, en los colores de [palette] (SailDash: [MinimalPalette.ICE] en la página Mapa). */
+internal fun newTileStore(context: Context, detail: MapDetail, palette: MinimalPalette, density: Float): TileStore {
     val userAgent = "LiteDash/${BuildConfig.VERSION_NAME} (+https://litedash.web.app)"
     val source = when (detail) {
         MapDetail.FULL -> OsmTiles
-        MapDetail.MINIMAL -> VectorTiles(context, if (dark) MinimalPalette.DARK else MinimalPalette.LIGHT, tilePx(density).toInt(), density, userAgent)
+        MapDetail.MINIMAL -> VectorTiles(context, palette, tilePx(density).toInt(), density, userAgent)
     }
     return TileStore(context, userAgent, source)
 }

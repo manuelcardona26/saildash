@@ -59,7 +59,22 @@ private const val ATTRIBUTION_URL = "https://www.openstreetmap.org/copyright"
  * filtro; el minimalista ya viene en sus colores.
  */
 @Composable
-fun MapCanvas(store: TileStore, lat: Double, lon: Double, bearing: Float?, kmh: Float?, look: MapLook, modifier: Modifier = Modifier, onTap: (() -> Unit)? = null) {
+fun MapCanvas(
+    store: TileStore,
+    lat: Double,
+    lon: Double,
+    bearing: Float?,
+    kmh: Float?,
+    look: MapLook,
+    modifier: Modifier = Modifier,
+    onTap: (() -> Unit)? = null,
+    /** Dónde va tu posición (fracción del ancho y del alto); null = al centro, un poco abajo. */
+    anchor: Offset? = null,
+    /** Tu posición dibujada por quien llama (SailDash: el disco de hielo del diseño C); null = la flecha de siempre. */
+    puck: (DrawScope.(at: Offset, bearing: Float?) -> Unit)? = null,
+    /** false = los créditos los pone quien llama (deben verse igual: lo piden las licencias). */
+    attribution: Boolean = true,
+) {
     val c = LocalColors.current
     var manual by remember { mutableStateOf<Int?>(null) }
     // El automático recuerda el anterior para no brincar alrededor de los umbrales (no es estado: no repinta).
@@ -75,7 +90,8 @@ fun MapCanvas(store: TileStore, lat: Double, lon: Double, bearing: Float?, kmh: 
     val turn = if (look.orientation == MapOrientation.HEADING) -(bearing ?: 0f) else 0f
     val arrow = if (look.orientation == MapOrientation.HEADING) bearing?.let { 0f } else bearing
     // Inclinado, tu posición va más abajo: se ve más camino adelante.
-    val anchorY = if (tilted) 0.78f else 0.6f
+    val anchorY = anchor?.y ?: if (tilted) 0.78f else 0.6f
+    val anchorX = anchor?.x ?: 0.5f
     val sky = store.source.sky?.let(::Color) ?: if (dark) Color(0xFF1C1C20) else Color(0xFFE8E8EA)
     // Un toque: lo que diga [onTap] (en el widget, verlo en grande); si no, alejar.
     BoxWithConstraints(modifier.background(sky).clickable { onTap?.invoke() ?: run { manual = nextZoom(zoom) } }) {
@@ -83,7 +99,7 @@ fun MapCanvas(store: TileStore, lat: Double, lon: Double, bearing: Float?, kmh: 
         Spacer(
             Modifier.fillMaxSize().drawWithCache {
                 // Se arma al cambiar el tamaño o la posición; entre tesela y tesela solo se redibuja.
-                val at = Offset(size.width / 2, size.height * anchorY)
+                val at = Offset(size.width * anchorX, size.height * anchorY)
                 val projection = MapProjection(size.width, size.height, at.x, at.y, turn, tilted, density)
                 val matrix = AndroidMatrix().apply { setValues(projection.values) }
                 val tiles = visibleTiles(projection, lat, lon, zoom, at, tilePx(density))
@@ -103,11 +119,13 @@ fun MapCanvas(store: TileStore, lat: Double, lon: Double, bearing: Float?, kmh: 
                     }
                     store.request(tiles.keys)
                     fade?.let { drawRect(it) }
-                    drawArrow(at, arrow, accent, tilted)
+                    if (puck != null) {
+                        if (tilted) scale(1f, 0.7f, at) { puck(at, arrow) } else puck(at, arrow)
+                    } else drawArrow(at, arrow, accent, tilted)
                 }
             },
         )
-        Attribution(if (short) store.source.attributionShort else store.source.attribution, Modifier.align(Alignment.BottomEnd))
+        if (attribution) Attribution(if (short) store.source.attributionShort else store.source.attribution, Modifier.align(Alignment.BottomEnd))
     }
 }
 
