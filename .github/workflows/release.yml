@@ -58,6 +58,8 @@ jobs:
           mkdir -p out
           cp app/build/outputs/apk/github/release/app-github-release.apk "out/saildash-$VERSION.apk"
           (cd out && sha256sum *.apk > SHA256SUMS.txt)
+          # Nombre fijo para el enlace directo: releases/latest/download/saildash.apk (fuera de SHA256SUMS).
+          cp "out/saildash-$VERSION.apk" out/saildash.apk
           # Notas = la sección de esta versión en CHANGELOG.md
           awk -v v="$VERSION" '
             $0 ~ "^## \\[" v "\\]" {on=1; next}
