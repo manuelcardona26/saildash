@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="zona_tab_eq">Equalizer</string>
+    <string name="zona_tab_zone">Sound zone</string>
+    <string name="zona_who">Who is it for?</string>
+    <string name="zona_all">Whole car</string>
+    <string name="zona_driver">Driver</string>
+    <string name="zona_passenger">Passenger</string>
+    <string name="zona_front_only">Front</string>
+    <string name="zona_rear_only">Rear</string>
+    <string name="zona_mine">My zone</string>
+    <string name="zona_balance">Balance</string>
+    <string name="zona_fader">Front / rear</string>
+    <string name="zona_left">L %1$d</string>
+    <string name="zona_right">R %1$d</string>
+    <string name="zona_front">Front %1$d</string>
+    <string name="zona_rear">Rear %1$d</string>
+    <string name="zona_center">Center</string>
+    <string name="zona_spk_fl">Front L</string>
+    <string name="zona_spk_fr">Front R</string>
+    <string name="zona_spk_rl">Rear L</string>
+    <string name="zona_spk_rr">Rear R</string>
+    <string name="zona_drag">Drag the dot</string>
+    <string name="zona_direct">Applied by the car\'s sound chip: same on radio, Bluetooth and apps.</string>
+    <string name="zona_factory_help">For now set the same in the factory sound app. After Diagnostics, SailDash will apply it itself.</string>
+    <string name="zona_factory_open">Apply in factory app</string>
+</resources>

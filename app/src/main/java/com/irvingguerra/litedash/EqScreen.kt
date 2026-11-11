@@ -101,6 +101,7 @@ internal val EqSoundIcon: ImageVector = ImageVector.Builder(defaultWidth = 24.dp
  */
 @Composable
 internal fun EqSettingsSection() {
+    if (currentTab(SOUND_TABS) == SOUND_TAB_ZONE) return SoundZoneSection()
     val context = LocalContext.current
     val ice = LocalIce.current
     val eq = remember { EqEngine.get(context) }
@@ -161,10 +162,12 @@ internal fun androidx.compose.foundation.layout.RowScope.EqHeaderTrailing() {
     val ice = LocalIce.current
     val eq = remember { EqEngine.get(context) }
     val s = eq.settings
-    EqStatusLine(Modifier.weight(1f).padding(start = 14.dp, top = 22.dp))
-    IceText(stringResource(R.string.p2_eq_switch), IceText2.lbl, ice.ink)
-    Spacer(Modifier.width(14.dp))
+    if (currentTab(SOUND_TABS) == SOUND_TAB_ZONE) return ZoneHeaderTrailing()
+    // Con las pestañas al lado no cabe "Ecualizador de las apps ·": solo cómo va y el interruptor.
+    EqStatusLine(Modifier.weight(1f).padding(start = 14.dp, top = 22.dp), lead = false)
     IceToggle(s.enabled, onChange = { eq.update(s.copy(enabled = it)) })
+    Spacer(Modifier.width(14.dp))
+    SoundTabs()
 }
 
 /** `.qr`: renglón de 54 dp con la raya de abajo. */
@@ -218,7 +221,7 @@ private fun FactoryCard(modifier: Modifier) {
 
 /** Cómo va: "Ecualizador de las apps · Activo en todo el sonido" (lo bueno en menta; lo malo en rojo). */
 @Composable
-private fun EqStatusLine(modifier: Modifier) {
+private fun EqStatusLine(modifier: Modifier, lead: Boolean = true) {
     val ice = LocalIce.current
     val st = EqEngine.status
     val unsupported = EqEngine.unsupported
@@ -232,11 +235,13 @@ private fun EqStatusLine(modifier: Modifier) {
         st.state == EqState.APPS -> stringResource(R.string.ecualizador_status_apps, st.apps.joinToString(", ")) to Color(0xFF8FF0CF)
         else -> stringResource(R.string.ecualizador_status_unsupported, stringResource(eqReasonText(st.reason))) to ice.danger
     }
-    val lead = stringResource(R.string.p2_eq_lead)
+    val leadText = stringResource(R.string.p2_eq_lead)
     IceText(
         buildAnnotatedString {
-            append(lead)
-            append(" · ")
+            if (lead) {
+                append(leadText)
+                append(" · ")
+            }
             withStyle(SpanStyle(color = color)) { append(text.trimEnd('.')) }
         },
         IceText2.sub, ice.ink2, maxLines = 1, modifier = modifier.padding(end = 12.dp),

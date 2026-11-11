@@ -182,7 +182,7 @@ internal object DiagSettings {
     private val INTERESTING = Regex(
         "radio|tuner|freq|(^|_)fm|fm_|mcu|equal|(^|_)eq(_|$)|bass|treble|dsp|(^|_)bt(_|$)|bluetooth|(^|_)car_|canbus|(^|_)can(_|$)|" +
             "backcar|back_car|backlight|revers|rear|camera|illum|lamp|dimm|headl|(^|_)ill(_|$)|(^|_)light|night|(^|[_.])acc([_.]|on|off|$)|" +
-            "ignit|amplif|nwd|syu|fyt|jyt|hct|kgl|zxw|microntek|steer|wheel",
+            "ignit|amplif|nwd|syu|fyt|jyt|hct|kgl|zxw|microntek|steer|wheel|balan|fader|(^|_)fad(_|e|$)|field|zone|loud",
         RegexOption.IGNORE_CASE,
     )
 

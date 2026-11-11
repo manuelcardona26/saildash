@@ -3,6 +3,12 @@
 SailDash es una versión personal de [LiteDash](https://github.com/IrvingGuerra/litedash) (GPL-3.0)
 para un Chevrolet Sail con pantalla Android T3L. Lo de LiteDash está en `CHANGELOG-LITEDASH.md`.
 
+## [1.2.0] - 2026-11-11
+
+### Agregado
+- Zona de sonido (Ajustes → Sonido → Zona de sonido): tu Sail visto desde arriba con sus cuatro parlantes; arrastras el punto o eliges Todo el carro, Conductor, Copiloto, Adelante, Atrás o Mi zona. Muestra el balance y el adelante/atrás.
+- El Diagnóstico ahora pide mover el balance de la app Sonido y lo resalta en el reporte, para que una próxima versión lo aplique directo al chip de sonido del carro. Mientras tanto, el botón "Aplicar en el de fábrica" abre el sonido de fábrica.
+
 ## [1.1.2] - 2026-11-10
 
 ### Cambiado

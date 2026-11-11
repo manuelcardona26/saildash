@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SailDash: Ajustes → Sonido → Zona de sonido (SoundZone.kt). -->
+<resources>
+    <string name="zona_tab_eq">Ecualizador</string>
+    <string name="zona_tab_zone">Zona de sonido</string>
+    <string name="zona_who">¿Para quién suena?</string>
+    <string name="zona_all">Todo el carro</string>
+    <string name="zona_driver">Conductor</string>
+    <string name="zona_passenger">Copiloto</string>
+    <string name="zona_front_only">Adelante</string>
+    <string name="zona_rear_only">Atrás</string>
+    <string name="zona_mine">Mi zona</string>
+    <string name="zona_balance">Balance</string>
+    <string name="zona_fader">Adelante / atrás</string>
+    <string name="zona_left">Izq %1$d</string>
+    <string name="zona_right">Der %1$d</string>
+    <string name="zona_front">Adel %1$d</string>
+    <string name="zona_rear">Atrás %1$d</string>
+    <string name="zona_center">Centro</string>
+    <string name="zona_spk_fl">Del. izq</string>
+    <string name="zona_spk_fr">Del. der</string>
+    <string name="zona_spk_rl">Tras. izq</string>
+    <string name="zona_spk_rr">Tras. der</string>
+    <string name="zona_drag">Arrastra el punto</string>
+    <string name="zona_direct">Lo aplica el chip de sonido del carro: suena igual en radio, Bluetooth y apps.</string>
+    <string name="zona_factory_help">Por ahora ponla igual en el sonido de fábrica. Con el Diagnóstico, SailDash la aplicará solo.</string>
+    <string name="zona_factory_open">Aplicar en el de fábrica</string>
+</resources>

@@ -65,7 +65,7 @@
 
     <!-- Record events -->
     <string name="diagnostico_rec_title">Record events</string>
-    <string name="diagnostico_rec_steps">Tap Record and then: shift into reverse, turn the lights on and off, change station on the factory radio, move the equalizer in the Sound app, turn the volume up and down.</string>
+    <string name="diagnostico_rec_steps">Tap Record and then: shift into reverse, turn the lights on and off, change station on the factory radio, move the equalizer in the Sound app and its balance (left/right and front/rear), turn the volume up and down.</string>
     <string name="diagnostico_rec_help">While recording, it listens to the system settings and the head unit\'s broadcasts. It stops by itself after 3 minutes and you can leave this screen meanwhile.</string>
     <string name="diagnostico_rec_start">Record</string>
     <string name="diagnostico_rec_stop">Stop</string>

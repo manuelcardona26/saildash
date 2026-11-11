@@ -65,7 +65,7 @@
 
     <!-- Grabar eventos -->
     <string name="diagnostico_rec_title">Grabar eventos</string>
-    <string name="diagnostico_rec_steps">Toca Grabar y luego: pon la reversa, prende y apaga las luces, cambia de emisora en la radio de fábrica, mueve el ecualizador de la app Sonido, sube y baja el volumen.</string>
+    <string name="diagnostico_rec_steps">Toca Grabar y luego: pon la reversa, prende y apaga las luces, cambia de emisora en la radio de fábrica, mueve el ecualizador de la app Sonido y su balance (izquierda/derecha y adelante/atrás), sube y baja el volumen.</string>
     <string name="diagnostico_rec_help">Mientras graba, escucha los ajustes del sistema y los avisos de la pantalla. Se detiene sola a los 3 minutos y puedes salir de aquí mientras tanto.</string>
     <string name="diagnostico_rec_start">Grabar</string>
     <string name="diagnostico_rec_stop">Detener</string>
